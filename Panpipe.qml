@@ -68,13 +68,25 @@ MainView {
         /* Bindings to PandoraInterface */
         data: pandoraModel.userStations
 
-        /* Interface state change handlers */
-        onPlayButtonStateChanged: {
-            if (viewComponent.playButtonState == true) {
+        /* Signal handlers */
+        onPlayPausePressed: {
+            if (playState == true) {
                 console.log("playing");
             } else {
                 console.log("pausing");
             }
+        }
+
+        onNextTrackPressed: {
+            console.log("next track requested");
+        }
+
+        onThumbsUpPressed: {
+            console.log("thumbs up");
+        }
+
+        onThumbsDownPressed: {
+            console.log("thumbs down");
         }
 
     }

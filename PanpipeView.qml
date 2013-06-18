@@ -29,10 +29,20 @@ Item {
     property alias songName: songLabel.text
 
     /* Signals */
-    //signal playPausePressed(bool play)
+    signal playPausePressed(bool playState)
+    signal nextTrackPressed()
+    signal thumbsUpPressed()
+    signal thumbsDownPressed()
 
-    /* Properties */
+    /* Public properties */
     property bool playButtonState
+
+    /* Private properties */
+
+    /* State change handlers */
+    onPlayButtonStateChanged: {
+        playPausePressed(playButtonState);
+    }
 
 
     /* View initialization */
@@ -247,18 +257,14 @@ Item {
                             width: parent.height
                             color: "transparent"
 
-                            anchors.verticalCenter: parent.verticalCenter
-
                             Image {
                                 source: (playButtonState) ? "./resources/icons/media-playback-pause.svg" : "./resources/icons/media-playback-start.svg"
-
                                 sourceSize.width: parent.width
                                 sourceSize.height: parent.height
                             }
 
                             MouseArea {
                                 anchors.fill: parent
-
                                 onClicked: {
                                     playButtonState = !playButtonState;
                                 }
@@ -274,16 +280,17 @@ Item {
                             width: parent.height
                             color: "transparent"
 
-                            //Text {text: (aud.playbackState == Audio.PlayingState) ? "pause" : "play"}
                             Image {
                                 source: "./resources/icons/media-skip-forward.svg"
-
                                 sourceSize.width: parent.width
                                 sourceSize.height: parent.height
                             }
 
                             MouseArea {
                                 anchors.fill: parent
+                                onClicked: {
+                                    nextTrackPressed();
+                                }
                             }
                         }
 
@@ -305,6 +312,9 @@ Item {
 
                             MouseArea {
                                 anchors.fill: parent
+                                onClicked: {
+                                    thumbsUpPressed();
+                                }
                             }
                         }
 
@@ -326,9 +336,11 @@ Item {
 
                             MouseArea {
                                 anchors.fill: parent
+                                onClicked: {
+                                    thumbsDownPressed();
+                                }
                             }
                         }
-
                     }
                 }
             }
