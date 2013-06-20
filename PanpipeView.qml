@@ -27,12 +27,16 @@ Item {
     /* Aliases */
     property alias data: stationsView.model
     property alias songName: songLabel.text
+    property alias albumName: albumLabel.text
+    property alias stationName: stationLabel.text
+    property alias songArt: currentArt.source;
 
     /* Signals */
     signal playPausePressed(bool playState)
     signal nextTrackPressed()
     signal thumbsUpPressed()
     signal thumbsDownPressed()
+    signal stationSelected(int stationIndex)
 
     /* Public properties */
     property bool playButtonState
@@ -74,6 +78,10 @@ Item {
                         delegate: ListItem.Standard {
                             text: stationsView.model[index]["stationName"];
                             icon: stationsView.model[index]["artUrl"];
+
+                            onClicked: {
+                                stationSelected(index);
+                            }
                         }
                     }
                 }

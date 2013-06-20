@@ -199,10 +199,8 @@ function connect(username, password, callback) {
             callback(success);
             return;
         }
-
         callback(success);
     }
-
     /* Start login process */
     partnerLogin();
 }
@@ -237,18 +235,16 @@ function getUserStations(callback) {
         userStationsString = data;
 
         data = JSON.parse(data);
-        userStations = data.result;
+        userStations = data.result.stations;
 
         /* Ensure success */
         if(data.stat != "ok") {
             callback(false);
             return;
         }
-
         /* Return the list of stations */
-        callback(userStations.stations);
+        callback(userStations);
     }
-
     requestStations();
 }
 
@@ -288,15 +284,14 @@ function getStation(stationToken, callback) {
             callback(false);
             return;
         }
-
         callback(currentStation);
     }
-
     requestStation();
 }
 
 /* Function to get the playlist of the selected station */
-function getStationPlaylist(stationToken, callback) {
+//function getStationPlaylist(stationToken, callback) {
+function getStationPlaylist(stationIndex, callback) {
 
     function requestStationPlaylist() {
         /* time calculations */
@@ -306,7 +301,7 @@ function getStationPlaylist(stationToken, callback) {
         /* Station request */
         var stationPlaylistRequest = {
             "userAuthToken": userResponse.userAuthToken,
-            "stationToken": stationToken,
+            "stationToken": userStations[stationIndex].stationToken,
             "syncTime": currentTime
         }
 
@@ -323,16 +318,14 @@ function getStationPlaylist(stationToken, callback) {
     function receiveStationPlaylistResponse(data) {
         /* Store away everything that needs to be kept for later */
         data = JSON.parse(data);
-        currentPlaylist = data.result;
+        currentPlaylist = data.result.items;
 
         /* Ensure success */
         if(data.stat != "ok") {
             callback(false);
             return;
         }
-
         callback(currentPlaylist);
     }
-
     requestStationPlaylist();
 }

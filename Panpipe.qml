@@ -39,7 +39,7 @@ MainView {
 
     /* Startup operations */
     Component.onCompleted: {
-        //pandoraModel.login();
+        pandoraModel.login();
     }
 
     /* Manage Pandora activity */
@@ -67,6 +67,9 @@ MainView {
 
         /* Bindings to PandoraInterface */
         data: pandoraModel.userStations
+        songName: pandoraModel.currentSongName
+        albumName: pandoraModel.currentSongAlbum
+        songArt: pandoraModel.currentSongImageUrl
 
         /* Signal handlers */
         onPlayPausePressed: {
@@ -87,6 +90,13 @@ MainView {
 
         onThumbsDownPressed: {
             console.log("thumbs down");
+        }
+
+        onStationSelected: {
+            console.log("Station number " + stationIndex + " selected.");
+
+            // Request playlist for selected station
+            pandoraModel.retrievePlaylist(stationIndex);
         }
 
     }

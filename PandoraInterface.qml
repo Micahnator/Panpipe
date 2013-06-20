@@ -25,11 +25,22 @@ Item {
     /* public properties */
     property bool connected
 
+    property string currentSongName
+    property string currentSongAlbum
+    property string currentSongArtist
     property string currentSongAudioUrl
     property string currentSongImageUrl
 
     property var userStations
 
+    property var playlistData
+    property int playlistCurrentIndex
+
+    /* Initialization operations */
+    Component.onCompleted: {
+        playlistCurrentIndex = 0;
+        playlistData = []; //define playlistData as an array
+    }
 
     /* public functions */
     function login() {
@@ -40,7 +51,9 @@ Item {
         Pandora.getUserStations(retrieveStationsResponse);
     }
 
-
+    function retrievePlaylist(stationIndex) {
+        Pandora.getStationPlaylist(stationIndex, retrievePlaylistResponse);
+    }
 
 
 
@@ -57,6 +70,32 @@ Item {
 
     function retrieveStationsResponse(stationList) {
         userStations = stationList; //later use sort property to arrange before assignment
-        console.log(JSON.stringify(stationList));
+        //console.log(JSON.stringify(stationList));
+    }
+
+    function retrievePlaylistResponse(playlist) {
+        var tempPlaylistArray = [];
+
+        for (var i = 0; i < playlist.length; i++) {
+            var tempSongObject = {};
+
+            tempSongObject.artistName = playlist[i].artistName;
+            tempSongObject.albumName = playlist[i].albumName;
+            tempSongObject.songName = playlist[i].songName;
+            tempSongObject.albumArtUrl = playlist[i].albumArtUrl;
+//            tempSongObject.audioUrl = playlist[i].audioUrlMap.highQuality.audioUrl;
+
+            tempPlaylistArray.push(tempSongObject);
+        }
+
+        playlistData = playlistData.concat(tempPlaylistArray);
+        //playlistData = tempPlaylistArray;
+
+        //temporary
+        //currentSongData = playlist[playlistIndex];
+        currentSongName = playlistData[playlistCurrentIndex].songName;
+        currentSongAlbum = playlistData[playlistCurrentIndex].albumName;
+        currentSongArtist = playlistData[playlistCurrentIndex].artistName;
+        currentSongImageUrl = playlistData[playlistCurrentIndex].albumArtUrl;
     }
 }
