@@ -60,8 +60,12 @@ MainView {
         id: audioPlayer
         source: pandoraModel.currentSongAudioUrl
 
-        onSourceChanged: {
-            audioPlayer.play();
+        onStatusChanged: {
+            switch (audioPlayer.status) {
+            case Audio.Loaded:
+                audioPlayer.play();
+                break;
+            }
         }
     }
 
@@ -76,6 +80,15 @@ MainView {
         albumName: pandoraModel.currentSongAlbum
         songArt: pandoraModel.currentSongImageUrl
         stationName: pandoraModel.currentStationName
+
+        /* Bindings to audioPlayer */
+        audioPlaying: (audioPlayer.playbackState == Audio.PlayingState)
+        position: ((audioPlayer.position / audioPlayer.duration) * 100)
+
+        //temp
+        onSongArtChanged: {
+            console.log("album art changed to " + songArt);
+        }
 
         /* Signal handlers */
         onPlayPausePressed: {

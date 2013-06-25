@@ -31,6 +31,8 @@ Item {
     property alias stationName: stationLabel.text
     property alias songArt: currentArt.source;
 
+    property alias position: trackProgress.value
+
     /* Signals */
     signal playPausePressed(bool playState)
     signal nextTrackPressed()
@@ -41,11 +43,17 @@ Item {
     /* Public properties */
     property bool playButtonState
 
+    property bool audioPlaying
+
     /* Private properties */
 
     /* State change handlers */
     onPlayButtonStateChanged: {
         playPausePressed(playButtonState);
+    }
+
+    onAudioPlayingChanged: {
+        playButtonState = audioPlaying;
     }
 
 
@@ -219,6 +227,11 @@ Item {
 
                     image: Image {
                         id: currentArt
+                        asynchronous: true
+
+                        onProgressChanged: {
+                            console.log("load progress: " + currentArt.progress);
+                        }
                     }
                 }
 
