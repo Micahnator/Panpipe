@@ -55,17 +55,41 @@ Item {
     }
 
     function setStation(stationIndex) {
-        // update the station name
+        //update the station name
         currentStationIndex = stationIndex;
         currentStationName = userStations[currentStationIndex].stationName;
 
-        // retrieve playlist data
+        //retrieve playlist data
         retrievePlaylist(currentStationIndex);
+    }
+
+    function loadNextSong() {
+        //update location in the playlist
+        playlistCurrentIndex = playlistCurrentIndex + 1;
+
+        updateCurrentSongData();
+
+        console.log("advancing to the next song!");
+
+        //retrieve more songs for playlist if necessary
+        if (playlistCurrentIndex >= (playlistData.length - 1)) {
+            console.log("retrieving more songs!");
+            retrievePlaylist(currentStationIndex);
+        }
     }
 
     /* private functions */
     function retrievePlaylist(stationIndex) {
         Pandora.getStationPlaylist(stationIndex, retrievePlaylistResponse);
+    }
+
+    function updateCurrentSongData() {
+        // update needed properties
+        currentSongName = playlistData[playlistCurrentIndex].songName;
+        currentSongAlbum = playlistData[playlistCurrentIndex].albumName;
+        currentSongArtist = playlistData[playlistCurrentIndex].artistName;
+        currentSongAudioUrl = playlistData[playlistCurrentIndex].audioUrl;
+        currentSongImageUrl = playlistData[playlistCurrentIndex].albumArtUrl;
     }
 
 
@@ -112,13 +136,8 @@ Item {
             playlistData = tempPlaylistArray;
             playlistCurrentIndex = 0;
             currentStationId = playlistStationId;
-        }
 
-        // update needed properties
-        currentSongName = playlistData[playlistCurrentIndex].songName;
-        currentSongAlbum = playlistData[playlistCurrentIndex].albumName;
-        currentSongArtist = playlistData[playlistCurrentIndex].artistName;
-        currentSongAudioUrl = playlistData[playlistCurrentIndex].audioUrl;
-        currentSongImageUrl = playlistData[playlistCurrentIndex].albumArtUrl;
+            updateCurrentSongData();
+        }
     }
 }

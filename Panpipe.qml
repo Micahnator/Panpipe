@@ -67,6 +67,16 @@ MainView {
                 break;
             }
         }
+
+        onPlaybackStateChanged: {
+            switch (audioPlayer.playbackState) {
+            case Audio.StoppedState:
+                //load the next song
+                pandoraModel.loadNextSong();
+                audioPlayer.play();
+                break;
+            }
+        }
     }
 
     /* View for Panpipe */
