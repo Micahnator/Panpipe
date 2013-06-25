@@ -58,6 +58,11 @@ MainView {
     /* Audio component */
     Audio {
         id: audioPlayer
+        source: pandoraModel.currentSongAudioUrl
+
+        onSourceChanged: {
+            audioPlayer.play();
+        }
     }
 
     /* View for Panpipe */
@@ -76,8 +81,10 @@ MainView {
         onPlayPausePressed: {
             if (playState == true) {
                 console.log("playing");
+                audioPlayer.play();
             } else {
                 console.log("pausing");
+                audioPlayer.pause();
             }
         }
 

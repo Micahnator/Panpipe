@@ -83,35 +83,42 @@ Item {
 
     function retrieveStationsResponse(stationList) {
         userStations = stationList; //later use sort property to arrange before assignment
-        //console.log(JSON.stringify(stationList));
     }
 
     function retrievePlaylistResponse(playlist) {
         var tempPlaylistArray = [];
+        var playlistStationId;
 
         for (var i = 0; i < playlist.length; i++) {
             // make sure this item is a song and not an ad
             if (playlist[i].artistName) {
                 var tempSongObject = {};
-
                 tempSongObject.artistName = playlist[i].artistName;
                 tempSongObject.albumName = playlist[i].albumName;
                 tempSongObject.songName = playlist[i].songName;
                 tempSongObject.albumArtUrl = playlist[i].albumArtUrl;
                 tempSongObject.audioUrl = playlist[i].audioUrlMap.highQuality.audioUrl;
-
                 tempPlaylistArray.push(tempSongObject);
+
+                playlistStationId = playlist[i].stationId;
             }
         }
 
-        playlistData = playlistData.concat(tempPlaylistArray);
-        //playlistData = tempPlaylistArray;
+        if (playlistStationId == currentStationId) {
+            // if retrieving playlist for current station, add to master playlist
+            playlistData = playlistData.concat(tempPlaylistArray);
+        } else {
+            // if a new station is selected, start rebuilding the master playlist
+            playlistData = tempPlaylistArray;
+            playlistCurrentIndex = 0;
+            currentStationId = playlistStationId;
+        }
 
-        //temporary
-        //currentSongData = playlist[playlistIndex];
+        // update needed properties
         currentSongName = playlistData[playlistCurrentIndex].songName;
         currentSongAlbum = playlistData[playlistCurrentIndex].albumName;
         currentSongArtist = playlistData[playlistCurrentIndex].artistName;
+        currentSongAudioUrl = playlistData[playlistCurrentIndex].audioUrl;
         currentSongImageUrl = playlistData[playlistCurrentIndex].albumArtUrl;
     }
 }
