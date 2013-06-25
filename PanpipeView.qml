@@ -210,9 +210,8 @@ Item {
                 }
 
                 /* Album artwork */
-                UbuntuShape {
+                Rectangle {
                     id: albumArt
-
                     anchors {
                         top: albumLabel.bottom
                         topMargin: units.gu(2)
@@ -220,20 +219,39 @@ Item {
                         bottom: controlBar.top
                         bottomMargin: units.gu(3)
                     }
-
                     width: Math.min( height, (parent.width - units.gu(5)) )
-                    color: "white"
-                    radius: "medium"
 
-                    image: Image {
+                    Image {
                         id: currentArt
-                        asynchronous: true
+                        anchors.fill: parent
 
-                        onProgressChanged: {
-                            console.log("load progress: " + currentArt.progress);
-                        }
                     }
                 }
+
+//                UbuntuShape {
+//                    id: albumArt
+
+//                    anchors {
+//                        top: albumLabel.bottom
+//                        topMargin: units.gu(2)
+//                        horizontalCenter: parent.horizontalCenter
+//                        bottom: controlBar.top
+//                        bottomMargin: units.gu(3)
+//                    }
+
+//                    width: Math.min( height, (parent.width - units.gu(5)) )
+//                    color: "white"
+//                    radius: "medium"
+
+//                    image: Image {
+//                        id: currentArt
+//                        asynchronous: true
+
+//                        onProgressChanged: {
+//                            console.log("load progress: " + currentArt.progress);
+//                        }
+//                    }
+//                }
 
                 ProgressBar {
                     id: trackProgress
