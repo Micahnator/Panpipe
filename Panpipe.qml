@@ -70,6 +70,7 @@ MainView {
         songName: pandoraModel.currentSongName
         albumName: pandoraModel.currentSongAlbum
         songArt: pandoraModel.currentSongImageUrl
+        stationName: pandoraModel.currentStationName
 
         /* Signal handlers */
         onPlayPausePressed: {
@@ -96,7 +97,7 @@ MainView {
             console.log("Station number " + stationIndex + " selected.");
 
             // Request playlist for selected station
-            pandoraModel.retrievePlaylist(stationIndex);
+            pandoraModel.setStation(stationIndex);
         }
 
     }

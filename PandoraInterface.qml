@@ -32,6 +32,9 @@ Item {
     property string currentSongImageUrl
 
     property var userStations
+    property int currentStationIndex
+    property string currentStationId
+    property string currentStationName
 
     property var playlistData
     property int playlistCurrentIndex
@@ -51,6 +54,16 @@ Item {
         Pandora.getUserStations(retrieveStationsResponse);
     }
 
+    function setStation(stationIndex) {
+        // update the station name
+        currentStationIndex = stationIndex;
+        currentStationName = userStations[currentStationIndex].stationName;
+
+        // retrieve playlist data
+        retrievePlaylist(currentStationIndex);
+    }
+
+    /* private functions */
     function retrievePlaylist(stationIndex) {
         Pandora.getStationPlaylist(stationIndex, retrievePlaylistResponse);
     }
@@ -77,15 +90,18 @@ Item {
         var tempPlaylistArray = [];
 
         for (var i = 0; i < playlist.length; i++) {
-            var tempSongObject = {};
+            // make sure this item is a song and not an ad
+            if (playlist[i].artistName) {
+                var tempSongObject = {};
 
-            tempSongObject.artistName = playlist[i].artistName;
-            tempSongObject.albumName = playlist[i].albumName;
-            tempSongObject.songName = playlist[i].songName;
-            tempSongObject.albumArtUrl = playlist[i].albumArtUrl;
-//            tempSongObject.audioUrl = playlist[i].audioUrlMap.highQuality.audioUrl;
+                tempSongObject.artistName = playlist[i].artistName;
+                tempSongObject.albumName = playlist[i].albumName;
+                tempSongObject.songName = playlist[i].songName;
+                tempSongObject.albumArtUrl = playlist[i].albumArtUrl;
+                tempSongObject.audioUrl = playlist[i].audioUrlMap.highQuality.audioUrl;
 
-            tempPlaylistArray.push(tempSongObject);
+                tempPlaylistArray.push(tempSongObject);
+            }
         }
 
         playlistData = playlistData.concat(tempPlaylistArray);
