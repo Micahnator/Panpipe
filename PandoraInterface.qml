@@ -121,13 +121,13 @@ Item {
                 tempSongObject.albumName = playlist[i].albumName;
                 tempSongObject.songName = playlist[i].songName;
                 tempSongObject.albumArtUrl = playlist[i].albumArtUrl;
-                // get the best audio possible
-                if (playlist[i].audioUrlMap.highQuality.audioUrl) {
-                    tempSongObject.audioUrl = playlist[i].audioUrlMap.highQuality.audioUrl;
-                } else if (playlist[i].audioUrlMap.mediumQuality.audioUrl) {
-                    tempSongObject.audioUrl = playlist[i].audioUrlMap.mediumhQuality.audioUrl;
-                } else {
+                // use good audio quality while avoiding skip restrictions
+                if (playlist[i].audioUrlMap.mediumQuality.audioUrl) {
+                    tempSongObject.audioUrl = playlist[i].audioUrlMap.mediumQuality.audioUrl;
+                } else if (playlist[i].audioUrlMap.lowQuality.audioUrl) {
                     tempSongObject.audioUrl = playlist[i].audioUrlMap.lowQuality.audioUrl;
+                } else {
+                    tempSongObject.audioUrl = playlist[i].audioUrlMap.highQuality.audioUrl;
                 }
 
                 tempPlaylistArray.push(tempSongObject);
