@@ -22,6 +22,7 @@ import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import Ubuntu.Components.Popups 0.1 as Popups
 
+
 /* Tabbed view component for Panpipe */
 Item {
     /* Aliases */
@@ -46,6 +47,10 @@ Item {
     property bool audioPlaying
 
     /* Private properties */
+
+    /* Private constants */
+    property int _STATIONS_TAB_INDEX: 0
+    property int _PLAYER_TAB_INDEX: 1
 
     /* State change handlers */
     onPlayButtonStateChanged: {
@@ -89,6 +94,7 @@ Item {
 
                             onClicked: {
                                 stationSelected(index);
+                                tabs.selectedTabIndex = _PLAYER_TAB_INDEX;
                             }
                         }
                     }
