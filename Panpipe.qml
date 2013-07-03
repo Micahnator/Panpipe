@@ -52,7 +52,6 @@ MainView {
                 pandoraModel.retrieveStations();
             }
         }
-
     }
     
     /* Audio component */
@@ -65,17 +64,27 @@ MainView {
             case Audio.Loaded:
                 audioPlayer.play();
                 break;
-            }
-        }
-
-        onPlaybackStateChanged: {
-            switch (audioPlayer.playbackState) {
-            case Audio.StoppedState:
-                //load the next song
+            case Audio.EndOfMedia:
                 pandoraModel.loadNextSong();
                 audioPlayer.play();
                 break;
             }
+        }
+
+        onError: {
+            console.log("Audio element error:");
+            console.log(audioPlayer.error);
+            console.log(audioPlayer.errorString);
+
+            //play next song
+            audioPlayer.stop();
+            pandoraModel.loadNextSong();
+            audioPlayer.play();
+        }
+
+        onAvailabilityChanged: {
+            console.log("availability:");
+            console.log(audioPlayer.availability);
         }
     }
 
@@ -95,11 +104,6 @@ MainView {
         audioPlaying: (audioPlayer.playbackState == Audio.PlayingState)
         position: ((audioPlayer.position / audioPlayer.duration) * 100)
 
-        //temp
-        onSongArtChanged: {
-            console.log("album art changed to " + songArt);
-        }
-
         /* Signal handlers */
         onPlayPausePressed: {
             if (playState == true) {
@@ -113,6 +117,9 @@ MainView {
 
         onNextTrackPressed: {
             console.log("next track requested");
+            audioPlayer.stop();
+            pandoraModel.loadNextSong();
+            audioPlayer.play();
         }
 
         onThumbsUpPressed: {
@@ -129,6 +136,5 @@ MainView {
             // Request playlist for selected station
             pandoraModel.setStation(stationIndex);
         }
-
     }
 }

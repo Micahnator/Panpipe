@@ -73,13 +73,13 @@ Item {
 
         //retrieve more songs for playlist if necessary
         if (playlistCurrentIndex >= (playlistData.length - 1)) {
-            console.log("retrieving more songs!");
             retrievePlaylist(currentStationIndex);
         }
     }
 
     /* private functions */
     function retrievePlaylist(stationIndex) {
+        console.log("retrieving more songs!");
         Pandora.getStationPlaylist(stationIndex, retrievePlaylistResponse);
     }
 
@@ -121,7 +121,15 @@ Item {
                 tempSongObject.albumName = playlist[i].albumName;
                 tempSongObject.songName = playlist[i].songName;
                 tempSongObject.albumArtUrl = playlist[i].albumArtUrl;
-                tempSongObject.audioUrl = playlist[i].audioUrlMap.highQuality.audioUrl;
+                // get the best audio possible
+                if (playlist[i].audioUrlMap.highQuality.audioUrl) {
+                    tempSongObject.audioUrl = playlist[i].audioUrlMap.highQuality.audioUrl;
+                } else if (playlist[i].audioUrlMap.mediumQuality.audioUrl) {
+                    tempSongObject.audioUrl = playlist[i].audioUrlMap.mediumhQuality.audioUrl;
+                } else {
+                    tempSongObject.audioUrl = playlist[i].audioUrlMap.lowQuality.audioUrl;
+                }
+
                 tempPlaylistArray.push(tempSongObject);
 
                 playlistStationId = playlist[i].stationId;

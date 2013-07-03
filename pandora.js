@@ -322,9 +322,15 @@ function getStationPlaylist(stationIndex, callback) {
 
         /* Ensure success */
         if(data.stat != "ok") {
+            console.log("Playlist retrieval failed. Status: " + data.stat);
+            console.log(JSON.stringify(data));
             callback(false);
             return;
         }
+        else {
+            console.log("Playlist successfully retrieved.");
+        }
+
         callback(currentPlaylist);
     }
     requestStationPlaylist();
