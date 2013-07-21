@@ -46,8 +46,12 @@ Item {
     }
 
     /* public functions */
-    function login() {
-        Pandora.connect("panache.player@gmail.com", "PanacheMusic", loginResponse);
+    function login(username, password) {
+        if (username && password) {
+            Pandora.connect(username, password, loginResponse);
+        } else {
+            viewComponent.requestCredentials();
+        }
     }
 
     function retrieveStations() {
@@ -102,6 +106,8 @@ Item {
             connected = true;
         } else {
             console.log("Login failed :/");
+            viewComponent.requestCredentials();
+            connected = false;
         }
     }
 

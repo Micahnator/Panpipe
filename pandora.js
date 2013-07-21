@@ -146,6 +146,10 @@ function connect(username, password, callback) {
         "includeAdAttributes": true,
     };
 
+    /* re-initialize */
+    partnerResponse = {};
+    userResponse = {};
+
     console.log("Pandora.connect ran");
 
     function partnerLogin() {

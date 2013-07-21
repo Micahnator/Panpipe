@@ -39,7 +39,7 @@ MainView {
 
     /* Startup operations */
     Component.onCompleted: {
-        pandoraModel.login();
+        viewComponent.requestCredentials();
     }
 
     /* Manage Pandora activity */
@@ -136,5 +136,12 @@ MainView {
             // Request playlist for selected station
             pandoraModel.setStation(stationIndex);
         }
+
+        onLoginCredentialsProvided: {
+            console.log("username: " + username);
+            console.log("password: " + password);
+            pandoraModel.login(username, password);
+        }
+
     }
 }

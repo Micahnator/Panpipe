@@ -40,6 +40,7 @@ Item {
     signal thumbsUpPressed()
     signal thumbsDownPressed()
     signal stationSelected(int stationIndex)
+    signal loginCredentialsProvided(string username, string password)
 
     /* Public properties */
     property bool playButtonState
@@ -65,6 +66,12 @@ Item {
     /* View initialization */
     Component.onCompleted: {
         playButtonState = false;
+    }
+
+    /* Public functions */
+    function requestCredentials() {
+        //show login dialog
+        PopupUtils.open(loginDialog);
     }
 
     Tabs {
@@ -387,6 +394,40 @@ Item {
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    /* Define login credential dialog */
+    Component {
+        id: loginDialog
+        Popups.Dialog {
+            id: loginScreen
+            title: "Enter login credentials"
+            text: "Enter Pandora username and password."
+
+            TextField {
+                id: usernameForm
+                placeholderText: "Username"
+            }
+
+            TextField {
+                id: passwordForm
+                placeholderText: "Password"
+                echoMode: TextInput.Password
+            }
+
+            Button {
+                text: "Login"
+                color: "orange"
+
+                onClicked: {
+                    //send data to view
+                    loginCredentialsProvided(usernameForm.text, passwordForm.text);
+
+                    //close dialog
+                    PopupUtils.close(loginScreen)
                 }
             }
         }
