@@ -37,6 +37,11 @@ MainView {
     width: units.gu(60)
     height: units.gu(80)
 
+    /* Suru colors */
+    headerColor: "#343C60"
+    backgroundColor: "#6A69A2"
+    footerColor: "#8896D5"
+
     /* Startup operations */
     Component.onCompleted: {
         viewComponent.requestCredentials();
