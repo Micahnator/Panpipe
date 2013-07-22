@@ -86,27 +86,23 @@ Item {
             /* Tab content begins here */
             page: Page {
                 id: stationsPage
+                flickable: stationsView
 
-                Column {
+                ListView {
+                    id: stationsView
+                    clip: true
                     anchors.fill: parent
 
-                    ListView {
-                        id: stationsView
-                        clip: true
-                        anchors.fill: parent
+                    delegate: ListItem.Standard {
+                        text: stationsView.model[index]["stationName"];
+                        icon: stationsView.model[index]["artUrl"];
 
-                        delegate: ListItem.Standard {
-                            text: stationsView.model[index]["stationName"];
-                            icon: stationsView.model[index]["artUrl"];
-
-                            onClicked: {
-                                stationSelected(index);
-                                tabs.selectedTabIndex = _PLAYER_TAB_INDEX;
-                            }
+                        onClicked: {
+                            stationSelected(index);
+                            tabs.selectedTabIndex = _PLAYER_TAB_INDEX;
                         }
                     }
                 }
-
 
                 /* Stations menu popover */
                 Component {
@@ -291,7 +287,7 @@ Item {
                     }
                     width: parent.width - units.gu(20)
                     height: Math.min(units.gu(8), (width / 4) )
-                    color: "white"
+                    color: headerColor
                     radius: "medium"
 
                     Row {
@@ -303,11 +299,10 @@ Item {
                         height: parent.height
 
                         /* Play / Pause button */
-                        Rectangle {
+                        Item {
                             id: playPause
                             height: parent.height
                             width: parent.height
-                            color: "transparent"
 
                             Image {
                                 source: (playButtonState) ? "./resources/icons/media-playback-pause.svg" : "./resources/icons/media-playback-start.svg"
@@ -326,11 +321,10 @@ Item {
                         }
 
                         /* Next track button */
-                        Rectangle {
+                        Item {
                             id: nextTrack
                             height: parent.height
                             width: parent.height
-                            color: "transparent"
 
                             Image {
                                 source: "./resources/icons/media-skip-forward.svg"
@@ -347,11 +341,10 @@ Item {
                         }
 
                         /* Thumbs up button */
-                        Rectangle {
+                        Item {
                             id: thumbsUp
                             height: parent.height
                             width: parent.height
-                            color: "transparent"
 
                             Text {
                                 anchors.fill: parent
@@ -359,7 +352,7 @@ Item {
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
                                 text: "Thumbs Up"
-                                color: "black"
+                                color: Theme.palette.normal.baseText
                             }
 
                             MouseArea {
@@ -371,11 +364,10 @@ Item {
                         }
 
                         /* Thumbs down button */
-                        Rectangle {
+                        Item {
                             id: thumbsDown
                             height: parent.height
                             width: parent.height
-                            color: "transparent"
 
                             Text {
                                 anchors.fill: parent
@@ -383,7 +375,7 @@ Item {
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
                                 text: "Thumbs Down"
-                                color: "black"
+                                color: Theme.palette.normal.baseText
                             }
 
                             MouseArea {
@@ -404,22 +396,22 @@ Item {
         id: loginDialog
         Popups.Dialog {
             id: loginScreen
-            title: "Enter login credentials"
-            text: "Enter Pandora username and password."
+            title: i18n.tr("Enter login credentials")
+            text: i18n.tr("Enter Pandora username and password.")
 
             TextField {
                 id: usernameForm
-                placeholderText: "Username"
+                placeholderText: i18n.tr("Username")
             }
 
             TextField {
                 id: passwordForm
-                placeholderText: "Password"
+                placeholderText: i18n.tr("Password")
                 echoMode: TextInput.Password
             }
 
             Button {
-                text: "Login"
+                text: i18n.tr("Login")
                 color: "orange"
 
                 onClicked: {
