@@ -20,7 +20,7 @@
 Name=Panpipe
 GenericName=Pandora Client
 Comment=A Pandora client for Ubuntu Touch
-Exec=/usr/bin/qmlscene $@ /usr/share/Panpipe/Panpipe.qml
+Exec=/usr/bin/qmlscene /usr/share/panpipe/panpipe.qml
 Icon=qmlscene
 Terminal=false
 Type=Application
