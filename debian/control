@@ -1,0 +1,17 @@
+Source: panpipe
+Section: gnome
+Priority: optional
+Maintainer: Ken VanDine <ken.vandine@canonical.com>
+Build-Depends: debhelper (>= 9.0.0)
+Standards-Version: 3.9.4
+Homepage: https://github.com/Micahnator/Panpipe
+
+Package: panpipe
+Architecture: all
+Depends: ${misc:Depends},
+         qtdeclarative5-qtmultimedia-plugin,
+         qtdeclarative5-qtquick2-plugin,
+         qtdeclarative5-ubuntu-ui-toolkit-plugin|qt-components-ubuntu,
+         qmlscene,
+Description: Pandora client built for Ubuntu Touch
+ Ubuntu Touch Pandora client
