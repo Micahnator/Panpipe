@@ -18,7 +18,8 @@
 
 [Desktop Entry]
 Name=Panpipe
-Comment=My project description
+GenericName=Pandora Client
+Comment=A Pandora client for Ubuntu Touch
 Exec=/usr/bin/qmlscene $@ /usr/share/Panpipe/Panpipe.qml
 Icon=qmlscene
 Terminal=false
