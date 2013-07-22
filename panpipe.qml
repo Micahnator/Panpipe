@@ -26,7 +26,7 @@ MainView {
     objectName: "mainView"
     
     // Note! applicationName needs to match the .desktop filename 
-    applicationName: "Panpipe"
+    applicationName: "panpipe"
     
     /* 
      This property enables the application to change orientation 
