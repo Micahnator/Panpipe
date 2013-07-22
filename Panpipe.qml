@@ -143,8 +143,6 @@ MainView {
         }
 
         onLoginCredentialsProvided: {
-            console.log("username: " + username);
-            console.log("password: " + password);
             pandoraModel.login(username, password);
         }
 
