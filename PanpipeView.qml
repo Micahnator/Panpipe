@@ -92,10 +92,19 @@ Item {
                     id: stationsView
                     clip: true
                     anchors.fill: parent
+                    cacheBuffer: 1000
 
                     delegate: ListItem.Standard {
                         text: stationsView.model[index]["stationName"];
-                        icon: stationsView.model[index]["artUrl"];
+                        icon: Image {
+                            source: stationsView.model[index]["artUrl"]//Qt.resolvedUrl(stationsView.model[index]["artUrl"])
+                            sourceSize.height: 40
+                            sourceSize.width: 40
+                            height: 40
+                            width: height
+                            fillMode: Image.PreserveAspectFit
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
 
                         onClicked: {
                             stationSelected(index);
