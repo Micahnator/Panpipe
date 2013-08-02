@@ -55,7 +55,7 @@ function lowerFunction(callback) {
 }
 
 /* Send / Receive Function */
-function transceive(httpMethod, url, method, data, callback) {
+function transceive(httpMethod, url, method, data, encrypt, callback) {
     var xhr = new XMLHttpRequest;
 
     /* Add url parameters */
@@ -96,6 +96,25 @@ function transceive(httpMethod, url, method, data, callback) {
     /* Put together the full path */
     var fullUrl = url + "?" + urlParameters + method;
 
+    /* Add sync time and an auth token whenever possible */
+    var currentTime = thisDate.getTime();
+    currentTime = parseInt(currentTime / 1000);
+    data["syncTime"] = currentTime;
+
+    if (userResponse.userAuthToken) {
+        data["userAuthToken"] = userResponse.userAuthToken;
+    } else if (partnerResponse.partnerAuthToken) {
+        data["partnerAuthToken"] = partnerResponse.partnerAuthToken;
+    }
+
+    /* Stringify the data */
+    data = JSON.stringify(data);
+
+    /* Encrypt the data if appropriate */
+    if (encrypt) {
+        data = Blowfish.crypto.Blowfish.encrypt(data, ENCODE_KEY, CRYPTO_MODE);
+    }
+
     /* Open the object */
     xhr.open(httpMethod, fullUrl);
 
@@ -106,7 +125,8 @@ function transceive(httpMethod, url, method, data, callback) {
             /* Run the callback if there is one */
             if (callback)
             {
-                callback(xhr.responseText);
+                var responseObject = JSON.parse(xhr.responseText);
+                callback(responseObject);
             }
         }
     }
@@ -156,15 +176,14 @@ function connect(username, password, callback) {
         transceive("POST",
                    HTTPS_ENTRY_POINT,
                    "auth.partnerLogin",
-                   JSON.stringify(connectRequest),
+                   connectRequest,
+                   false,
                    userLogin);
 
     }
 
     function userLogin(data) {
-
         /* Store away everything that needs to be kept for later */
-        data = JSON.parse(data);
         partnerResponse = data.result;
 
         /* Ensure success */
@@ -174,27 +193,17 @@ function connect(username, password, callback) {
             return;
         }
 
-        /* time calculations */
-        var currentTime = thisDate.getTime();
-        currentTime = parseInt(currentTime / 1000);
-
-        /* Update the userRequest object */
-        userRequest.partnerAuthToken = partnerResponse.partnerAuthToken;
-        userRequest.syncTime = currentTime;
-
-        var toSend = JSON.stringify(userRequest);
-
         /* do user login */
         transceive("POST",
                    HTTPS_ENTRY_POINT,
                    "auth.userLogin",
-                   Blowfish.crypto.Blowfish.encrypt(toSend, ENCODE_KEY, CRYPTO_MODE),
+                   userRequest,
+                   true,
                    receiveUserResponse);
     }
 
     function receiveUserResponse(data) {
         /* Store away everything that needs to be kept for later */
-        data = JSON.parse(data);
         userResponse = data.result;
 
         /* Ensure success */
@@ -213,32 +222,23 @@ function connect(username, password, callback) {
 function getUserStations(callback) {
 
     function requestStations() {
-        /* time calculations */
-        var currentTime = thisDate.getTime();
-        currentTime = parseInt(currentTime / 1000);
-
         /* Station request */
         var stationsRequest = {
-            "userAuthToken": userResponse.userAuthToken,
             "includeStationArtUrl": true,
-            "syncTime": currentTime
         }
-
-        var toSend = JSON.stringify(stationsRequest);
 
         /* Request stations */
         transceive("POST",
                    HTTP_ENTRY_POINT,
                    "user.getStationList",
-                   Blowfish.crypto.Blowfish.encrypt(toSend, ENCODE_KEY, CRYPTO_MODE),
+                   stationsRequest,
+                   true,
                    receiveStationsResponse);
     }
 
     function receiveStationsResponse(data) {
         /* Store away everything that needs to be kept for later */
-        userStationsString = data;
-
-        data = JSON.parse(data);
+        userStationsString = JSON.stringify(data);
         userStations = data.result.stations;
 
         /* Ensure success */
@@ -256,31 +256,23 @@ function getUserStations(callback) {
 function getStation(stationToken, callback) {
 
     function requestStation() {
-        /* time calculations */
-        var currentTime = thisDate.getTime();
-        currentTime = parseInt(currentTime / 1000);
-
         /* Station request */
         var stationRequest = {
-            "userAuthToken": userResponse.userAuthToken,
             "stationToken": stationToken,
             "includeExtendedAttributes": true,
-            "syncTime": currentTime
         }
-
-        var toSend = JSON.stringify(stationRequest);
 
         /* Request stations */
         transceive("POST",
                    HTTP_ENTRY_POINT,
                    "station.getStation",
-                   Blowfish.crypto.Blowfish.encrypt(toSend, ENCODE_KEY, CRYPTO_MODE),
+                   stationRequest,
+                   true,
                    receiveStationResponse);
     }
 
     function receiveStationResponse(data) {
         /* Store away everything that needs to be kept for later */
-        data = JSON.parse(data);
         currentStation = data.result;
 
         /* Ensure success */
@@ -294,34 +286,26 @@ function getStation(stationToken, callback) {
 }
 
 /* Function to get the playlist of the selected station */
-//function getStationPlaylist(stationToken, callback) {
 function getStationPlaylist(stationIndex, callback) {
 
     function requestStationPlaylist() {
-        /* time calculations */
-        var currentTime = thisDate.getTime();
-        currentTime = parseInt(currentTime / 1000);
 
         /* Station request */
         var stationPlaylistRequest = {
-            "userAuthToken": userResponse.userAuthToken,
             "stationToken": userStations[stationIndex].stationToken,
-            "syncTime": currentTime
         }
-
-        var toSend = JSON.stringify(stationPlaylistRequest);
 
         /* Request stations */
         transceive("POST",
                    HTTP_ENTRY_POINT,
                    "station.getPlaylist",
-                   Blowfish.crypto.Blowfish.encrypt(toSend, ENCODE_KEY, CRYPTO_MODE),
+                   stationPlaylistRequest,
+                   true,
                    receiveStationPlaylistResponse);
     }
 
     function receiveStationPlaylistResponse(data) {
         /* Store away everything that needs to be kept for later */
-        data = JSON.parse(data);
         currentPlaylist = data.result.items;
 
         /* Ensure success */
@@ -342,24 +326,15 @@ function getStationPlaylist(stationIndex, callback) {
 
 /* Function to give feedback */
 function sendFeedback(favorable, trackToken, callback) {
-
-    /* time calculations */
-    var currentTime = thisDate.getTime();
-    currentTime = parseInt(currentTime / 1000);
-
     var feedback = {
         "trackToken": trackToken,
         "isPositive": favorable,
-        "userAuthToken": userResponse.userAuthToken,
-        "syncTime": currentTime
     }
-
-    var toSend = JSON.stringify(feedback);
-    console.log(toSend);
 
     transceive("POST",
                HTTP_ENTRY_POINT,
                "station.addFeedback",
-               Blowfish.crypto.Blowfish.encrypt(toSend, ENCODE_KEY, CRYPTO_MODE),
+               feedback,
+               true,
                null);
 }
