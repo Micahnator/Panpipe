@@ -339,3 +339,27 @@ function getStationPlaylist(stationIndex, callback) {
     }
     requestStationPlaylist();
 }
+
+/* Function to give feedback */
+function sendFeedback(favorable, trackToken, callback) {
+
+    /* time calculations */
+    var currentTime = thisDate.getTime();
+    currentTime = parseInt(currentTime / 1000);
+
+    var feedback = {
+        "trackToken": trackToken,
+        "isPositive": favorable,
+        "userAuthToken": userResponse.userAuthToken,
+        "syncTime": currentTime
+    }
+
+    var toSend = JSON.stringify(feedback);
+    console.log(toSend);
+
+    transceive("POST",
+               HTTP_ENTRY_POINT,
+               "station.addFeedback",
+               Blowfish.crypto.Blowfish.encrypt(toSend, ENCODE_KEY, CRYPTO_MODE),
+               null);
+}

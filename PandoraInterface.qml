@@ -30,6 +30,7 @@ Item {
     property string currentSongArtist
     property string currentSongAudioUrl
     property string currentSongImageUrl
+    property string currentSongToken
 
     property var userStations
     property int currentStationIndex
@@ -81,6 +82,10 @@ Item {
         }
     }
 
+    function giveFeedback(favorable, trackToken) {
+        Pandora.sendFeedback(favorable, trackToken, null);
+    }
+
     /* private functions */
     function retrievePlaylist(stationIndex) {
         console.log("retrieving more songs!");
@@ -94,6 +99,7 @@ Item {
         currentSongArtist = playlistData[playlistCurrentIndex].artistName;
         currentSongAudioUrl = playlistData[playlistCurrentIndex].audioUrl;
         currentSongImageUrl = playlistData[playlistCurrentIndex].albumArtUrl;
+        currentSongToken = playlistData[playlistCurrentIndex].trackToken;
     }
 
 
@@ -127,6 +133,7 @@ Item {
                 tempSongObject.albumName = playlist[i].albumName;
                 tempSongObject.songName = playlist[i].songName;
                 tempSongObject.albumArtUrl = playlist[i].albumArtUrl;
+                tempSongObject.trackToken = playlist[i].trackToken;
                 // use good audio quality while avoiding skip restrictions
                 if (playlist[i].audioUrlMap.mediumQuality.audioUrl) {
                     tempSongObject.audioUrl = playlist[i].audioUrlMap.mediumQuality.audioUrl;
