@@ -62,7 +62,7 @@ MainView {
     /* Audio component */
     Audio {
         id: audioPlayer
-        source: pandoraModel.currentSongAudioUrl
+        source: pandoraModel.playlistData[pandoraModel.playlistCurrentIndex].audioUrlMap.mediumQuality.audioUrl
 
         onStatusChanged: {
             switch (audioPlayer.status) {
@@ -99,11 +99,10 @@ MainView {
         anchors.fill: parent
 
         /* Bindings to PandoraInterface */
-        data: pandoraModel.userStations
-        songName: pandoraModel.currentSongName
-        albumName: pandoraModel.currentSongAlbum
-        songArt: pandoraModel.currentSongImageUrl
-        stationName: pandoraModel.currentStationName
+        stationsList: pandoraModel.userStations
+        stationName: i18n.tr(pandoraModel.currentStationName)
+        playlist: pandoraModel.playlistData
+        currentPlaylistIndex: pandoraModel.playlistCurrentIndex
 
         /* Bindings to audioPlayer */
         audioPlaying: (audioPlayer.playbackState == Audio.PlayingState)

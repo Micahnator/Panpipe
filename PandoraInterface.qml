@@ -20,17 +20,11 @@ along with Panpipe.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 2.0
 
 import "pandora.js" as Pandora
+import "Song.js" as Song
 
 Item {
     /* public properties */
     property bool connected
-
-    property string currentSongName
-    property string currentSongAlbum
-    property string currentSongArtist
-    property string currentSongAudioUrl
-    property string currentSongImageUrl
-    property string currentSongToken
 
     property var userStations
     property int currentStationIndex
@@ -94,12 +88,12 @@ Item {
 
     function updateCurrentSongData() {
         // update needed properties
-        currentSongName = playlistData[playlistCurrentIndex].songName;
-        currentSongAlbum = playlistData[playlistCurrentIndex].albumName;
-        currentSongArtist = playlistData[playlistCurrentIndex].artistName;
-        currentSongAudioUrl = playlistData[playlistCurrentIndex].audioUrl;
-        currentSongImageUrl = playlistData[playlistCurrentIndex].albumArtUrl;
-        currentSongToken = playlistData[playlistCurrentIndex].trackToken;
+//        currentSongName = playlistData[playlistCurrentIndex].songName;
+//        currentSongAlbum = playlistData[playlistCurrentIndex].albumName;
+//        currentSongArtist = playlistData[playlistCurrentIndex].artistName;
+//        currentSongAudioUrl = playlistData[playlistCurrentIndex].audioUrl;
+//        currentSongImageUrl = playlistData[playlistCurrentIndex].albumArtUrl;
+//        currentSongToken = playlistData[playlistCurrentIndex].trackToken;
     }
 
 
@@ -128,22 +122,9 @@ Item {
         for (var i = 0; i < playlist.length; i++) {
             // make sure this item is a song and not an ad
             if (playlist[i].artistName) {
-                var tempSongObject = {};
-                tempSongObject.artistName = playlist[i].artistName;
-                tempSongObject.albumName = playlist[i].albumName;
-                tempSongObject.songName = playlist[i].songName;
-                tempSongObject.albumArtUrl = playlist[i].albumArtUrl;
-                tempSongObject.trackToken = playlist[i].trackToken;
-                // use good audio quality while avoiding skip restrictions
-                if (playlist[i].audioUrlMap.mediumQuality.audioUrl) {
-                    tempSongObject.audioUrl = playlist[i].audioUrlMap.mediumQuality.audioUrl;
-                } else if (playlist[i].audioUrlMap.lowQuality.audioUrl) {
-                    tempSongObject.audioUrl = playlist[i].audioUrlMap.lowQuality.audioUrl;
-                } else {
-                    tempSongObject.audioUrl = playlist[i].audioUrlMap.highQuality.audioUrl;
-                }
+                var aSong = new Song.Song(playlist[i]);
 
-                tempPlaylistArray.push(tempSongObject);
+                tempPlaylistArray.push(aSong);
 
                 playlistStationId = playlist[i].stationId;
             }

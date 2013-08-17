@@ -26,12 +26,8 @@ import Ubuntu.Components.Popups 0.1 as Popups
 /* Tabbed view component for Panpipe */
 Item {
     /* Aliases */
-    property alias data: stationsView.model
-    property alias songName: songLabel.text
-    property alias albumName: albumLabel.text
+    property alias stationsList: stationsView.model
     property alias stationName: stationLabel.text
-    property alias songArt: currentArt.source;
-
     property alias position: trackProgress.value
 
     /* Signals */
@@ -43,8 +39,10 @@ Item {
     signal loginCredentialsProvided(string username, string password)
 
     /* Public properties */
-    property bool playButtonState
+    property var playlist
+    property int currentPlaylistIndex
 
+    property bool playButtonState
     property bool audioPlaying
 
     /* Private properties */
@@ -196,7 +194,6 @@ Item {
                     }
 
                     fontSize: "large"
-                    text: i18n.tr("? Radio.")
                 }
 
                 /* Song name */
@@ -210,7 +207,7 @@ Item {
                     }
 
                     fontSize: "medium"
-                    text: i18n.tr("Hey Mama!")
+                    text: i18n.tr(playlist[currentPlaylistIndex].songName)
                 }
 
                 /* Album name */
@@ -224,7 +221,7 @@ Item {
                     }
 
                     fontSize: "medium"
-                    text: i18n.tr("Young Love")
+                    text: i18n.tr(playlist[currentPlaylistIndex].albumName)
                 }
 
                 /* Album artwork */
@@ -242,7 +239,7 @@ Item {
                     Image {
                         id: currentArt
                         anchors.fill: parent
-
+                        source: playlist[currentPlaylistIndex].albumArtUrl
                     }
                 }
 
