@@ -34,7 +34,7 @@ MainView {
     */
     automaticOrientation: false
     
-    width: units.gu(60)
+    width: units.gu(50)
     height: units.gu(80)
 
     /* Suru colors */
@@ -106,7 +106,9 @@ MainView {
 
         /* Bindings to audioPlayer */
         audioPlaying: (audioPlayer.playbackState == Audio.PlayingState)
-        position: ((audioPlayer.position / audioPlayer.duration) * 100)
+        playbackPercentage: (audioPlayer.position / audioPlayer.duration)
+        playbackPosition: audioPlayer.position
+        playbackDuration: audioPlayer.duration
 
         /* Signal handlers */
         onPlayPausePressed: {

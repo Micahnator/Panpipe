@@ -28,7 +28,6 @@ Item {
     /* Aliases */
     property alias stationsList: stationsView.model
     property alias stationName: stationLabel.text
-    property alias position: trackProgress.value
 
     /* Signals */
     signal playPausePressed(bool playState)
@@ -44,6 +43,10 @@ Item {
 
     property bool playButtonState
     property bool audioPlaying
+
+    property double playbackPercentage
+    property int playbackPosition
+    property int playbackDuration
 
     /* Private properties */
 
@@ -147,29 +150,29 @@ Item {
                 }
 
                 /* Bottom Toolbar */
-                tools: ToolbarActions {
-                    id: toolbar
+//                tools: ToolbarActions {
+//                    id: toolbar
 
-                    Action {
-                        id: sortStationsAction
-                        objectName: "action"
+//                    Action {
+//                        id: sortStationsAction
+//                        objectName: "action"
 
-                        iconSource: Qt.resolvedUrl("./resources/icons/filter.svg")
-                        text: i18n.tr("Sort")
+//                        iconSource: Qt.resolvedUrl("./resources/icons/filter.svg")
+//                        text: i18n.tr("Sort")
 
-                        onTriggered: {
-                            PopupUtils.open(stationsMenu, caller)
-                        }
-                    }
+//                        onTriggered: {
+//                            PopupUtils.open(stationsMenu, caller)
+//                        }
+//                    }
 
-                    Action {
-                        id: addStationAction
-                        objectName: "action"
+//                    Action {
+//                        id: addStationAction
+//                        objectName: "action"
 
-                        iconSource: Qt.resolvedUrl("./resources/icons/add.svg")
-                        text: i18n.tr("New Station")
-                    }
-                }
+//                        iconSource: Qt.resolvedUrl("./resources/icons/add.svg")
+//                        text: i18n.tr("New Station")
+//                    }
+//                }
             }
         }
 
@@ -185,102 +188,138 @@ Item {
                 Label {
                     id: stationLabel
                     objectName: "label"
-
                     anchors {
                         top: parent.top
-                        left: parent.left
                         topMargin: units.gu(1)
-                        leftMargin: units.gu(2)
+                        horizontalCenter: parent.horizontalCenter
                     }
-
+                    width: (parent.width - units.gu(4))
+                    elide: Text.ElideRight
                     fontSize: "large"
-                }
-
-                /* Song name */
-                Label {
-                    id: songLabel
-
-                    anchors {
-                        top: stationLabel.bottom
-                        left: parent.left
-                        leftMargin: units.gu(2)
-                    }
-
-                    fontSize: "medium"
-                    text: i18n.tr(playlist[currentPlaylistIndex].songName)
-                }
-
-                /* Album name */
-                Label {
-                    id: albumLabel
-
-                    anchors {
-                        top: songLabel.bottom
-                        left: parent.left
-                        leftMargin: units.gu(2)
-                    }
-
-                    fontSize: "medium"
-                    text: i18n.tr(playlist[currentPlaylistIndex].albumName)
+                    horizontalAlignment: Text.AlignLeft
                 }
 
                 /* Album artwork */
                 Rectangle {
                     id: albumArt
                     anchors {
-                        top: albumLabel.bottom
+                        top: stationLabel.bottom
                         topMargin: units.gu(2)
                         horizontalCenter: parent.horizontalCenter
-                        bottom: controlBar.top
-                        bottomMargin: units.gu(3)
                     }
-                    width: Math.min( height, (parent.width - units.gu(5)) )
+                    width: Math.min( (parent.width - units.gu(2)), (Math.abs(stationLabel.y - songLabel.y) - (stationLabel.height + songLabel.height + playbackRemainingLabel.height)) )
+                    height: albumArt.width
 
-                    Image {
+                    CrossFadeImage {
                         id: currentArt
                         anchors.fill: parent
                         source: playlist[currentPlaylistIndex].albumArtUrl
+                        fadeDuration: 1000
+                        fillMode: Image.PreserveAspectCrop
+                    }
+
+                    Image {
+                        id: songRatingArt
+                        anchors {
+                            bottom: parent.bottom
+                            right: parent.right
+                        }
+                        width: parent.width / 8
+                        height: width
+                        //source: "./resources/icons/favorite-selected.svg"
+                        source: (playlist[currentPlaylistIndex].songRating == 1) ? "./resources/icons/favorite-selected.svg" : ""
                     }
                 }
 
-//                UbuntuShape {
-//                    id: albumArt
 
-//                    anchors {
-//                        top: albumLabel.bottom
-//                        topMargin: units.gu(2)
-//                        horizontalCenter: parent.horizontalCenter
-//                        bottom: controlBar.top
-//                        bottomMargin: units.gu(3)
-//                    }
-
-//                    width: Math.min( height, (parent.width - units.gu(5)) )
-//                    color: "white"
-//                    radius: "medium"
-
-//                    image: Image {
-//                        id: currentArt
-//                        asynchronous: true
-
-//                        onProgressChanged: {
-//                            console.log("load progress: " + currentArt.progress);
-//                        }
-//                    }
-//                }
-
-                ProgressBar {
-                    id: trackProgress
-
+                /* Progress bar */
+                Rectangle {
+                    id: progressBase
                     anchors {
                         top: albumArt.bottom
-                        horizontalCenter: albumArt.horizontalCenter
                         left: albumArt.left
                         right: albumArt.right
                     }
+                    height: units.gu(0.5)
+                    color: UbuntuColors.coolGrey
 
-                    minimumValue: 0
-                    maximumValue: 100
-                    value: 50
+                    Rectangle {
+                        id: progressTracker
+                        anchors {
+                            top: parent.top
+                            bottom: parent.bottom
+                            left: parent.left
+                        }
+                        height: parent.height
+                        width: (parent.width * playbackPercentage)
+                        color: UbuntuColors.orange
+                    }
+                }
+
+                /* Playback position */
+                Label {
+                    id: playbackPositionLabel
+                    anchors {
+                        top: progressBase.bottom
+                        left: progressBase.left
+                    }
+                    fontSize: "small"
+                    text: __durationToString(playbackPosition)
+                }
+
+                /* Playback remaining */
+                Label {
+                    id: playbackRemainingLabel
+                    anchors {
+                        top: progressBase.bottom
+                        right: progressBase.right
+                    }
+                    fontSize: "small"
+                    text: "-" + __durationToString(playbackDuration - playbackPosition)
+                }
+
+                /* Song name */
+                Label {
+                    id: songLabel
+                    anchors {
+                        bottom: artistLabel.top
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                    width: (parent.width - units.gu(4))
+                    elide: Text.ElideRight
+                    fontSize: "large"
+                    horizontalAlignment: Text.AlignHCenter
+                    text: i18n.tr(playlist[currentPlaylistIndex].songName)
+                }
+
+                /* Artist name */
+                Label {
+                    id: artistLabel
+                    anchors {
+                        bottom: albumLabel.top
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                    width: (parent.width - units.gu(4))
+                    elide: Text.ElideRight
+                    fontSize: "medium"
+                    horizontalAlignment: Text.AlignHCenter
+                    text: i18n.tr("By " + playlist[currentPlaylistIndex].artistName)
+                }
+
+
+                /* Album name */
+                Label {
+                    id: albumLabel
+                    anchors {
+                        bottom: controlBar.top
+                        bottomMargin: units.gu(1)
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                    width: (parent.width - units.gu(4))
+                    elide: Text.ElideRight
+                    fontSize: "medium"
+                    horizontalAlignment: Text.AlignHCenter
+                    text: i18n.tr("On " + playlist[currentPlaylistIndex].albumName)
                 }
 
 
@@ -288,16 +327,22 @@ Item {
                     id: controlBar
                     anchors {
                         bottom: parent.bottom
-                        bottomMargin: units.gu(3)
+                        bottomMargin: units.gu(1)
                         horizontalCenter: parent.horizontalCenter
                     }
-                    width: parent.width - units.gu(20)
+                    width: {
+                        if(parent.width > units.gu(40)) {
+                            parent.width - units.gu(12)
+                        } else {
+                            parent.width - units.gu(4)
+                        }
+                    }
                     height: Math.min(units.gu(8), (width / 4) )
                     color: headerColor
                     radius: "medium"
 
                     Row {
-                        anchors.fill: controlBar
+                        anchors.fill: parent
 
                         //note: units.gu(32) is the combined width of the buttons
                         spacing: Math.max( ((parent.width - units.gu(32)) / 3), 0 )
@@ -352,13 +397,9 @@ Item {
                             height: parent.height
                             width: parent.height
 
-                            Text {
+                            Image {
+                                source: "./resources/icons/Thumbs-Up-256.png"
                                 anchors.fill: parent
-                                wrapMode: Text.Wrap
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                                text: "Thumbs Up"
-                                color: Theme.palette.normal.baseText
                             }
 
                             MouseArea {
@@ -375,13 +416,10 @@ Item {
                             height: parent.height
                             width: parent.height
 
-                            Text {
+                            Image {
+                                source: "./resources/icons/Thumbs-Down-256.png"
                                 anchors.fill: parent
-                                wrapMode: Text.Wrap
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                                text: "Thumbs Down"
-                                color: Theme.palette.normal.baseText
+
                             }
 
                             MouseArea {
@@ -430,4 +468,12 @@ Item {
             }
         }
     }
+
+    // Converts an duration in ms to a formated string ("minutes:seconds")
+    function __durationToString(duration) {
+        var minutes = Math.floor((duration/1000) / 60);
+        var seconds = Math.floor((duration/1000)) % 60;
+        return minutes + ":" + (seconds<10 ? "0"+seconds : seconds);
+    }
+
 }
