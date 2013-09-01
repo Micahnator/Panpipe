@@ -130,12 +130,12 @@ MainView {
 
         onThumbsUpPressed: {
             console.log("thumbs up");
-            pandoraModel.giveFeedback(true, pandoraModel.currentSongToken);
+            pandoraModel.giveFeedback(true, pandoraModel.playlistData[pandoraModel.playlistCurrentIndex].trackToken);
         }
 
         onThumbsDownPressed: {
             console.log("thumbs down");
-            pandoraModel.giveFeedback(false, pandoraModel.currentSongToken);
+            pandoraModel.giveFeedback(false, pandoraModel.playlistData[pandoraModel.playlistCurrentIndex].trackToken);
         }
 
         onStationSelected: {

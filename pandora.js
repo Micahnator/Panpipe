@@ -338,3 +338,8 @@ function sendFeedback(favorable, trackToken, callback) {
                true,
                null);
 }
+
+function retrieveSendFeedbackResponse(data) {
+    console.log("feedback response:");
+    console.log(JSON.stringify(data));
+}
