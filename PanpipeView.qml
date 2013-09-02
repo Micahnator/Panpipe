@@ -49,6 +49,7 @@ Item {
     property int playbackDuration
 
     /* Private properties */
+    property int _temp_song_thumbs_up
 
     /* Private constants */
     property int _STATIONS_TAB_INDEX: 0
@@ -61,6 +62,10 @@ Item {
 
     onAudioPlayingChanged: {
         playButtonState = audioPlaying;
+    }
+
+    onCurrentPlaylistIndexChanged: {
+        _temp_song_thumbs_up = 0;
     }
 
 
@@ -226,8 +231,7 @@ Item {
                         }
                         width: parent.width / 8
                         height: width
-                        //source: "./resources/icons/favorite-selected.svg"
-                        source: (playlist[currentPlaylistIndex].songRating == 1) ? "./resources/icons/favorite-selected.svg" : ""
+                        source: ((playlist[currentPlaylistIndex].songRating == 1) || (_temp_song_thumbs_up == 1)) ? "./resources/icons/favorite-selected.svg" : ""
                     }
                 }
 
@@ -405,7 +409,10 @@ Item {
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    thumbsUpPressed();
+                                    if(playlist[currentPlaylistIndex].songRating != 1) {
+                                        thumbsUpPressed();
+                                        _temp_song_thumbs_up = 1;
+                                    }
                                 }
                             }
                         }
@@ -425,7 +432,9 @@ Item {
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    thumbsDownPressed();
+                                    if(playlist[currentPlaylistIndex].songRating != -1) {
+                                        thumbsDownPressed();
+                                    }
                                 }
                             }
                         }

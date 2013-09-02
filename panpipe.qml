@@ -136,6 +136,11 @@ MainView {
         onThumbsDownPressed: {
             console.log("thumbs down");
             pandoraModel.giveFeedback(false, pandoraModel.playlistData[pandoraModel.playlistCurrentIndex].trackToken);
+
+            /* Skip thumbs-down song */
+            audioPlayer.stop();
+            pandoraModel.loadNextSong();
+            audioPlayer.play();
         }
 
         onStationSelected: {
