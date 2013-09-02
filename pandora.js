@@ -30,10 +30,6 @@ var CRYPTO_MODE = {};
 CRYPTO_MODE.outputType = Blowfish.crypto.outputTypes.Hex;
 CRYPTO_MODE.cipherMode = Blowfish.crypto.cipherModes.ECB;
 
-/* Data provided by outside source */
-//var pandoraUsername = "";
-//var pandoraPassword = "";
-
 
 /* Global variables */
 var partnerResponse = {};
@@ -49,10 +45,6 @@ var currentPlaylistIndex = 0;
 var currentSyncTime = 0;
 var timeOffset = 0;
 var thisDate = new Date();
-
-function lowerFunction(callback) {
-    callback("----It works!!!----");
-}
 
 /* Send / Receive Function */
 function transceive(httpMethod, url, method, data, encrypt, callback) {
@@ -193,7 +185,7 @@ function connect(username, password, callback) {
             return;
         }
 
-        /* do user login */
+        /* Do user login */
         transceive("POST",
                    HTTPS_ENTRY_POINT,
                    "auth.userLogin",

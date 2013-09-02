@@ -76,7 +76,7 @@ Item {
 
     /* Public functions */
     function requestCredentials() {
-        //show login dialog
+        /* show login dialog */
         PopupUtils.open(loginDialog);
     }
 
@@ -103,7 +103,7 @@ Item {
                     delegate: ListItem.Standard {
                         text: stationsView.model[index]["stationName"];
                         icon: Image {
-                            source: stationsView.model[index]["artUrl"]//Qt.resolvedUrl(stationsView.model[index]["artUrl"])
+                            source: stationsView.model[index]["artUrl"]
                             sourceSize.height: 40
                             sourceSize.width: 40
                             height: 40
@@ -153,31 +153,6 @@ Item {
                         }
                     }
                 }
-
-                /* Bottom Toolbar */
-//                tools: ToolbarActions {
-//                    id: toolbar
-
-//                    Action {
-//                        id: sortStationsAction
-//                        objectName: "action"
-
-//                        iconSource: Qt.resolvedUrl("./resources/icons/filter.svg")
-//                        text: i18n.tr("Sort")
-
-//                        onTriggered: {
-//                            PopupUtils.open(stationsMenu, caller)
-//                        }
-//                    }
-
-//                    Action {
-//                        id: addStationAction
-//                        objectName: "action"
-
-//                        iconSource: Qt.resolvedUrl("./resources/icons/add.svg")
-//                        text: i18n.tr("New Station")
-//                    }
-//                }
             }
         }
 
@@ -348,7 +323,7 @@ Item {
                     Row {
                         anchors.fill: parent
 
-                        //note: units.gu(32) is the combined width of the buttons
+                        /* Note: units.gu(32) is the combined width of the buttons */
                         spacing: Math.max( ((parent.width - units.gu(32)) / 3), 0 )
 
                         height: parent.height

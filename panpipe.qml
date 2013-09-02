@@ -22,10 +22,10 @@ import QtMultimedia 5.0
 import Ubuntu.Components 0.1
 
 MainView {
-    // objectName for functional testing purposes (autopilot-qt5)
+    /* objectName for functional testing purposes (autopilot-qt5) */
     objectName: "mainView"
     
-    // Note! applicationName needs to match the .desktop filename 
+    /* Note! applicationName needs to match the .desktop filename */
     applicationName: "panpipe"
     
     /* 
@@ -81,7 +81,7 @@ MainView {
             console.log(audioPlayer.error);
             console.log(audioPlayer.errorString);
 
-            //play next song
+            /* Play next song */
             audioPlayer.stop();
             pandoraModel.loadNextSong();
             audioPlayer.play();
@@ -146,7 +146,7 @@ MainView {
         onStationSelected: {
             console.log("Station number " + stationIndex + " selected.");
 
-            // Request playlist for selected station
+            /* Request playlist for selected station */
             pandoraModel.setStation(stationIndex);
         }
 

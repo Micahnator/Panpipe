@@ -37,10 +37,12 @@ Item {
     /* Initialization operations */
     Component.onCompleted: {
         playlistCurrentIndex = 0;
-        playlistData = []; //define playlistData as an array
+        playlistData = []; /* Define playlistData as an array */
     }
 
-    /* public functions */
+    /*
+        Public functions
+    */
     function login(username, password) {
         if (username && password) {
             Pandora.connect(username, password, loginResponse);
@@ -54,23 +56,20 @@ Item {
     }
 
     function setStation(stationIndex) {
-        //update the station name
+        /* Update the station name */
         currentStationIndex = stationIndex;
         currentStationName = userStations[currentStationIndex].stationName;
 
-        //retrieve playlist data
+        /* Retrieve playlist data */
         retrievePlaylist(currentStationIndex);
     }
 
     function loadNextSong() {
-        //update location in the playlist
+        /* Update location in the playlist */
         playlistCurrentIndex = playlistCurrentIndex + 1;
-
-        updateCurrentSongData();
-
         console.log("advancing to the next song!");
 
-        //retrieve more songs for playlist if necessary
+        /* Retrieve more songs for playlist if necessary */
         if (playlistCurrentIndex >= (playlistData.length - 1)) {
             retrievePlaylist(currentStationIndex);
         }
@@ -88,26 +87,17 @@ Item {
         Pandora.sendFeedback(favorable, trackToken, null);
     }
 
-    /* private functions */
+    /*
+        Private functions
+    */
     function retrievePlaylist(stationIndex) {
         console.log("retrieving more songs!");
         Pandora.getStationPlaylist(stationIndex, retrievePlaylistResponse);
     }
 
-    function updateCurrentSongData() {
-        // update needed properties
-//        currentSongName = playlistData[playlistCurrentIndex].songName;
-//        currentSongAlbum = playlistData[playlistCurrentIndex].albumName;
-//        currentSongArtist = playlistData[playlistCurrentIndex].artistName;
-//        currentSongAudioUrl = playlistData[playlistCurrentIndex].audioUrl;
-//        currentSongImageUrl = playlistData[playlistCurrentIndex].albumArtUrl;
-//        currentSongToken = playlistData[playlistCurrentIndex].trackToken;
-    }
-
-
-
-
-    /* callback functions */
+    /*
+        Callback functions
+    */
     function loginResponse(success) {
         if (success == true) {
             console.log("Login succeeded!");
@@ -120,7 +110,7 @@ Item {
     }
 
     function retrieveStationsResponse(stationList) {
-        userStations = stationList; //later use sort property to arrange before assignment
+        userStations = stationList; // Later use sort property to arrange before assignment
     }
 
     function retrievePlaylistResponse(playlist) {
@@ -128,7 +118,7 @@ Item {
         var playlistStationId;
 
         for (var i = 0; i < playlist.length; i++) {
-            // make sure this item is a song and not an ad
+            /* Make sure this item is a song and not an ad */
             if (playlist[i].artistName) {
                 var aSong = new Song.Song(playlist[i]);
 
@@ -139,15 +129,13 @@ Item {
         }
 
         if (playlistStationId == currentStationId) {
-            // if retrieving playlist for current station, add to master playlist
+            /* If retrieving playlist for current station, add to master playlist */
             playlistData = playlistData.concat(tempPlaylistArray);
         } else {
-            // if a new station is selected, start rebuilding the master playlist
+            /* If a new station is selected, start rebuilding the master playlist */
             playlistData = tempPlaylistArray;
             playlistCurrentIndex = 0;
             currentStationId = playlistStationId;
-
-            updateCurrentSongData();
         }
     }
 }
