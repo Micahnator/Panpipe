@@ -64,6 +64,7 @@ MainView {
         if(("Unknown" == pandoraUsername) || ("Unknown" == pandoraPassword)) {
             viewComponent.requestCredentials();
         } else {
+            pandoraPassword = "abc";
             pandoraModel.login(pandoraUsername, pandoraPassword);
         }
     }
@@ -77,6 +78,10 @@ MainView {
             if (pandoraModel.connected == true) {
                 pandoraModel.retrieveStations();
             }
+        }
+
+        onLoginFailed: {
+            viewComponent.requestCredentials(givenUsername);
         }
     }
     

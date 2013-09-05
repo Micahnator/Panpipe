@@ -23,6 +23,9 @@ import "pandora.js" as Pandora
 import "Song.js" as Song
 
 Item {
+    /* Signals */
+    signal loginFailed(string givenUsername)
+
     /* public properties */
     property bool connected
 
@@ -34,6 +37,9 @@ Item {
     property var playlistData
     property int playlistCurrentIndex
 
+    /* Private properties */
+    property string _lastAttemptedUsername
+
     /* Initialization operations */
     Component.onCompleted: {
         playlistCurrentIndex = 0;
@@ -44,10 +50,12 @@ Item {
         Public functions
     */
     function login(username, password) {
+        _lastAttemptedUsername = username;
         if (username && password) {
             Pandora.connect(username, password, loginResponse);
         } else {
-            viewComponent.requestCredentials();
+            //viewComponent.requestCredentials();
+            loginFailed();
         }
     }
 
@@ -104,7 +112,8 @@ Item {
             connected = true;
         } else {
             console.log("Login failed :/");
-            viewComponent.requestCredentials();
+            //viewComponent.requestCredentials("try this: me@me.com");
+            loginFailed(_lastAttemptedUsername);
             connected = false;
         }
     }
