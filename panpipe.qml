@@ -21,6 +21,8 @@ import QtQuick 2.0
 import QtMultimedia 5.0
 import Ubuntu.Components 0.1
 
+import "storage.js" as Storage
+
 MainView {
     /* objectName for functional testing purposes (autopilot-qt5) */
     objectName: "mainView"
@@ -42,9 +44,28 @@ MainView {
     backgroundColor: "#6A69A2"
     footerColor: "#8896D5"
 
+    /* Properties */
+    property string pandoraUsername
+    property string pandoraPassword
+
     /* Startup operations */
     Component.onCompleted: {
-        viewComponent.requestCredentials();
+        /* Initialize the storage database */
+        Storage.initialize();
+
+        /* Check settings database */
+//        if(Storage.getSetting("settings_initialized") !== "true") {
+//            console.log("Settings are being re-initialized.");
+
+//        }
+        pandoraUsername = Storage.getSetting("pandora_username");
+        pandoraPassword = Storage.getSetting("pandora_password");
+
+        if(("Unknown" == pandoraUsername) || ("Unknown" == pandoraPassword)) {
+            viewComponent.requestCredentials();
+        } else {
+            pandoraModel.login(pandoraUsername, pandoraPassword);
+        }
     }
 
     /* Manage Pandora activity */
@@ -151,7 +172,13 @@ MainView {
         }
 
         onLoginCredentialsProvided: {
+            /* Perform login */
             pandoraModel.login(username, password);
+
+            /* Store login credientials */
+            Storage.setSetting("pandora_username", username);
+            Storage.setSetting("pandora_password", password);
+
         }
 
     }
