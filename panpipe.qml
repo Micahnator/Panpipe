@@ -53,21 +53,30 @@ MainView {
         /* Initialize the storage database */
         Storage.initialize();
 
-        /* Check settings database */
-//        if(Storage.getSetting("settings_initialized") !== "true") {
-//            console.log("Settings are being re-initialized.");
-
-//        }
         pandoraUsername = Storage.getSetting("pandora_username");
         pandoraPassword = Storage.getSetting("pandora_password");
 
         if(("Unknown" == pandoraUsername) || ("Unknown" == pandoraPassword)) {
             viewComponent.requestCredentials();
         } else {
-            pandoraPassword = "abc";
             pandoraModel.login(pandoraUsername, pandoraPassword);
         }
     }
+
+    /* HUD actions */
+    Action {
+        id: logoutAction
+        text: i18n.tr("Logout")
+        keywords: i18n.tr("Logout")
+        onTriggered: {
+            //logout();
+            viewComponent.confirmLogout();
+        }
+    }
+
+    actions: [logoutAction]
+
+
 
     /* Manage Pandora activity */
     PandoraInterface {
@@ -186,5 +195,25 @@ MainView {
 
         }
 
+        onUserLogout: {
+            logout();
+        }
+
+    }
+
+    /* Action functions */
+    function logout() {
+        /* Clear audio component */
+        audioPlayer.stop();
+
+        /* Clear pandora interface */
+        pandoraModel.logout();
+
+        /* Clear login credentials */
+        Storage.setSetting("pandora_username", "Unknown");
+        Storage.setSetting("pandora_password", "Unknown");
+
+        /* Request login credentials */
+        viewComponent.requestCredentials();
     }
 }

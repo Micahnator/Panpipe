@@ -53,10 +53,62 @@ Item {
         _lastAttemptedUsername = username;
         if (username && password) {
             Pandora.connect(username, password, loginResponse);
+
+            playlistCurrentIndex = 0;
+            playlistData = []; /* Define playlistData as an array */
+
         } else {
-            //viewComponent.requestCredentials();
             loginFailed();
         }
+    }
+
+    function logout() {
+
+        playlistData = []; /* Define playlistData as an array */
+
+        var default_song_json = {
+            "artistName": "",
+            "albumName": "",
+            "songName": "",
+            "albumArtUrl": "./resources/images/cover_default.png",
+            "songRating": 0,
+            "audioUrlMap": {
+                "highQuality": {
+                    "bitrate": "",
+                    "encoding": "",
+                    "audioUrl": "",
+                    "protocol": "",
+                },
+                "mediumQuality": {
+                    "bitrate": "",
+                    "encoding": "",
+                    "audioUrl": "",
+                    "protocol": "",
+                },
+                "lowQuality": {
+                    "bitrate": "",
+                    "encoding": "",
+                    "audioUrl": "",
+                    "protocol": "",
+                },
+            },
+            "stationId": "",
+        }
+
+        playlistData[0] = new Song.Song(default_song_json);
+
+        playlistCurrentIndex = 0;
+
+        userStations = null;
+        currentStationIndex = 0;
+        currentStationId = "";
+        currentStationName = "";
+
+        Pandora.partnerResponse = {};
+        Pandora.userResponse = {};
+        Pandora.userStations = {};
+
+        connected = false;
     }
 
     function retrieveStations() {
@@ -112,7 +164,6 @@ Item {
             connected = true;
         } else {
             console.log("Login failed :/");
-            //viewComponent.requestCredentials("try this: me@me.com");
             loginFailed(_lastAttemptedUsername);
             connected = false;
         }

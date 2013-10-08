@@ -36,6 +36,7 @@ Item {
     signal thumbsDownPressed()
     signal stationSelected(int stationIndex)
     signal loginCredentialsProvided(string username, string password)
+    signal userLogout()
 
     /* Public properties */
     property var playlist
@@ -86,6 +87,11 @@ Item {
         /* show login dialog */
         PopupUtils.open(loginDialog);
     }
+
+    function confirmLogout() {
+        PopupUtils.open(logoutDialog);
+    }
+
 
     Tabs {
         id: tabs
@@ -157,6 +163,23 @@ Item {
                                     hide()
                                 }
                             }
+                        }
+                    }
+                }
+
+                /* Toolbar */
+                tools: ToolbarItems {
+                    id: stationsToolbar
+                    ToolbarButton {
+                        objectName: logoutAction
+                        iconSource: "./resources/icons/close.svg"
+                        text: i18n.tr("Logout")
+                        onTriggered: {
+                            /* Hide toolbar */
+                            stationsToolbar.opened = false;
+
+                            /* show login dialog */
+                            PopupUtils.open(logoutDialog);
                         }
                     }
                 }
@@ -250,7 +273,7 @@ Item {
                         left: progressBase.left
                     }
                     fontSize: "small"
-                    text: __durationToString(playbackPosition)
+                    text: (audioPlayer.source != "") ? __durationToString(playbackPosition) : "0:00"
                 }
 
                 /* Playback remaining */
@@ -261,7 +284,7 @@ Item {
                         right: progressBase.right
                     }
                     fontSize: "small"
-                    text: "-" + __durationToString(playbackDuration - playbackPosition)
+                    text: (audioPlayer.source != "") ? "-" + __durationToString(playbackDuration - playbackPosition) : "0:00"
                 }
 
                 /* Song name */
@@ -289,7 +312,7 @@ Item {
                     elide: Text.ElideRight
                     fontSize: "medium"
                     horizontalAlignment: Text.AlignHCenter
-                    text: i18n.tr("By " + playlist[currentPlaylistIndex].artistName)
+                    text: (playlist[currentPlaylistIndex].artistName != "") ? i18n.tr("By " + playlist[currentPlaylistIndex].artistName) : i18n.tr("")
                 }
 
 
@@ -305,7 +328,7 @@ Item {
                     elide: Text.ElideRight
                     fontSize: "medium"
                     horizontalAlignment: Text.AlignHCenter
-                    text: i18n.tr("On " + playlist[currentPlaylistIndex].albumName)
+                    text: (playlist[currentPlaylistIndex].albumName != "") ? i18n.tr("On " + playlist[currentPlaylistIndex].albumName) : i18n.tr("")
                 }
 
 
@@ -469,6 +492,39 @@ Item {
 
                     //close dialog
                     PopupUtils.close(loginScreen)
+                }
+            }
+        }
+    }
+
+    /* Define logout confirmation dialog */
+    Component {
+        id: logoutDialog
+
+        Popups.Dialog {
+            id: logoutScreen
+            title: i18n.tr("Are you sure you want to logout?")
+
+            Button {
+                text: i18n.tr("Logout")
+                color: "orange"
+
+                onClicked: {
+                    //Tell the controller that logout is requested
+                    userLogout();
+
+                    //close dialog
+                    PopupUtils.close(logoutScreen)
+                }
+            }
+
+            Button {
+                text: i18n.tr("Cancel")
+                color: "gray"
+
+                onClicked: {
+                    //close dialog
+                    PopupUtils.close(logoutScreen)
                 }
             }
         }
