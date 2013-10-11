@@ -377,7 +377,7 @@ Item {
                             width: parent.height
 
                             Image {
-                                source: "./resources/icons/Thumbs-Up-256.png"
+                                source: "./resources/icons/keyboard-caps.svg"
                                 anchors.fill: parent
                             }
 
@@ -399,7 +399,7 @@ Item {
                             width: parent.height
 
                             Image {
-                                source: "./resources/icons/Thumbs-Down-256.png"
+                                source: "./resources/icons/keyboard-caps-down.png"
                                 anchors.fill: parent
 
                             }
