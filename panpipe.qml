@@ -22,6 +22,7 @@ import QtMultimedia 5.0
 import Ubuntu.Components 0.1
 
 import "storage.js" as Storage
+import "Blowfish.js" as Blowfish
 
 MainView {
     /* objectName for functional testing purposes (autopilot-qt5) */
@@ -48,13 +49,25 @@ MainView {
     property string pandoraUsername
     property string pandoraPassword
 
+    property string _CREDENTIAL_ENCODE_KEY: "7AP$Y@8VT3M"//"6#26FRL$ZWD"
+    property var    _CRYPTO_MODE
+
     /* Startup operations */
     Component.onCompleted: {
+        _CRYPTO_MODE = {};
+        _CRYPTO_MODE.outputType = Blowfish.crypto.outputTypes.Hex;
+        _CRYPTO_MODE.cipherMode = Blowfish.crypto.cipherModes.String;
+
         /* Initialize the storage database */
         Storage.initialize();
 
-        pandoraUsername = Storage.getSetting("pandora_username");
-        pandoraPassword = Storage.getSetting("pandora_password");
+        pandoraUsername = Blowfish.crypto.Blowfish.decrypt(Storage.getSetting("pandora_username"),
+                                                           _CREDENTIAL_ENCODE_KEY,
+                                                           _CRYPTO_MODE);
+        pandoraPassword = Blowfish.crypto.Blowfish.decrypt(Storage.getSetting("pandora_password"),
+                                                           _CREDENTIAL_ENCODE_KEY,
+                                                           _CRYPTO_MODE);
+
 
         if(("Unknown" == pandoraUsername) || ("Unknown" == pandoraPassword)) {
             viewComponent.requestCredentials();
@@ -189,10 +202,11 @@ MainView {
             /* Perform login */
             pandoraModel.login(username, password);
 
-            /* Store login credientials */
-            Storage.setSetting("pandora_username", username);
-            Storage.setSetting("pandora_password", password);
-
+            /* Store login credientials (encrypted) */
+            Storage.setSetting("pandora_username",
+                               Blowfish.crypto.Blowfish.encrypt(username, _CREDENTIAL_ENCODE_KEY, _CRYPTO_MODE));
+            Storage.setSetting("pandora_password",
+                               Blowfish.crypto.Blowfish.encrypt(password, _CREDENTIAL_ENCODE_KEY, _CRYPTO_MODE));
         }
 
         onUserLogout: {
@@ -209,9 +223,11 @@ MainView {
         /* Clear pandora interface */
         pandoraModel.logout();
 
-        /* Clear login credentials */
-        Storage.setSetting("pandora_username", "Unknown");
-        Storage.setSetting("pandora_password", "Unknown");
+        /* Clear login credentials (encrypted) */
+        Storage.setSetting("pandora_username",
+                           Blowfish.crypto.Blowfish.encrypt("Unknown", _CREDENTIAL_ENCODE_KEY, _CRYPTO_MODE));
+        Storage.setSetting("pandora_password",
+                           Blowfish.crypto.Blowfish.encrypt("Unknown", _CREDENTIAL_ENCODE_KEY, _CRYPTO_MODE));
 
         /* Request login credentials */
         viewComponent.requestCredentials();

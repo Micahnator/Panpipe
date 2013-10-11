@@ -58,7 +58,7 @@ Item {
             playlistData = []; /* Define playlistData as an array */
 
         } else {
-            loginFailed();
+            loginFailed(_lastAttemptedUsername);
         }
     }
 
