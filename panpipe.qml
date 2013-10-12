@@ -21,6 +21,8 @@ import QtQuick 2.0
 import QtMultimedia 5.0
 import Ubuntu.Components 0.1
 
+import "storage.js" as Storage
+
 MainView {
     /* objectName for functional testing purposes (autopilot-qt5) */
     objectName: "mainView"
@@ -42,10 +44,39 @@ MainView {
     backgroundColor: "#6A69A2"
     footerColor: "#8896D5"
 
+    /* Properties */
+    property string pandoraUsername
+    property string pandoraPassword
+
     /* Startup operations */
     Component.onCompleted: {
-        viewComponent.requestCredentials();
+        /* Initialize the storage database */
+        Storage.initialize();
+
+        pandoraUsername = Storage.getSetting("pandora_username");
+        pandoraPassword = Storage.getSetting("pandora_password");
+
+        if(("Unknown" == pandoraUsername) || ("Unknown" == pandoraPassword)) {
+            viewComponent.requestCredentials();
+        } else {
+            pandoraModel.login(pandoraUsername, pandoraPassword);
+        }
     }
+
+    /* HUD actions */
+    Action {
+        id: logoutAction
+        text: i18n.tr("Logout")
+        keywords: i18n.tr("Logout")
+        onTriggered: {
+            //logout();
+            viewComponent.confirmLogout();
+        }
+    }
+
+    actions: [logoutAction]
+
+
 
     /* Manage Pandora activity */
     PandoraInterface {
@@ -56,6 +87,10 @@ MainView {
             if (pandoraModel.connected == true) {
                 pandoraModel.retrieveStations();
             }
+        }
+
+        onLoginFailed: {
+            viewComponent.requestCredentials(givenUsername);
         }
     }
     
@@ -151,8 +186,34 @@ MainView {
         }
 
         onLoginCredentialsProvided: {
+            /* Perform login */
             pandoraModel.login(username, password);
+
+            /* Store login credientials */
+            Storage.setSetting("pandora_username", username);
+            Storage.setSetting("pandora_password", password);
+
         }
 
+        onUserLogout: {
+            logout();
+        }
+
+    }
+
+    /* Action functions */
+    function logout() {
+        /* Clear audio component */
+        audioPlayer.stop();
+
+        /* Clear pandora interface */
+        pandoraModel.logout();
+
+        /* Clear login credentials */
+        Storage.setSetting("pandora_username", "Unknown");
+        Storage.setSetting("pandora_password", "Unknown");
+
+        /* Request login credentials */
+        viewComponent.requestCredentials();
     }
 }
