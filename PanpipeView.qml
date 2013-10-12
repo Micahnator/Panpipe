@@ -407,7 +407,7 @@ Item {
                             width: parent.height
 
                             Image {
-                                source: "./resources/icons/Thumbs-Up-256.png"
+                                source: "./resources/icons/arrow-up.svg"
                                 anchors.fill: parent
                             }
 
@@ -429,7 +429,7 @@ Item {
                             width: parent.height
 
                             Image {
-                                source: "./resources/icons/Thumbs-Down-256.png"
+                                source: "./resources/icons/arrow-down.svg"
                                 anchors.fill: parent
 
                             }
