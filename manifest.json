@@ -7,7 +7,7 @@
             "desktop": "panpipe.desktop"
         }
     },
-    "maintainer": "Ken VanDine <ken.vandine@canonical.com>",
+    "maintainer": "Micah Losli <micah.losli@gmail.com>",
     "name": "com.ubuntu.developer.mlosli.panpipe",
     "title": "panpipe",
     "version": "0.1"
