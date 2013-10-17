@@ -1,0 +1,14 @@
+{
+    "description": "Pandora client for Ubuntu Touch",
+    "framework": "ubuntu-sdk-13.10",
+    "hooks": {
+        "panpipe": {
+            "apparmor": "panpipe.json",
+            "desktop": "panpipe.desktop"
+        }
+    },
+    "maintainer": "Ken VanDine <ken.vandine@canonical.com>",
+    "name": "com.ubuntu.developer.mlosli.panpipe",
+    "title": "panpipe",
+    "version": "0.1"
+}
