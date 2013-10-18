@@ -28,7 +28,7 @@ MainView {
     objectName: "mainView"
     
     /* Note! applicationName needs to match the .desktop filename */
-    applicationName: "panpipe"
+    applicationName: "com.ubuntu.developer.mlosli.panpipe"
     
     /* 
      This property enables the application to change orientation 
