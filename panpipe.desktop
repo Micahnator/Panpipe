@@ -2,8 +2,8 @@
 Name=Panpipe
 GenericName=Pandora Client
 Comment=A Pandora client for Ubuntu Touch
-Exec=/usr/bin/qmlscene /usr/share/panpipe/panpipe.qml
-Icon=qmlscene
+Exec=qmlscene $@ panpipe.qml
+Icon=Panpipe_filler_icon.png
 Terminal=false
 Type=Application
 X-Ubuntu-Touch=true
