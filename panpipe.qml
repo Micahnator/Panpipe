@@ -20,6 +20,7 @@ along with Panpipe.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 2.0
 import QtMultimedia 5.0
 import Ubuntu.Components 0.1
+import Ubuntu.Unity.Action 1.0 as UnityActions
 
 import "storage.js" as Storage
 
@@ -64,10 +65,15 @@ MainView {
     }
 
     /* HUD actions */
+
+
     Action {
         id: logoutAction
         text: i18n.tr("Logout")
-        keywords: i18n.tr("Logout")
+
+//        action: Action {}
+
+//        keywords: i18n.tr("Logout")
         onTriggered: {
             //logout();
             viewComponent.confirmLogout();
@@ -144,6 +150,8 @@ MainView {
         playbackPercentage: (audioPlayer.position / audioPlayer.duration)
         playbackPosition: audioPlayer.position
         playbackDuration: audioPlayer.duration
+
+        audioSourceUrl: audioPlayer.source
 
         /* Signal handlers */
         onPlayPausePressed: {
