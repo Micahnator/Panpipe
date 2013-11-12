@@ -20,6 +20,7 @@ along with Panpipe.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1 as Popups
+import Ubuntu.Components.ListItems 0.1 as ListItem
 
 Item {
     property alias playerControls: controlBar
@@ -50,6 +51,12 @@ Item {
         }
         width: Math.min( (parent.width - units.gu(2)), (Math.abs(stationLabel.y - songLabel.y) - (stationLabel.height + songLabel.height + playbackRemainingLabel.height)) )
         height: albumArt.width
+
+        MouseArea {
+            id: albumArtMouseArea
+            anchors.fill: parent
+            onPressAndHold: PopupUtils.open(songMenu)
+        }
 
         CrossFadeImage {
             id: currentArt
@@ -272,6 +279,81 @@ Item {
                         if(playlist[currentPlaylistIndex].songRating != -1) {
                             thumbsDownPressed();
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    /* Song options popover */
+    Component {
+        id: songMenu
+
+        Popups.Popover {
+            id: popover
+
+            autoClose: true
+
+            Column {
+                id: containerLayout
+                anchors {
+                    left: parent.left
+                    top: parent.top
+                    right: parent.right
+                }
+                ListItem.Header { text: "Song Options" }
+                ListItem.Standard {
+                    text: "Explore Song"
+                    onClicked: {
+                        hide();
+                        webView.url = playlist[currentPlaylistIndex].songExplorerUrl;
+                        pagestack.push(webViewPage);
+                    }
+                }
+                ListItem.Standard {
+                    text: "Explore Artist"
+                    onClicked: {
+                        hide();
+                        webView.url = playlist[currentPlaylistIndex].artistExplorerUrl;
+                        pagestack.push(webViewPage);
+                    }
+                }
+                ListItem.Standard {
+                    text: "Song Details"
+                    onClicked: {
+                        hide();
+                        webView.url = playlist[currentPlaylistIndex].songDetailUrl;
+                        pagestack.push(webViewPage);
+                    }
+                }
+                ListItem.Standard {
+                    text: "Album Details"
+                    onClicked: {
+                        hide();
+                        webView.url = playlist[currentPlaylistIndex].albumDetailUrl;
+                        pagestack.push(webViewPage);
+                    }
+                }
+                ListItem.Standard {
+                    text: "Artist Details"
+                    onClicked: {
+                        hide();
+                        webView.url = playlist[currentPlaylistIndex].artistDetailUrl;
+                        pagestack.push(webViewPage);
+                    }
+                }
+                ListItem.Standard {
+                    text: "Buy from Amazon"
+                    onClicked: {
+                        hide();
+                        Qt.openUrlExternally(playlist[currentPlaylistIndex].amazonAlbumUrl)
+                    }
+                }
+                ListItem.Standard {
+                    text: "Buy from iTunes"
+                    onClicked: {
+                        hide();
+                        Qt.openUrlExternally(playlist[currentPlaylistIndex].itunesSongUrl)
                     }
                 }
             }

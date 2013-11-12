@@ -144,6 +144,40 @@ Item {
                 id: playerToolbar
             }
         }
+
+        Page {
+            id: webViewPage
+            visible: false
+
+            onVisibleChanged: {
+                webView.visible = webViewPage.visible
+            }
+
+            WebView {
+                id: webView
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: parent.height
+                visible: false
+            }
+
+            /* Toolbar */
+            tools: ToolbarItems {
+                id: webViewToolbar
+                ToolbarButton {
+                    iconSource: "./resources/icons/go-to.svg"
+                    text: i18n.tr("In Browser")
+                    onTriggered: {
+                        /* Hide toolbar */
+                        webViewToolbar.opened = false;
+
+                        /* show login dialog */
+                        Qt.openUrlExternally(webView.url);
+                    }
+                }
+            }
+        }
     }
 
     /* Define login credential dialog */

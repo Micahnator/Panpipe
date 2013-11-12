@@ -33,4 +33,13 @@ function Song(json_song) {
 
     /* Station data */
     this.stationId = json_song.stationId;
+
+    /* Extra options */
+    this.songDetailUrl = json_song.songDetailUrl;
+    this.albumDetailUrl = json_song.albumDetailUrl;
+    this.artistDetailUrl = json_song.artistDetailUrl;
+    this.songExplorerUrl = json_song.songExplorerUrl;
+    this.amazonAlbumUrl = json_song.amazonAlbumUrl;
+    this.itunesSongUrl = json_song.itunesSongUrl;
+    this.artistExplorerUrl = json_song.artistExplorerUrl;
 }
