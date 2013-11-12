@@ -298,7 +298,6 @@ Item {
                 id: containerLayout
                 anchors {
                     left: parent.left
-                    top: parent.top
                     right: parent.right
                 }
                 ListItem.Header { text: "Song Options" }

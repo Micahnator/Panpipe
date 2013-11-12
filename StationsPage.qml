@@ -23,7 +23,11 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 import Ubuntu.Components.Popups 0.1 as Popups
 
 Item {
+    /* Aliases */
     property alias stationsListItem: stationsView
+
+    /* Private properties */
+    property int _pressAndHoldIndex
 
     ListView {
         id: stationsView
@@ -54,7 +58,8 @@ Item {
             }
 
             onPressAndHold: {
-                pagestack.push(playingWebViewPage);
+                _pressAndHoldIndex = index;
+                PopupUtils.open(stationOptions)
             }
         }
     }
@@ -206,6 +211,43 @@ Item {
                     icon: Qt.resolvedUrl("./resources/icons/torch-on.svg")
                     onClicked: {
                         hide()
+                    }
+                }
+            }
+        }
+    }
+
+    /* Station options popover */
+    Component {
+        id: stationOptions
+
+        Popups.Popover {
+            id: popover
+
+            autoClose: true
+
+            Column {
+                id: containerLayout
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+                ListItem.Header { text: "Station Options" }
+                ListItem.Standard {
+                    text: "Station Details"
+                    onClicked: {
+                        hide();
+                        webView.url = stationsView.model[_pressAndHoldIndex]["stationDetailUrl"]
+                        pagestack.push(webViewPage);
+
+                    }
+                }
+                ListItem.Standard {
+                    text: "Share Station"
+                    onClicked: {
+                        hide();
+                        webView.url = stationsView.model[_pressAndHoldIndex]["stationSharingUrl"]
+                        pagestack.push(webViewPage);
                     }
                 }
             }
