@@ -21,6 +21,7 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import Ubuntu.Components.Popups 0.1 as Popups
+import "components"
 
 Item {
     /* Aliases */
@@ -180,6 +181,21 @@ Item {
                 pagestack.push(playerPage);
                 playerToolbar.opened = false;
             }
+        }
+
+        /* Progress bar */
+        RectangleProgressBar {
+            id: songProgressBar
+            anchors {
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+            }
+            height: units.gu(0.3)
+
+            percentageComplete: playbackPercentage
+            backgroundColor: UbuntuColors.coolGrey
+            progressColor: UbuntuColors.orange
         }
     }
 

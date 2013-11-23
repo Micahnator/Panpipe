@@ -21,6 +21,7 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.Popups 0.1 as Popups
 import Ubuntu.Components.ListItems 0.1 as ListItem
+import "components"
 
 Item {
     property alias playerControls: controlBar
@@ -79,35 +80,26 @@ Item {
     }
 
     /* Progress bar */
-    Rectangle {
-        id: progressBase
+    RectangleProgressBar {
+        id: songProgressBar
         anchors {
             top: albumArt.bottom
             left: albumArt.left
             right: albumArt.right
         }
         height: units.gu(0.5)
-        color: UbuntuColors.coolGrey
 
-        Rectangle {
-            id: progressTracker
-            anchors {
-                top: parent.top
-                bottom: parent.bottom
-                left: parent.left
-            }
-            height: parent.height
-            width: (parent.width * playbackPercentage)
-            color: UbuntuColors.orange
-        }
+        percentageComplete: playbackPercentage
+        backgroundColor: UbuntuColors.coolGrey
+        progressColor: UbuntuColors.orange
     }
 
     /* Playback position */
     Label {
         id: playbackPositionLabel
         anchors {
-            top: progressBase.bottom
-            left: progressBase.left
+            top: songProgressBar.bottom
+            left: songProgressBar.left
         }
         fontSize: "small"
         text: (audioSourceUrl != "") ? __durationToString(playbackPosition) : "0:00"
@@ -117,8 +109,8 @@ Item {
     Label {
         id: playbackRemainingLabel
         anchors {
-            top: progressBase.bottom
-            right: progressBase.right
+            top: songProgressBar.bottom
+            right: songProgressBar.right
         }
         fontSize: "small"
         text: (audioSourceUrl != "") ? "-" + __durationToString(playbackDuration - playbackPosition) : "0:00"
