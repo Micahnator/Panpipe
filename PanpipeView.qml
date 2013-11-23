@@ -117,7 +117,7 @@ Item {
                 id: stationsToolbar
                 ToolbarButton {
                     objectName: logoutAction
-                    iconSource: "./resources/icons/close.svg"
+                    iconSource: Qt.resolvedUrl("resources/icons/close.svg")
                     text: i18n.tr("Logout")
                     onTriggered: {
                         /* Hide toolbar */
@@ -128,7 +128,7 @@ Item {
                     }
                 }
                 ToolbarButton {
-                    iconSource: "./resources/icons/filter.svg"
+                    iconSource: Qt.resolvedUrl("resources/icons/filter.svg")
                     text: i18n.tr("Sort")
                     onTriggered: {
                         /* Hide toolbar */
@@ -177,7 +177,7 @@ Item {
             tools: ToolbarItems {
                 id: webViewToolbar
                 ToolbarButton {
-                    iconSource: "./resources/icons/go-to.svg"
+                    iconSource: Qt.resolvedUrl("resources/icons/go-to.svg")
                     text: i18n.tr("In Browser")
                     onTriggered: {
                         /* Hide toolbar */

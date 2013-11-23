@@ -75,7 +75,7 @@ Item {
             }
             width: parent.width / 8
             height: width
-            source: ((playlist[currentPlaylistIndex].songRating == 1) || (_temp_song_thumbs_up == 1)) ? "./resources/icons/favorite-selected.svg" : ""
+            source: ((playlist[currentPlaylistIndex].songRating == 1) || (_temp_song_thumbs_up == 1)) ? Qt.resolvedUrl("./resources/icons/favorite-selected.svg") : ""
         }
     }
 
@@ -198,7 +198,7 @@ Item {
                 width: parent.height
 
                 Image {
-                    source: (playButtonState) ? "./resources/icons/media-playback-pause.svg" : "./resources/icons/media-playback-start.svg"
+                    source: (playButtonState) ? Qt.resolvedUrl("resources/icons/media-playback-pause.svg") : Qt.resolvedUrl("resources/icons/media-playback-start.svg")
                     sourceSize.width: parent.width
                     sourceSize.height: parent.height
                 }
@@ -218,7 +218,7 @@ Item {
                 width: parent.height
 
                 Image {
-                    source: "./resources/icons/media-skip-forward.svg"
+                    source: Qt.resolvedUrl("resources/icons/media-skip-forward.svg")
                     sourceSize.width: parent.width
                     sourceSize.height: parent.height
                 }
@@ -238,7 +238,7 @@ Item {
                 width: parent.height
 
                 Image {
-                    source: "./resources/icons/arrow-up.svg"
+                    source: Qt.resolvedUrl("resources/icons/arrow-up.svg")
                     anchors.fill: parent
                 }
 
@@ -260,7 +260,7 @@ Item {
                 width: parent.height
 
                 Image {
-                    source: "./resources/icons/arrow-down.svg"
+                    source: Qt.resolvedUrl("resources/icons/arrow-down.svg")
                     anchors.fill: parent
 
                 }

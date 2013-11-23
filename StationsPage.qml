@@ -107,7 +107,7 @@ Item {
             }
 
             Image {
-                source: (playButtonState) ? "./resources/icons/media-playback-pause.svg" : "./resources/icons/media-playback-start.svg"
+                source: (playButtonState) ? Qt.resolvedUrl("resources/icons/media-playback-pause.svg") : Qt.resolvedUrl("./resources/icons/media-playback-start.svg")
                 sourceSize.width: parent.width
                 sourceSize.height: parent.height
             }
