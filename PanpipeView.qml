@@ -127,6 +127,17 @@ Item {
                         PopupUtils.open(logoutDialog);
                     }
                 }
+                ToolbarButton {
+                    iconSource: "./resources/icons/filter.svg"
+                    text: i18n.tr("Sort")
+                    onTriggered: {
+                        /* Hide toolbar */
+                        stationsToolbar.opened = false;
+
+                        /* Show sorting options popup */
+                        PopupUtils.open(stationsPageContents.stationSortingPopup);
+                    }
+                }
             }
         }
 

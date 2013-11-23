@@ -25,6 +25,7 @@ import Ubuntu.Components.Popups 0.1 as Popups
 Item {
     /* Aliases */
     property alias stationsListItem: stationsView
+    property alias stationSortingPopup: stationSortingMenu
 
     /* Private properties */
     property int _pressAndHoldIndex
@@ -184,7 +185,7 @@ Item {
 
     /* Stations menu popover */
     Component {
-        id: stationsMenu
+        id: stationSortingMenu
 
         Popups.Popover {
             id: popover
@@ -201,16 +202,16 @@ Item {
                 ListItem.Header { text: "Sort stations" }
                 ListItem.Standard {
                     text: "By Date"
-                    icon: Qt.resolvedUrl("./resources/icons/torch-off.svg")
                     onClicked: {
-                        hide()
+                        hide();
+                        __sortByCreatedDate();
                     }
                 }
                 ListItem.Standard {
                     text: "Alphabetically"
-                    icon: Qt.resolvedUrl("./resources/icons/torch-on.svg")
                     onClicked: {
-                        hide()
+                        hide();
+                        __sortAlphabetically();
                     }
                 }
             }
@@ -252,5 +253,62 @@ Item {
                 }
             }
         }
+    }
+
+    //A string comparison function used to sort stations by station name
+    function __strcmp ( str1, str2 ) {
+        // http://kevin.vanzonneveld.net
+        // +   original by: Waldo Malqui Silva
+        // +      input by: Steve Hilder
+        // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+        // +    revised by: gorthaur
+        // *     example 1: strcmp( 'waldo', 'owald' );
+        // *     returns 1: 1
+        // *     example 2: strcmp( 'owald', 'waldo' );
+        // *     returns 2: -1
+
+        return ( ( str1 == str2 ) ? 0 : ( ( str1 > str2 ) ? 1 : -1 ) );
+    }
+
+    //A comparison function used to sort stations by creation date
+    function __pandoraDateCompare(a, b) {
+        var date_a = new Date(a.year, a.month, a.day, a.hours, a.minutes, a.seconds);
+        var date_b = new Date(b.year, b.month, b.day, b.hours, b.minutes, b.seconds);
+
+        return date_b.getTime() - date_a.getTime();
+    }
+
+    //Function to place the "QuickMix" station back at the top of the station list
+    function __moveQuickMix(stationList) {
+        var temp;
+        for(var i = 0; i < stationList.length; i++) {
+            if(stationList[i].stationName == "QuickMix") {
+                temp = stationList[i];
+
+                //now shift other items down
+                for(var j = i; j > 0; j--) {
+                    stationList[i] = stationList[(i - 1)];
+                }
+
+                stationList[0] = temp;
+            }
+        }
+    }
+
+    //Function to sort the stations list alphabetically
+    function __sortAlphabetically() {
+
+        //stationsList.sort(function(a,b){return a.stationName - b.stationName});
+        stationsList.sort(function(a,b){return __strcmp(a.stationName, b.stationName)});
+        __moveQuickMix(stationsList);
+        stationsView.model = stationsList;
+    }
+
+    //Function to sort the stations by creation date
+    function __sortByCreatedDate() {
+        //stationsList.sort(function(a,b){return pandoraDateCompare(a,b)});
+        stationsList.sort(function(a,b){return __pandoraDateCompare(a.dateCreated,b.dateCreated)});
+        __moveQuickMix(stationsList);
+        stationsView.model = stationsList;
     }
 }
