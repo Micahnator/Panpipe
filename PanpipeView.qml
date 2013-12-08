@@ -34,6 +34,7 @@ Item {
     signal stationSelected(int stationIndex)
     signal loginCredentialsProvided(string username, string password)
     signal userLogout()
+    signal sortPreferenceProvided(string preferredSort)
 
     /* Public properties */
     property var stationsList
@@ -73,6 +74,10 @@ Item {
     onStationSelected: {
         pagestack.push(playerPage);
         playerToolbar.opened = false;
+    }
+
+    onStationsListChanged: {
+        stationsPageContents.updateStationList();
     }
 
     /* View initialization */

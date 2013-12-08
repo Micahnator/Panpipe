@@ -30,6 +30,11 @@ Item {
 
     /* Private properties */
     property int _pressAndHoldIndex
+    property string currentSortMethod
+
+    Component.onCompleted: {
+        currentSortMethod = startupPreferredStationSort;
+    }
 
     ListView {
         id: stationsView
@@ -41,7 +46,6 @@ Item {
         anchors.bottom: (audioSourceUrl != "") ? nowPlayingBar.top : parent.bottom
 
         cacheBuffer: 1000
-        model: stationsList
 
         delegate: ListItem.Standard {
             text: stationsView.model[index]["stationName"];
@@ -217,14 +221,14 @@ Item {
                 }
                 ListItem.Header { text: "Sort stations" }
                 ListItem.Standard {
-                    text: "By Date"
+                    text: (currentSortMethod == "by_date") ? "*By Date Created" : "By Date Created"
                     onClicked: {
                         hide();
                         __sortByCreatedDate();
                     }
                 }
                 ListItem.Standard {
-                    text: "Alphabetically"
+                    text: (currentSortMethod == "alphabetical") ? "*Alphabetically" : "Alphabetically"
                     onClicked: {
                         hide();
                         __sortAlphabetically();
@@ -271,6 +275,18 @@ Item {
         }
     }
 
+    //A function to trigger correct sorting of the stations list
+    function updateStationList() {
+        if(currentSortMethod == "alphabetical")
+            {
+            __sortAlphabetically();
+            }
+        else if(currentSortMethod == "by_date")
+            {
+            __sortByCreatedDate();
+            }
+    }
+
     //A string comparison function used to sort stations by station name
     function __strcmp ( str1, str2 ) {
         // http://kevin.vanzonneveld.net
@@ -303,10 +319,11 @@ Item {
 
                 //now shift other items down
                 for(var j = i; j > 0; j--) {
-                    stationList[i] = stationList[(i - 1)];
+                    stationList[j] = stationList[(j - 1)];
                 }
 
                 stationList[0] = temp;
+                break;
             }
         }
     }
@@ -318,6 +335,8 @@ Item {
         stationsList.sort(function(a,b){return __strcmp(a.stationName, b.stationName)});
         __moveQuickMix(stationsList);
         stationsView.model = stationsList;
+        sortPreferenceProvided("alphabetical");
+        currentSortMethod = "alphabetical";
     }
 
     //Function to sort the stations by creation date
@@ -326,5 +345,7 @@ Item {
         stationsList.sort(function(a,b){return __pandoraDateCompare(a.dateCreated,b.dateCreated)});
         __moveQuickMix(stationsList);
         stationsView.model = stationsList;
+        sortPreferenceProvided("by_date");
+        currentSortMethod = "by_date";
     }
 }

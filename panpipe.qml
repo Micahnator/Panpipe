@@ -46,17 +46,16 @@ MainView {
     footerColor: "#8896D5"
 
     /* Properties */
-    property string pandoraUsername
-    property string pandoraPassword
+    property string pandoraUsername: Storage.getSetting("pandora_username");
+    property string pandoraPassword: Storage.getSetting("pandora_password");
+    property string startupPreferredStationSort: Storage.getSetting("station_sort_method");
 
     /* Startup operations */
     Component.onCompleted: {
         /* Initialize the storage database */
         Storage.initialize();
 
-        pandoraUsername = Storage.getSetting("pandora_username");
-        pandoraPassword = Storage.getSetting("pandora_password");
-
+        /* If login credentials are available, attempt to use them to login */
         if(("Unknown" == pandoraUsername) || ("Unknown" == pandoraPassword)) {
             viewComponent.requestCredentials();
         } else {
@@ -205,6 +204,11 @@ MainView {
 
         onUserLogout: {
             logout();
+        }
+
+        onSortPreferenceProvided: {
+            /* Store the user's preferred station sort method */
+            Storage.setSetting("station_sort_method", preferredSort);
         }
 
     }
