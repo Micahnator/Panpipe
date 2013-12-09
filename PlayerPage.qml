@@ -351,7 +351,12 @@ Item {
         }
     }
 
-    // Converts an duration in ms to a formated string ("minutes:seconds")
+    //Show the song options popover
+    function displaySongOptions() {
+        PopupUtils.open(songMenu)
+    }
+
+    //Converts an duration in ms to a formated string ("minutes:seconds")
     function __durationToString(duration) {
         var minutes = Math.floor((duration/1000) / 60);
         var seconds = Math.floor((duration/1000)) % 60;

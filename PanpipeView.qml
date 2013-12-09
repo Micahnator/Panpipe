@@ -158,6 +158,26 @@ Item {
 
             tools: ToolbarItems {
                 id: playerToolbar
+
+                ToolbarButton {
+                    objectName: logoutAction
+                    iconSource: Qt.resolvedUrl("resources/icons/close.svg")
+                    text: i18n.tr("Logout")
+                    onTriggered: {
+                        /* Hide toolbar */
+                        stationsToolbar.opened = false;
+
+                        /* show login dialog */
+                        PopupUtils.open(logoutDialog);
+                    }
+                }
+                ToolbarButton {
+                    iconSource: Qt.resolvedUrl("resources/icons/navigation-menu.svg")
+                    text: i18n.tr("Song Menu")
+                    onTriggered: {
+                        playerPageContents.displaySongOptions();
+                    }
+                }
             }
         }
 
