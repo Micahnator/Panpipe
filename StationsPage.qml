@@ -32,6 +32,11 @@ Item {
     property int _pressAndHoldIndex
     property string currentSortMethod
 
+    Timer {
+        id: justSwiped
+        interval: 1
+    }
+
     Component.onCompleted: {
         currentSortMethod = startupPreferredStationSort;
     }
@@ -173,7 +178,7 @@ Item {
             elide: Text.ElideRight
         }
 
-        MouseArea {
+        SwipeArea {
             anchors {
                 left: parent.left
                 right: nowPlayingPlayPause.left
@@ -181,9 +186,21 @@ Item {
                 top: parent.top
             }
 
+            onSwipe: {
+                /* Start timer that prevents onClicked() signal from doing anything */
+                justSwiped.start();
+
+                /* When swiped leftward, skip to the next track */
+                if(direction == "left") {
+                    nextTrackPressed();
+                }
+            }
+
             onClicked: {
-                pagestack.push(playerPage);
-                playerToolbar.opened = false;
+                if(!justSwiped.running) {
+                    pagestack.push(playerPage);
+                    playerToolbar.opened = false;
+                }
             }
         }
 
