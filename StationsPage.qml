@@ -30,7 +30,15 @@ Item {
 
     /* Private properties */
     property int _pressAndHoldIndex
-    property string currentSortMethod
+    property string _currentSortMethod
+    property int _pressIndex
+    property bool _selectionMade
+
+    Timer {
+        id: delayStationSelected
+        interval: 500
+        onTriggered: stationSelected(_pressIndex)
+    }
 
     Timer {
         id: justSwiped
@@ -38,7 +46,8 @@ Item {
     }
 
     Component.onCompleted: {
-        currentSortMethod = startupPreferredStationSort;
+        _currentSortMethod = startupPreferredStationSort;
+        _selectionMade = false;
     }
 
     ListView {
@@ -51,6 +60,12 @@ Item {
         anchors.bottom: (audioSourceUrl != "") ? nowPlayingBar.top : parent.bottom
 
         cacheBuffer: 1000
+
+        highlight: highlightBlock
+
+        Component.onCompleted: {
+            currentIndex = -1;
+        }
 
         delegate: ListItem.Standard {
             text: stationsView.model[index]["stationName"];
@@ -65,7 +80,10 @@ Item {
             }
 
             onClicked: {
-                stationSelected(index);
+                stationsView.currentIndex = index;
+                _selectionMade = true;
+                _pressIndex = index;
+                delayStationSelected.start();
             }
 
             onPressAndHold: {
@@ -73,6 +91,11 @@ Item {
                 PopupUtils.open(stationOptions)
             }
         }
+    }
+
+    Scrollbar {
+        flickableItem: stationsView
+        align: Qt.AlignTrailing
     }
 
     Rectangle {
@@ -220,6 +243,22 @@ Item {
         }
     }
 
+    /* Highligh object */
+    Component {
+         id: highlightBlock
+         Rectangle {
+             visible: _selectionMade
+             width: units.gu(0.75); height: stationsView.currentItem.height
+             color: UbuntuColors.orange
+             y: stationsView.currentItem.y
+             Behavior on y {
+                 SmoothedAnimation {
+                     duration: 300
+                 }
+             }
+         }
+     }
+
     /* Stations menu popover */
     Component {
         id: stationSortingMenu
@@ -238,14 +277,14 @@ Item {
                 }
                 ListItem.Header { text: "Sort stations" }
                 ListItem.Standard {
-                    text: (currentSortMethod == "by_date") ? "*By Date Created" : "By Date Created"
+                    text: (_currentSortMethod == "by_date") ? "*By Date Created" : "By Date Created"
                     onClicked: {
                         hide();
                         __sortByCreatedDate();
                     }
                 }
                 ListItem.Standard {
-                    text: (currentSortMethod == "alphabetical") ? "*Alphabetically" : "Alphabetically"
+                    text: (_currentSortMethod == "alphabetical") ? "*Alphabetically" : "Alphabetically"
                     onClicked: {
                         hide();
                         __sortAlphabetically();
@@ -294,11 +333,11 @@ Item {
 
     //A function to trigger correct sorting of the stations list
     function updateStationList() {
-        if(currentSortMethod == "alphabetical")
+        if(_currentSortMethod == "alphabetical")
             {
             __sortAlphabetically();
             }
-        else if(currentSortMethod == "by_date")
+        else if(_currentSortMethod == "by_date")
             {
             __sortByCreatedDate();
             }
@@ -353,7 +392,7 @@ Item {
         __moveQuickMix(stationsList);
         stationsView.model = stationsList;
         sortPreferenceProvided("alphabetical");
-        currentSortMethod = "alphabetical";
+        _currentSortMethod = "alphabetical";
     }
 
     //Function to sort the stations by creation date
@@ -363,6 +402,6 @@ Item {
         __moveQuickMix(stationsList);
         stationsView.model = stationsList;
         sortPreferenceProvided("by_date");
-        currentSortMethod = "by_date";
+        _currentSortMethod = "by_date";
     }
 }
