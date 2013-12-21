@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<!-- CHANGE THIS TITLE TAG -->
+<title>Panpipe - A native Pandora Internet Radio client for Ubuntu Touch</title>
+
+<!-- media-queries.js -->
+<!--[if lt IE 9]>
+	<script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+<![endif]-->
+<!-- html5.js -->
+<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+
+<link href="font/stylesheet.css" rel="stylesheet" type="text/css" />	
+<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
+<link href="css/styles.css" rel="stylesheet" type="text/css" />
+<link href="css/media-queries.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css" media="screen" />
+
+<meta name="viewport" content="width=device-width" />
+ 
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+<link href='http://fonts.googleapis.com/css?family=Exo:400,800' rel='stylesheet' type='text/css'>
+
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+    var s = document.createElement('script');
+    var t = document.getElementsByTagName('script')[0];
+
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = '//api.flattr.com/js/0.6/load.js?mode=auto';
+
+    t.parentNode.insertBefore(s, t);
+ })();
+/* ]]> */
+</script>
+
+</head>
+
+<body data-spy="scroll">
+
+<!-- TOP MENU NAVIGATION -->
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+	
+			<a class="brand pull-left" href="#">
+			Panpipe
+			</a>
+	
+			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</a>
+		
+			<div class="nav-collapse collapse">
+				<ul id="nav-list" class="nav pull-right">
+					<li><a href="#home">Home</a></li>
+					<li><a href="#about">About</a></li>
+					<li><a href="#updates">Updates</a></li>
+					<li><a href="#screenshots">Screenshots</a></li>
+                                        <li><a href="#donate">Donate</a></li>
+					<li><a href="#contact">Contact</a></li>
+				</ul>
+			</div>
+		
+		</div>
+	</div>
+</div>
+
+
+<!-- MAIN CONTENT -->
+<div class="container content container-fluid" id="home">
+
+
+
+	<!-- HOME -->
+	<div class="row-fluid">
+  
+		<!-- PHONES IMAGE FOR DESKTOP MEDIA QUERY -->
+		<!--<div class="span5 visible-desktop">
+			<img src="img/phones.png">
+		</div>-->
+	
+		<!-- APP DETAILS -->
+		<div class="span7">
+	
+			<!-- ICON -->
+			<div class="visible-desktop" id="icon">
+				<img src="img/Panpipe_filler_icon.png" />
+			</div>
+			
+			<!-- APP NAME -->
+			<div id="app-name">
+				<h1>Panpipe</h1>
+			</div>
+			
+			<!-- VERSION -->
+			<div id="version">
+				<span class="version-top label label-inverse">Version 0.1</span>
+			</div>
+            
+			<!-- TAGLINE -->
+			<div id="tagline">
+				A native Pandora Internet Radio client for Ubuntu Touch
+			</div>
+		
+			<!-- PHONES IMAGE FOR TABLET MEDIA QUERY -->
+			<!--<div class="hidden-desktop" id="phones">
+				<img src="img/phones.png">
+			</div>-->
+            
+			<!-- DESCRIPTION -->
+			<div id="description">
+				Panpipe is an open source GPLv3 client for Panpipe Internet Radio. It is written in QML/JavaScript and is designed to run natively on Ubuntu Touch. In the future I hope to bring Panpipe to other platforms that support QML/JS and are in need of a Pandora client. Panpipe is still under heavy development and has a ways to go to feature completion.
+			</div>
+            
+			<!-- FEATURE -->
+			<ul id="features">
+				<li>Free and Open Source</li>
+				<li>Interactive and intuitive UI</li>
+			</ul>
+		
+			<!-- DOWNLOAD & REQUIREMENT BOX -->
+			<!--<div class="download-box">
+				<a href="#"><img src="img/available-on-the-app-store.png"></a>
+			</div>
+			<div class="download-box">
+				<a href="#"><img src="img/android_app_on_play_logo_large.png"></a>
+			</div>
+			<div class="download-box">
+				<strong>Requirements:</strong><br>
+				Compatible with iPhone and iPod touch. Requires iPhone OS 2.2 or later. WiFi, Edge, or 3G network connection sometimes required.
+			</div>
+			<div class="download-box">
+				<strong>Requirements:</strong><br>
+				Requires Android 2.3 and higher. WiFi, Edge, or 3G network connection sometimes required.
+			</div>-->
+			
+		</div>
+	</div>
+	
+	
+	
+	<!-- ABOUT & UPDATES -->
+	<div class="row-fluid" id="about">
+	
+		<div class="span6">
+			<h2 class="page-title" id="scroll_up">
+				About
+				<a href="#home" class="arrow-top">
+				<img src="img/arrow-top.png">
+				</a>
+			</h2>
+			
+			<p>Panpipe is one of the growing number of applications designed to integrate natively with the Ubuntu Touch design approach. The focus is on content and controls are tucked away in a toolbar that hides along the bottom edge. Panpipe strives to be intuitive, easy to use, and pleasing to the eye.</p>
+			<p>Panpipe is open source, and code is hosted on <a href="https://github.com/Micahnator/Panpipe">Github</a>. Bug reports and code contributions are all very welcome.</p>
+                        <p>Panpipe is not affiliated with or endorsed by Pandora Media, Inc.</p>
+			<!--<p><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">FlexApp</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://www.carp.io" property="cc:attributionName" rel="cc:attributionURL">Carp</a> is licensed under <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.<br />Built on <a xmlns:dct="http://purl.org/dc/terms/" href="http://twitter.github.com/bootstrap/" rel="dct:source">Bootstrap</a>.</p>-->
+			
+		</div>
+	
+		<div class="span6 updates" id="updates">
+			<h2 class="page-title" id="scroll_up">
+				Updates
+				<a href="#home" class="arrow-top">
+				<img src="img/arrow-top.png">
+				</a>
+			</h2>
+			
+			<!-- UPDATES & RELEASE NOTES -->
+			
+			<!--<h3 class="version">Version 1.2</h3>
+			<span class="release-date">Released on April 28th, 2012</span>
+			<ul>
+				<li><span class="label new">NEW</span>Challenge a Friend</li>
+				<li><span class="label fix">FIX</span>Fixed 'Resume Game' Bug</li>
+			</ul>
+			<hr>
+			
+			<h3 class="version">Version 1.1</h3>
+			<span class="release-date">Released on January 28th, 2012</span>
+			<ul>
+				<li><span class="label new">NEW</span>Facebook & Twitter Integration</li>
+				<li><span class="label fix">FIX</span>Various Bug Fixes</li>
+				<li><span class="label new">NEW</span>Graphics for Retina Display</li>
+			</ul>
+			<hr>-->
+		
+			<h3 class="version">Version 0.1</h3>
+			<span class="release-date">Released on October 18th, 2013</span>
+			<ul>
+				<li><span class="label label-info">NEW</span>Initial Release</li>
+			</ul>
+			
+		</div>
+	
+	</div>
+	
+	
+	
+	<!-- SCREENSHOTS -->
+	<div class="row-fluid" id="screenshots">
+		
+		<h2 class="page-title" id="scroll_up">
+				Screenshots
+				<a href="#home" class="arrow-top">
+				<img src="img/arrow-top.png">
+				</a>
+			</h2>
+		
+		<!-- SCREENSHOT IMAGES ROW 1-->
+		<ul class="thumbnails">
+			<li class="span3">
+				<a href="img/Panpipe_Preview_1.png" rel="gallery" class="thumbnail">
+				<img src="img/Panpipe_Preview_1.png" alt="">
+				</a>
+			</li>
+		
+			<li class="span3">
+				<a href="img/Panpipe_Preview_2.png" rel="gallery" class="thumbnail">
+				<img src="img/Panpipe_Preview_2.png" alt="">
+				</a>
+			</li>
+			
+			<li class="span3">
+				<a href="img/Panpipe_Preview_3.png" rel="gallery" class="thumbnail">
+				<img src="img/Panpipe_Preview_3.png" alt="">
+				</a>
+			</li>
+ 
+			<!--<li class="span3">
+				<a href="img/screenshot.jpg" rel="gallery" class="thumbnail">
+				<img src="img/screenshot.jpg" alt="">
+				</a>
+			</li>-->
+		</ul>	
+		
+		<!-- SCREENSHOT IMAGES ROW 2-->		
+		<!--<ul class="thumbnails">
+			<li class="span3">
+				<a href="img/screenshot.jpg" rel="gallery" class="thumbnail">
+				<img src="img/screenshot.jpg" alt="">
+				</a>
+			</li>
+			
+			<li class="span3">
+				<a href="img/screenshot.jpg" rel="gallery" class="thumbnail">
+				<img src="img/screenshot.jpg" alt="">
+				</a>
+			</li>
+			
+			<li class="span3">
+				<a href="img/screenshot.jpg" rel="gallery" class="thumbnail">
+				<img src="img/screenshot.jpg" alt="">
+				</a>
+			</li>
+			
+			<li class="span3">
+				<a href="img/screenshot.jpg" rel="gallery" class="thumbnail">
+				<img src="img/screenshot.jpg" alt="">
+				</a>
+			</li>
+		</ul>-->
+	</div>
+
+
+        <!-- Donate -->
+	<div class="row-fluid" id="donate">
+                <h2 class="page-title" id="scroll_up">
+			Donate
+			<a href="#home" class="arrow-top">
+			<img src="img/arrow-top.png">
+			</a>
+		</h2>
+
+                <div class="span6">
+
+                        <h3>PayPal</h3>
+                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                        <input type="hidden" name="cmd" value="_s-xclick">
+                        <table>
+                        <tr><td><input type="hidden" name="on0" value="Donation Amounts">Donation Amounts</td></tr><tr><td><select name="os0">
+	                        <option value="Small">Small $1.00 USD</option>
+	                        <option value="Medium">Medium $5.00 USD</option>
+	                        <option value="Large">Large $10.00 USD</option>
+	                        <option value="Huge!">Huge! $100.00 USD</option>
+                        </select> </td></tr>
+                        </table>
+                        <input type="hidden" name="currency_code" value="USD">
+                        <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----MIIIKQYJKoZIhvcNAQcEoIIIGjCCCBYCAQExggEwMIIBLAIBADCBlDCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20CAQAwDQYJKoZIhvcNAQEBBQAEgYCho4uVCu1pV/ABOEqzBzWl6qydWtQYZlC3Ww6gQCqhCQsKPB+q1G1Pb9JIHWy/Es3vGqb6vUIKRdeXl0vIxqtuvzcZ6f5H2mpCmqh6eiOv32554a4dECvqbx8nzWcEm3gAXUE8sP0SjLmFQ4yTaiiRCE58R+mcKIbV53LO41/rfDELMAkGBSsOAwIaBQAwggGlBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECADsUke0BqnhgIIBgICaZcJAKZ7JW7A985FM+r1BTWz+UTvyJewpBU26wavix+AFjstH4+wb5avojWdevJ99/ux+gYH+eLogz9vLsdimcM5CA3fPr5LDvrQpWSC4cG7ntl8ASpjyYG5WacVtRO9KOYE3WHlQbHwYC5HSdta9gHLXsSxi9DTmSQofzp3P3YIOCg5e4yYay7EMoanuweTGSmne7gJ48MtXpN/0sYXCfS63eFCWMUxAjaapIdDckXQoW/zViMQHik+f+Ffdouc57OVoU9oEwBQrf69K/TMg2pV5wLaE5Q7J3sVsr7CXrps1nztdZoAeWBDIfIGivpFdMQmzpFn1UO4C1KGG5RbhIAS4OS1z/G+/7aCDPPxlh/BniGoF1paDAIdjaDpyM7Kduoc02pmi29gzIu454gWms2hIKrEAFgENmwqLKsfgiHsFzM0XjE7ev6UKcLBDBDSSRgyxXgn3xlZMdncyl65XQbZsnfqTo4lxKzkGCeUeE2Dbnw1DMcheKBtCVDTxBqCCA4cwggODMIIC7KADAgECAgEAMA0GCSqGSIb3DQEBBQUAMIGOMQswCQYDVQQGEwJVUzELMAkGA1UECBMCQ0ExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDASBgNVBAoTC1BheVBhbCBJbmMuMRMwEQYDVQQLFApsaXZlX2NlcnRzMREwDwYDVQQDFAhsaXZlX2FwaTEcMBoGCSqGSIb3DQEJARYNcmVAcGF5cGFsLmNvbTAeFw0wNDAyMTMxMDEzMTVaFw0zNTAyMTMxMDEzMTVaMIGOMQswCQYDVQQGEwJVUzELMAkGA1UECBMCQ0ExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDASBgNVBAoTC1BheVBhbCBJbmMuMRMwEQYDVQQLFApsaXZlX2NlcnRzMREwDwYDVQQDFAhsaXZlX2FwaTEcMBoGCSqGSIb3DQEJARYNcmVAcGF5cGFsLmNvbTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAwUdO3fxEzEtcnI7ZKZL412XvZPugoni7i7D7prCe0AtaHTc97CYgm7NsAtJyxNLixmhLV8pyIEaiHXWAh8fPKW+R017+EmXrr9EaquPmsVvTywAAE1PMNOKqo2kl4Gxiz9zZqIajOm1fZGWcGS0f5JQ2kBqNbvbg2/Za+GJ/qwUCAwEAAaOB7jCB6zAdBgNVHQ4EFgQUlp98u8ZvF71ZP1LXChvsENZklGswgbsGA1UdIwSBszCBsIAUlp98u8ZvF71ZP1LXChvsENZklGuhgZSkgZEwgY4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEUMBIGA1UEChMLUGF5UGFsIEluYy4xEzARBgNVBAsUCmxpdmVfY2VydHMxETAPBgNVBAMUCGxpdmVfYXBpMRwwGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tggEAMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADgYEAgV86VpqAWuXvX6Oro4qJ1tYVIT5DgWpE692Ag422H7yRIr/9j/iKG4Thia/Oflx4TdL+IFJBAyPK9v6zZNZtBgPBynXb048hsP16l2vi0k5Q2JKiPDsEfBhGI+HnxLXEaUWAcVfCsQFvd2A1sxRr67ip5y2wwBelUecP3AjJ+YcxggGaMIIBlgIBATCBlDCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20CAQAwCQYFKw4DAhoFAKBdMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTEzMTIyMTAzNDA0NVowIwYJKoZIhvcNAQkEMRYEFDELGpG8ax9/f4P5zVpUBfWzN6+oMA0GCSqGSIb3DQEBAQUABIGAIzQ2eD8ZgZzAK1YXhaLAkrhq1IkPZ9GY8iY2d9SgkfxXzfQBRw3PQ7ha6f3qWZyGn+j1m0B9pVu4AUVkMeO7Ol52tY1ITIxUO1S6A+8qMdT8grpooOqVC2nJLy7vKw/YF4iDE2OjwVi7QfO0VfyaEwGAWrsMl/tqO/4JloA7tRk=-----END PKCS7-----
+                        ">
+                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynow_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                        </form>
+                </div>
+
+
+                <div class="span6">
+                        <h3>Bitcoin</h3>
+
+                        <a class="coinbase-button" data-code="ce5e2151347839eae40379d63f07a9f3" data-button-style="donation_large" href="https://coinbase.com/checkouts/ce5e2151347839eae40379d63f07a9f3">Donate Bitcoins</a><script src="https://coinbase.com/assets/button.js" type="text/javascript"></script>
+
+                </div>
+
+                <!--<div class="span6">
+                        <h3>Flattr</h3>
+
+                        <div>
+                        <a href="https://flattr.com/submit/auto?user_id=micah.losli&url=https%3A%2F%2Fmicahnator.github.io%2Fpanpipe" target="_blank"><img src="//api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0"></a>
+                        </div>
+                </div>-->
+
+
+        </div>
+	
+	
+	
+	<!-- CONTACT -->
+	<div class="row-fluid" id="contact">
+	
+		<h2 class="page-title" id="scroll_up">
+				Contact
+				<a href="#home" class="arrow-top">
+				<img src="img/arrow-top.png">
+				</a>
+			</h2>
+		
+		<!-- CONTACT INFO -->
+		<div class="span4" id="contact-info">
+			<h3>Contact Us</h3>
+			<p>Panpipe is FLOSS (Free Libre Open Source Software) and as such it is made possible by the source code, designs, bugs, artwork, etc. that is contributed by the open source community. If you would like to be a part of making Panpipe a first class Pandora client, or would like to contact the developer about anything else, I'd be glad to hear from you.</p>
+			<!--<p>However, you may contact us about general business inquiries or to report bugs in the template!<p>-->
+			<p><a href="mailto:micah.losli@gmail.com">micah.losli@gmail.com</a></p>
+		</div>
+		
+		<!-- CONTACT FORM -->
+		<!--<div class="span7" id="contact-form">
+			<form class="form-horizontal">
+				<fieldset>
+					<div class="control-group">
+						<label class="control-label" for="name">Name</label>
+						<div class="controls">
+							<input class="input-xlarge" type="text" id="name" placeholder="John Doe">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="email">Email</label>
+						<div class="controls">
+							<input class="input-xlarge" type="text" id="email" placeholder="john@gmail.com">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="subject">Subject</label>
+						<div class="controls">
+							<input class="input-xlarge" type="text" id="subject" placeholder="General Inquiry">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="message">Message</label>
+						<div class="controls">
+							<textarea class="input-xlarge" rows="3" id="message" placeholder="Your message..."></textarea>
+						</div>
+					</div>
+					<div class="form-actions">
+						<button type="submit" class="btn btn-primary">SEND</button>
+					</div>
+				</fieldset>
+			</form>
+		</div>-->
+		
+	</div>
+	
+</div>
+
+
+<!-- FOOTER -->
+<div class="footer container container-fluid">
+
+	<!-- COPYRIGHT - EDIT HOWEVER YOU WANT! -->
+	<div id="copyright">
+		Copyright &copy; 2014 Micah Losli<br>
+		Licensed under <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>. Built on <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>.
+	</div>
+	
+	<!-- CREDIT - PLEASE LEAVE THIS LINK! -->
+	<div id="credits">
+		<a href="http://github.differential.io/flexapp">Theme</a> by <a href="http://carp.io">Carp</a>.
+	</div>
+
+</div>
+
+<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-collapse.js"></script>
+<script src="js/bootstrap-scrollspy.js"></script>
+<script src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+<script src="fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script src="js/init.js"></script>
+
+</body>
+</html>
