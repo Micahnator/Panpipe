@@ -363,12 +363,10 @@ Item {
                 width: units.gu(20)
             }
 
-            Text {
-                width: units.gu(20)
-
+            Label {
                 text: i18n.tr("Panpipe is a Pandora Internet Radio client for Ubuntu, licensed under the GPLv3.")
-                color: "white"
                 wrapMode: Text.WordWrap
+                fontSize: "medium"
             }
 
             Button {
