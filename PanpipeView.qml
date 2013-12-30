@@ -133,6 +133,14 @@ Item {
                     }
                 }
                 ToolbarButton {
+                    iconSource: Qt.resolvedUrl("resources/icons/properties.svg")
+                    text: i18n.tr("Settings")
+                    onTriggered: {
+                        PopupUtils.open(settingsDialog)
+                    }
+                }
+
+                ToolbarButton {
                     iconSource: Qt.resolvedUrl("resources/icons/filter.svg")
                     text: i18n.tr("Sort")
                     onTriggered: {
@@ -212,6 +220,14 @@ Item {
                         Qt.openUrlExternally(webView.url);
                     }
                 }
+
+//                ToolbarButton {
+//                    iconSource: Qt.resolvedUrl("resources/icons/go-previous.svg")
+//                    text: i18n.tr("Nav Back")
+//                    onTriggered: {
+//                        webView.goBack();
+//                    }
+//                }
             }
         }
     }
@@ -292,6 +308,89 @@ Item {
                 onClicked: {
                     //close dialog
                     PopupUtils.close(logoutScreen)
+                }
+            }
+        }
+    }
+
+    /* Application settings dialog */
+    Component {
+        id: settingsDialog
+
+        Popups.Dialog {
+            id: settingsScreen
+            title: i18n.tr("There are no settings yet.")
+
+            Button {
+                text: i18n.tr("About")
+                color: "orange"
+
+                onClicked: {
+                    //close dialog
+                    PopupUtils.close(settingsScreen);
+
+                    //open new dialog
+                    PopupUtils.open(aboutDialog);
+                }
+            }
+
+            Button {
+                text: i18n.tr("Close")
+                color: "gray"
+
+                onClicked: {
+                    //close dialog
+                    PopupUtils.close(settingsScreen)
+                }
+            }
+        }
+    }
+
+    /* About this app dialog */
+    Component {
+        id: aboutDialog
+
+        Popups.Dialog {
+            id: aboutScreen
+            title: i18n.tr("Panpipe")
+
+            UbuntuShape {
+                image: Image {
+                    source: Qt.resolvedUrl("Panpipe_filler_icon.png")
+                    anchors.fill: parent
+                }
+                height: units.gu(20)
+                width: units.gu(20)
+            }
+
+            Text {
+                width: units.gu(20)
+
+                text: i18n.tr("Panpipe is a Pandora Internet Radio client for Ubuntu, licensed under the GPLv3.")
+                color: "white"
+                wrapMode: Text.WordWrap
+            }
+
+            Button {
+                text: i18n.tr("Panpipe Website")
+                color: "orange"
+
+                onClicked: {
+                    //close dialog
+                    PopupUtils.close(aboutScreen);
+
+                    //Open the Panpipe project website in the browser
+                    Qt.openUrlExternally("http://micahnator.github.io/Panpipe/");
+                }
+            }
+
+            Button {
+                text: i18n.tr("Close")
+                color: "gray"
+
+                onClicked: {
+                    //close dialog
+                    PopupUtils.close(aboutScreen)
                 }
             }
         }
