@@ -386,22 +386,53 @@ Item {
 
     //Function to sort the stations list alphabetically
     function __sortAlphabetically() {
+        var station_selected = (stationsView.currentIndex >= 0);
 
-        //stationsList.sort(function(a,b){return a.stationName - b.stationName});
+        //Get the station name of the currently selected station, if there is one
+        if(station_selected) {
+            var current_station_name = stationsList[stationsView.currentIndex]["stationName"];
+        }
+
         stationsList.sort(function(a,b){return __strcmp(a.stationName, b.stationName)});
         __moveQuickMix(stationsList);
         stationsView.model = stationsList;
         sortPreferenceProvided("alphabetical");
         _currentSortMethod = "alphabetical";
+
+        //Re-set the stationView's current index so that it is still correct
+        if(station_selected) {
+            for(var i = 0; i < stationsList.length; i++) {
+                if(current_station_name === stationsList[i].stationName) {
+                    stationsView.currentIndex = i;
+                    break;
+                }
+            }
+        }
     }
 
     //Function to sort the stations by creation date
     function __sortByCreatedDate() {
-        //stationsList.sort(function(a,b){return pandoraDateCompare(a,b)});
+        var station_selected = (stationsView.currentIndex >= 0);
+
+        //Get the station name of the currently selected station, if there is one
+        if(station_selected) {
+            var current_station_name = stationsList[stationsView.currentIndex]["stationName"];
+        }
+
         stationsList.sort(function(a,b){return __pandoraDateCompare(a.dateCreated,b.dateCreated)});
         __moveQuickMix(stationsList);
         stationsView.model = stationsList;
         sortPreferenceProvided("by_date");
         _currentSortMethod = "by_date";
+
+        //Re-set the stationView's current index so that it is still correct
+        if(station_selected) {
+            for(var i = 0; i < stationsList.length; i++) {
+                if(current_station_name === stationsList[i].stationName) {
+                    stationsView.currentIndex = i;
+                    break;
+                }
+            }
+        }
     }
 }
