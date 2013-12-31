@@ -331,7 +331,7 @@ Item {
         }
     }
 
-    //A function to trigger correct sorting of the stations list
+    /* A function to trigger correct sorting of the stations list */
     function updateStationList() {
         if(_currentSortMethod == "alphabetical")
             {
@@ -343,7 +343,7 @@ Item {
             }
     }
 
-    //A string comparison function used to sort stations by station name
+    /* A string comparison function used to sort stations by station name */
     function __strcmp ( str1, str2 ) {
         // http://kevin.vanzonneveld.net
         // +   original by: Waldo Malqui Silva
@@ -358,7 +358,7 @@ Item {
         return ( ( str1 == str2 ) ? 0 : ( ( str1 > str2 ) ? 1 : -1 ) );
     }
 
-    //A comparison function used to sort stations by creation date
+    /* A comparison function used to sort stations by creation date */
     function __pandoraDateCompare(a, b) {
         var date_a = new Date(a.year, a.month, a.day, a.hours, a.minutes, a.seconds);
         var date_b = new Date(b.year, b.month, b.day, b.hours, b.minutes, b.seconds);
@@ -366,7 +366,7 @@ Item {
         return date_b.getTime() - date_a.getTime();
     }
 
-    //Function to place the "QuickMix" station back at the top of the station list
+    /* Function to place the "QuickMix" station back at the top of the station list */
     function __moveQuickMix(stationList) {
         var temp;
         for(var i = 0; i < stationList.length; i++) {
@@ -399,7 +399,7 @@ Item {
         sortPreferenceProvided("alphabetical");
         _currentSortMethod = "alphabetical";
 
-        //Re-set the stationView's current index so that it is still correct
+        /* Re-set the stationView's current index so that it is still correct */
         if(station_selected) {
             for(var i = 0; i < stationsList.length; i++) {
                 if(current_station_name === stationsList[i].stationName) {
@@ -410,11 +410,11 @@ Item {
         }
     }
 
-    //Function to sort the stations by creation date
+    /* Function to sort the stations by creation date */
     function __sortByCreatedDate() {
         var station_selected = (stationsView.currentIndex >= 0);
 
-        //Get the station name of the currently selected station, if there is one
+        /* Get the station name of the currently selected station, if there is one */
         if(station_selected) {
             var current_station_name = stationsList[stationsView.currentIndex]["stationName"];
         }
@@ -425,7 +425,7 @@ Item {
         sortPreferenceProvided("by_date");
         _currentSortMethod = "by_date";
 
-        //Re-set the stationView's current index so that it is still correct
+        /* Re-set the stationView's current index so that it is still correct */
         if(station_selected) {
             for(var i = 0; i < stationsList.length; i++) {
                 if(current_station_name === stationsList[i].stationName) {

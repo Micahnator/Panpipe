@@ -220,14 +220,6 @@ Item {
                         Qt.openUrlExternally(webView.url);
                     }
                 }
-
-//                ToolbarButton {
-//                    iconSource: Qt.resolvedUrl("resources/icons/go-previous.svg")
-//                    text: i18n.tr("Nav Back")
-//                    onTriggered: {
-//                        webView.goBack();
-//                    }
-//                }
             }
         }
     }
@@ -306,7 +298,7 @@ Item {
                 color: "gray"
 
                 onClicked: {
-                    //close dialog
+                    /* close dialog */
                     PopupUtils.close(logoutScreen)
                 }
             }
@@ -326,10 +318,10 @@ Item {
                 color: "orange"
 
                 onClicked: {
-                    //close dialog
+                    /* close dialog */
                     PopupUtils.close(settingsScreen);
 
-                    //open new dialog
+                    /* open new dialog */
                     PopupUtils.open(aboutDialog);
                 }
             }
@@ -339,7 +331,7 @@ Item {
                 color: "gray"
 
                 onClicked: {
-                    //close dialog
+                    /* close dialog */
                     PopupUtils.close(settingsScreen)
                 }
             }
@@ -374,10 +366,10 @@ Item {
                 color: "orange"
 
                 onClicked: {
-                    //close dialog
+                    /* close dialog */
                     PopupUtils.close(aboutScreen);
 
-                    //Open the Panpipe project website in the browser
+                    /* Open the Panpipe project website in the browser */
                     Qt.openUrlExternally("http://micahnator.github.io/Panpipe/");
                 }
             }
@@ -387,7 +379,7 @@ Item {
                 color: "gray"
 
                 onClicked: {
-                    //close dialog
+                    /* close dialog */
                     PopupUtils.close(aboutScreen)
                 }
             }
