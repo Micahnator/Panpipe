@@ -139,7 +139,6 @@ Item {
                         PopupUtils.open(settingsDialog)
                     }
                 }
-
                 ToolbarButton {
                     iconSource: Qt.resolvedUrl("resources/icons/filter.svg")
                     text: i18n.tr("Sort")
@@ -177,6 +176,13 @@ Item {
 
                         /* show login dialog */
                         PopupUtils.open(logoutDialog);
+                    }
+                }
+                ToolbarButton {
+                    iconSource: Qt.resolvedUrl("resources/icons/properties.svg")
+                    text: i18n.tr("Settings")
+                    onTriggered: {
+                        PopupUtils.open(settingsDialog)
                     }
                 }
                 ToolbarButton {
