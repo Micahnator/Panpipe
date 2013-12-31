@@ -346,13 +346,13 @@ Item {
             id: aboutScreen
             title: i18n.tr("Panpipe")
 
-            UbuntuShape {
-                image: Image {
-                    source: Qt.resolvedUrl("Panpipe_filler_icon.png")
+            Rectangle {
+                height: width
+                color: "transparent"
+                Image {
+                    source: Qt.resolvedUrl("panpipe-256.png")
                     anchors.fill: parent
                 }
-                height: units.gu(20)
-                width: units.gu(20)
             }
 
             Label {
