@@ -1,4 +1,10 @@
-panpipe (0.1) UNRELEASED; urgency=low
+panpipe (0.2) UNRELEASED; urgency=medium
+
+  * New upstream release
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Fri, 03 Jan 2014 12:19:34 -0500
+
+panpipe (0.1) trusty; urgency=low
 
   * Initial Release.
 
