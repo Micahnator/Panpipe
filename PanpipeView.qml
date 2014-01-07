@@ -21,7 +21,7 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import Ubuntu.Components.Popups 0.1 as Popups
-import QtWebKit 3.0
+import Ubuntu.Components.Extras.Browser 0.1
 
 /* Tabbed view component for Panpipe */
 Item {
@@ -203,7 +203,7 @@ Item {
                 webView.visible = webViewPage.visible
             }
 
-            WebView {
+            UbuntuWebView {
                 id: webView
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
