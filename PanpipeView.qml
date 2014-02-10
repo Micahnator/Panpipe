@@ -23,7 +23,7 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 import Ubuntu.Components.Popups 0.1 as Popups
 import Ubuntu.Components.Extras.Browser 0.1
 
-/* Tabbed view component for Panpipe */
+/* View component for Panpipe */
 Item {
 
     /* Signals */
@@ -31,14 +31,13 @@ Item {
     signal nextTrackPressed()
     signal thumbsUpPressed()
     signal thumbsDownPressed()
-    signal stationSelected(int stationIndex)
+    signal stationSelected(string stationToken)
     signal loginCredentialsProvided(string username, string password)
     signal userLogout()
     signal sortPreferenceProvided(string preferredSort)
 
     /* Public properties */
     property var stationsList
-
     property var stationName
     property var playlist
     property int currentPlaylistIndex
@@ -48,7 +47,6 @@ Item {
     property int playbackPosition
     property int playbackDuration
     property string audioSourceUrl
-
     property string username_auto_fill
 
     /* Private properties */
@@ -77,7 +75,7 @@ Item {
     }
 
     onStationsListChanged: {
-        stationsPageContents.updateStationList();
+        stationsPageContents.updateStations();
     }
 
     /* View initialization */
@@ -99,6 +97,10 @@ Item {
 
     function confirmLogout() {
         PopupUtils.open(logoutDialog);
+    }
+
+    function updateInterface() {
+        stationsPageContents.updateStations();
     }
 
     PageStack {

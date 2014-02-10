@@ -278,13 +278,13 @@ function getStation(stationToken, callback) {
 }
 
 /* Function to get the playlist of the selected station */
-function getStationPlaylist(stationIndex, callback) {
+function getStationPlaylist(stationToken, callback) {
 
     function requestStationPlaylist() {
 
         /* Station request */
         var stationPlaylistRequest = {
-            "stationToken": userStations[stationIndex].stationToken,
+            "stationToken": stationToken,
         }
 
         /* Request stations */

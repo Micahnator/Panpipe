@@ -27,6 +27,7 @@ import "storage.js" as Storage
 MainView {
     /* objectName for functional testing purposes (autopilot-qt5) */
     objectName: "mainView"
+    id: root
     
     /* Note! applicationName needs to match the .desktop filename */
     applicationName: "com.ubuntu.developer.mlosli.panpipe"
@@ -48,12 +49,17 @@ MainView {
     /* Properties */
     property string pandoraUsername: Storage.getSetting("pandora_username");
     property string pandoraPassword: Storage.getSetting("pandora_password");
-    property string startupPreferredStationSort: Storage.getSetting("station_sort_method");
+    property string startupPreferredStationSort
+
+    property string _lastAttemptedUsername
 
     /* Startup operations */
     Component.onCompleted: {
         /* Initialize the storage database */
         Storage.initialize();
+
+        /* Get the last used station sort method */
+        startupPreferredStationSort = Storage.getSetting("station_sort_method");
 
         /* If login credentials are available, attempt to use them to login */
         if(("Unknown" == pandoraUsername) || ("Unknown" == pandoraPassword)) {
@@ -95,7 +101,7 @@ MainView {
         }
 
         onLoginFailed: {
-            viewComponent.requestCredentials(givenUsername);
+            viewComponent.requestCredentials(_lastAttemptedUsername);
         }
     }
     
@@ -149,7 +155,6 @@ MainView {
         playbackPercentage: (audioPlayer.position / audioPlayer.duration)
         playbackPosition: audioPlayer.position
         playbackDuration: audioPlayer.duration
-
         audioSourceUrl: audioPlayer.source
 
         /* Signal handlers */
@@ -186,20 +191,18 @@ MainView {
         }
 
         onStationSelected: {
-            console.log("Station number " + stationIndex + " selected.");
-
             /* Request playlist for selected station */
-            pandoraModel.setStation(stationIndex);
+            pandoraModel.setStation(stationToken)
         }
 
         onLoginCredentialsProvided: {
             /* Perform login */
+            _lastAttemptedUsername = username
             pandoraModel.login(username, password);
 
             /* Store login credientials */
             Storage.setSetting("pandora_username", username);
             Storage.setSetting("pandora_password", password);
-
         }
 
         onUserLogout: {
@@ -221,11 +224,14 @@ MainView {
         /* Clear pandora interface */
         pandoraModel.logout();
 
+        /* Clear the UI */
+        viewComponent.updateInterface();
+
         /* Clear login credentials */
         Storage.setSetting("pandora_username", "Unknown");
         Storage.setSetting("pandora_password", "Unknown");
 
         /* Request login credentials */
-        viewComponent.requestCredentials();
+        viewComponent.requestCredentials(_lastAttemptedUsername);
     }
 }

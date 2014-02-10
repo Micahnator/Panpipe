@@ -24,25 +24,24 @@ import "Song.js" as Song
 
 Item {
     /* Signals */
-    signal loginFailed(string givenUsername)
+    signal loginFailed()
+    signal stationsLoaded()
 
     /* public properties */
     property bool connected
-
-    property var userStations
-    property int currentStationIndex
+    property var userStationsAlphabetical
+    property var userStationsByDate
+    property bool stationSelected
     property string currentStationId
     property string currentStationName
-
+    property string currentStationToken
     property var playlistData
     property int playlistCurrentIndex
 
-    /* Private properties */
-    property string _lastAttemptedUsername
-
     /* Initialization operations */
     Component.onCompleted: {
-        playlistCurrentIndex = 0;
+        stationSelected = false;
+        currentStationToken = null;
         playlistData = []; /* Define playlistData as an array */
     }
 
@@ -99,8 +98,8 @@ Item {
 
         playlistCurrentIndex = 0;
 
-        userStations = null;
-        currentStationIndex = 0;
+        userStationsAlphabetical = [];
+        userStationsByDate = [];
         currentStationId = "";
         currentStationName = "";
 
@@ -115,13 +114,14 @@ Item {
         Pandora.getUserStations(retrieveStationsResponse);
     }
 
-    function setStation(stationIndex) {
-        /* Update the station name */
-        currentStationIndex = stationIndex;
-        currentStationName = userStations[currentStationIndex].stationName;
+    function setStation(stationToken) {
+        /* Indicate that a station has been selected */
+        stationSelected = true;
 
-        /* Retrieve playlist data */
-        retrievePlaylist(currentStationIndex);
+        currentStationToken = stationToken;
+        currentStationName = userStationsByDate[__findStationIndexFromToken(currentStationToken, userStationsByDate)].stationName;
+
+        retrievePlaylist(currentStationToken);
     }
 
     function loadNextSong() {
@@ -131,7 +131,7 @@ Item {
 
         /* Retrieve more songs for playlist if necessary */
         if (playlistCurrentIndex >= (playlistData.length - 1)) {
-            retrievePlaylist(currentStationIndex);
+            retrievePlaylist(currentStationToken);
         }
     }
 
@@ -150,9 +150,9 @@ Item {
     /*
         Private functions
     */
-    function retrievePlaylist(stationIndex) {
+    function retrievePlaylist(stationToken) {
         console.log("retrieving more songs!");
-        Pandora.getStationPlaylist(stationIndex, retrievePlaylistResponse);
+        Pandora.getStationPlaylist(stationToken, retrievePlaylistResponse);
     }
 
     /*
@@ -170,7 +170,12 @@ Item {
     }
 
     function retrieveStationsResponse(stationList) {
-        userStations = stationList; // Later use sort property to arrange before assignment
+//        console.log(JSON.stringify(stationList));
+        userStationsByDate = stationList;
+        userStationsAlphabetical = userStationsByDate.slice();
+        __sortStationArrayAlphabetically(userStationsAlphabetical);
+        console.log("stations received");
+        stationsLoaded();
     }
 
     function retrievePlaylistResponse(playlist) {
@@ -197,5 +202,68 @@ Item {
             playlistCurrentIndex = 0;
             currentStationId = playlistStationId;
         }
+    }
+
+    /*
+        Helper functions
+    */
+
+    /* A string comparison function used to sort stations by station name */
+    function __strcmp ( str1, str2 ) {
+        // http://kevin.vanzonneveld.net
+        // +   original by: Waldo Malqui Silva
+        // +      input by: Steve Hilder
+        // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+        // +    revised by: gorthaur
+        // *     example 1: strcmp( 'waldo', 'owald' );
+        // *     returns 1: 1
+        // *     example 2: strcmp( 'owald', 'waldo' );
+        // *     returns 2: -1
+
+        return ( ( str1 == str2 ) ? 0 : ( ( str1 > str2 ) ? 1 : -1 ) );
+    }
+
+    /* A comparison function used to sort stations by creation date */
+    function __pandoraDateCompare(a, b) {
+        var date_a = new Date(a.year, a.month, a.day, a.hours, a.minutes, a.seconds);
+        var date_b = new Date(b.year, b.month, b.day, b.hours, b.minutes, b.seconds);
+
+        return date_b.getTime() - date_a.getTime();
+    }
+
+    /* Function to place the "QuickMix" station back at the top of the station list */
+    function __moveQuickMix(stationList) {
+        var temp;
+        for(var i = 0; i < stationList.length; i++) {
+            if(stationList[i].stationName == "QuickMix") {
+                temp = stationList[i];
+
+                //now shift other items down
+                for(var j = i; j > 0; j--) {
+                    stationList[j] = stationList[(j - 1)];
+                }
+
+                stationList[0] = temp;
+                break;
+            }
+        }
+    }
+
+    //Function to sort the stations list alphabetically
+    function __sortStationArrayAlphabetically(stationsList) {
+        stationsList.sort(function(a,b){return __strcmp(a.stationName, b.stationName)});
+        __moveQuickMix(stationsList);
+    }
+
+    /* A function to identify the index of the station in the list, given a stationToken */
+    function __findStationIndexFromToken(stationToken, stationList) {
+        for(var i = 0; i < stationList.length; i++) {
+            if( stationToken === stationList[i].stationToken ) {
+                return i;
+            }
+        }
+
+        //If token not found, return negative one
+        return -1;
     }
 }

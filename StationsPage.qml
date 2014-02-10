@@ -28,16 +28,19 @@ Item {
     property alias stationsListItem: stationsView
     property alias stationSortingPopup: stationSortingMenu
 
+    /* Public properties */
+    property string sortMethod
+
     /* Private properties */
     property int _pressAndHoldIndex
-    property string _currentSortMethod
     property int _pressIndex
     property bool _selectionMade
+    property string _currentStationToken
 
     Timer {
         id: delayStationSelected
         interval: 500
-        onTriggered: stationSelected(_pressIndex)
+        onTriggered: stationSelected(stationsView.model[_pressIndex].stationToken)
     }
 
     Timer {
@@ -46,8 +49,35 @@ Item {
     }
 
     Component.onCompleted: {
-        _currentSortMethod = startupPreferredStationSort;
         _selectionMade = false;
+    }
+
+    onSortMethodChanged: {
+        updateStationSort(sortMethod);
+    }
+
+    Connections {
+        target: pandoraModel
+
+        onStationsLoaded: {
+            if(!sortMethod) {
+                sortMethod = startupPreferredStationSort;
+            } else {
+                updateStationSort(sortMethod);
+            }
+        }
+    }
+
+    function updateStations() {
+        updateStationSort(sortMethod);
+    }
+
+    function updateStationSort(method) {
+        //Update the view model
+        stationsView.model = (method === "by_date") ? pandoraModel.userStationsByDate : pandoraModel.userStationsAlphabetical;
+
+        //Update the currently selected index
+        stationsView.currentIndex = __findStationIndexFromToken(_currentStationToken, stationsView.model);
     }
 
     ListView {
@@ -67,6 +97,14 @@ Item {
             currentIndex = -1;
         }
 
+        onModelChanged: {
+            console.log("model length: " + model.length );
+            if( model.length == 0 ) {
+                currentIndex = -1;
+                _currentStationToken = "";
+            }
+        }
+
         delegate: ListItem.Standard {
             text: stationsView.model[index]["stationName"];
             icon: Image {
@@ -83,6 +121,7 @@ Item {
                 stationsView.currentIndex = index;
                 _selectionMade = true;
                 _pressIndex = index;
+                _currentStationToken = stationsView.model[index].stationToken;
                 delayStationSelected.start();
             }
 
@@ -277,17 +316,19 @@ Item {
                 }
                 ListItem.Header { text: "Sort stations" }
                 ListItem.Standard {
-                    text: (_currentSortMethod == "by_date") ? "*By Date Created" : "By Date Created"
+                    text: (sortMethod == "by_date") ? "*By Date Created" : "By Date Created"
                     onClicked: {
                         hide();
-                        __sortByCreatedDate();
+                        sortPreferenceProvided("by_date");
+                        sortMethod = "by_date";
                     }
                 }
                 ListItem.Standard {
-                    text: (_currentSortMethod == "alphabetical") ? "*Alphabetically" : "Alphabetically"
+                    text: (sortMethod == "alphabetical") ? "*Alphabetically" : "Alphabetically"
                     onClicked: {
                         hide();
-                        __sortAlphabetically();
+                        sortPreferenceProvided("alphabetical");
+                        sortMethod = "alphabetical";
                     }
                 }
             }
@@ -331,108 +372,19 @@ Item {
         }
     }
 
-    /* A function to trigger correct sorting of the stations list */
-    function updateStationList() {
-        if(_currentSortMethod == "alphabetical")
-            {
-            __sortAlphabetically();
-            }
-        else if(_currentSortMethod == "by_date")
-            {
-            __sortByCreatedDate();
-            }
-    }
+    /*
+        Helper Functions
+    */
 
-    /* A string comparison function used to sort stations by station name */
-    function __strcmp ( str1, str2 ) {
-        // http://kevin.vanzonneveld.net
-        // +   original by: Waldo Malqui Silva
-        // +      input by: Steve Hilder
-        // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-        // +    revised by: gorthaur
-        // *     example 1: strcmp( 'waldo', 'owald' );
-        // *     returns 1: 1
-        // *     example 2: strcmp( 'owald', 'waldo' );
-        // *     returns 2: -1
-
-        return ( ( str1 == str2 ) ? 0 : ( ( str1 > str2 ) ? 1 : -1 ) );
-    }
-
-    /* A comparison function used to sort stations by creation date */
-    function __pandoraDateCompare(a, b) {
-        var date_a = new Date(a.year, a.month, a.day, a.hours, a.minutes, a.seconds);
-        var date_b = new Date(b.year, b.month, b.day, b.hours, b.minutes, b.seconds);
-
-        return date_b.getTime() - date_a.getTime();
-    }
-
-    /* Function to place the "QuickMix" station back at the top of the station list */
-    function __moveQuickMix(stationList) {
-        var temp;
+    /* A function to identify the index of the station in the list, given a stationToken */
+    function __findStationIndexFromToken(stationToken, stationList) {
         for(var i = 0; i < stationList.length; i++) {
-            if(stationList[i].stationName == "QuickMix") {
-                temp = stationList[i];
-
-                //now shift other items down
-                for(var j = i; j > 0; j--) {
-                    stationList[j] = stationList[(j - 1)];
-                }
-
-                stationList[0] = temp;
-                break;
+            if( stationToken === stationList[i].stationToken ) {
+                return i;
             }
         }
-    }
 
-    //Function to sort the stations list alphabetically
-    function __sortAlphabetically() {
-        var station_selected = (stationsView.currentIndex >= 0);
-
-        //Get the station name of the currently selected station, if there is one
-        if(station_selected) {
-            var current_station_name = stationsList[stationsView.currentIndex]["stationName"];
-        }
-
-        stationsList.sort(function(a,b){return __strcmp(a.stationName, b.stationName)});
-        __moveQuickMix(stationsList);
-        stationsView.model = stationsList;
-        sortPreferenceProvided("alphabetical");
-        _currentSortMethod = "alphabetical";
-
-        /* Re-set the stationView's current index so that it is still correct */
-        if(station_selected) {
-            for(var i = 0; i < stationsList.length; i++) {
-                if(current_station_name === stationsList[i].stationName) {
-                    stationsView.currentIndex = i;
-                    break;
-                }
-            }
-        }
-    }
-
-    /* Function to sort the stations by creation date */
-    function __sortByCreatedDate() {
-        var station_selected = (stationsView.currentIndex >= 0);
-
-        /* Get the station name of the currently selected station, if there is one */
-        if(station_selected) {
-            var current_station_name = stationsList[stationsView.currentIndex]["stationName"];
-        }
-
-        stationsList.sort(function(a,b){return __pandoraDateCompare(a.dateCreated,b.dateCreated)});
-        __moveQuickMix(stationsList);
-        stationsView.model = stationsList;
-        sortPreferenceProvided("by_date");
-        _currentSortMethod = "by_date";
-
-        /* Re-set the stationView's current index so that it is still correct */
-        if(station_selected) {
-            for(var i = 0; i < stationsList.length; i++) {
-                if(current_station_name === stationsList[i].stationName) {
-                    stationsView.currentIndex = i;
-                    break;
-                }
-            }
-        }
+        //If token not found, return negative one
+        return -1;
     }
 }
