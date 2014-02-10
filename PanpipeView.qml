@@ -259,6 +259,9 @@ Item {
                 if("" !== username_auto_fill) {
                     usernameForm.text = username_auto_fill;
                 }
+
+                /* Set active focus to the username form */
+                usernameForm.forceActiveFocus();
             }
 
             /* Dialog destruction */
@@ -270,20 +273,35 @@ Item {
             TextField {
                 id: usernameForm
                 placeholderText: i18n.tr("Username")
+
+                /* Place focus on password form when tab or enter is typed */
+                KeyNavigation.tab: passwordForm
+                onAccepted: {
+                    passwordForm.focus = true;
+                }
             }
 
             TextField {
                 id: passwordForm
                 placeholderText: i18n.tr("Password")
                 echoMode: TextInput.Password
+
+                /* Place focus back on the username form when tab is typed */
+                KeyNavigation.tab: usernameForm
+
+                /* Send the loginCredentialsProvided() signal when enter is pressed */
+                onAccepted: {
+                    loginButton.trigger()
+                }
             }
 
             Button {
+                id: loginButton
                 text: i18n.tr("Login")
                 color: "orange"
 
-                onClicked: {
-                    //send data to view
+                onTriggered: {
+                    //send data to controller
                     loginCredentialsProvided(usernameForm.text, passwordForm.text);
 
                     //close dialog
