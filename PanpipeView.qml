@@ -48,6 +48,7 @@ Item {
     property int playbackDuration
     property string audioSourceUrl
     property string username_auto_fill
+    property string webviewURL
 
     /* Private properties */
     property int _temp_song_thumbs_up
@@ -113,6 +114,7 @@ Item {
             anchors.fill: parent
             visible: false
             flickable: stationsPageContents.stationsListItem
+            onVisibleChanged: console.log("stations Page now visible")
 
             StationsPage {
                 id: stationsPageContents
@@ -202,16 +204,20 @@ Item {
             visible: false
 
             onVisibleChanged: {
-                webView.visible = webViewPage.visible
+                if(webViewPage.visible) {
+                    webviewLoader.sourceComponent = webviewComponent
+                } else {
+                    webviewLoader.sourceComponent = undefined
+                }
             }
 
-            UbuntuWebView {
-                id: webView
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: parent.height
-                visible: false
+            Loader {
+                id: webviewLoader
+                anchors.fill: parent
+
+                onLoaded: {
+                    item.url = webviewURL
+                }
             }
 
             /* Toolbar */
@@ -225,11 +231,18 @@ Item {
                         webViewToolbar.opened = false;
 
                         /* show login dialog */
-                        Qt.openUrlExternally(webView.url);
+                        Qt.openUrlExternally(webviewURL);
                     }
                 }
             }
         }
+    }
+
+    /* Define the webview component */
+    Component {
+        id: webviewComponent
+
+        UbuntuWebView {}
     }
 
     /* Define login credential dialog */

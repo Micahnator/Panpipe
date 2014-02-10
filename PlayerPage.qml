@@ -297,7 +297,7 @@ Item {
                     text: "Explore Song"
                     onClicked: {
                         hide();
-                        webView.url = playlist[currentPlaylistIndex].songExplorerUrl;
+                        webviewURL = playlist[currentPlaylistIndex].songExplorerUrl;
                         pagestack.push(webViewPage);
                     }
                 }
@@ -305,7 +305,7 @@ Item {
                     text: "Explore Artist"
                     onClicked: {
                         hide();
-                        webView.url = playlist[currentPlaylistIndex].artistExplorerUrl;
+                        webviewURL = playlist[currentPlaylistIndex].artistExplorerUrl;
                         pagestack.push(webViewPage);
                     }
                 }
@@ -313,7 +313,7 @@ Item {
                     text: "Song Details"
                     onClicked: {
                         hide();
-                        webView.url = playlist[currentPlaylistIndex].songDetailUrl;
+                        webviewURL = playlist[currentPlaylistIndex].songDetailUrl;
                         pagestack.push(webViewPage);
                     }
                 }
@@ -321,7 +321,7 @@ Item {
                     text: "Album Details"
                     onClicked: {
                         hide();
-                        webView.url = playlist[currentPlaylistIndex].albumDetailUrl;
+                        webviewURL = playlist[currentPlaylistIndex].albumDetailUrl;
                         pagestack.push(webViewPage);
                     }
                 }
@@ -329,7 +329,7 @@ Item {
                     text: "Artist Details"
                     onClicked: {
                         hide();
-                        webView.url = playlist[currentPlaylistIndex].artistDetailUrl;
+                        webviewURL = playlist[currentPlaylistIndex].artistDetailUrl;
                         pagestack.push(webViewPage);
                     }
                 }

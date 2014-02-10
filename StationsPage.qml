@@ -355,7 +355,7 @@ Item {
                     text: "Station Details"
                     onClicked: {
                         hide();
-                        webView.url = stationsView.model[_pressAndHoldIndex]["stationDetailUrl"]
+                        webviewURL = stationsView.model[_pressAndHoldIndex]["stationDetailUrl"]
                         pagestack.push(webViewPage);
 
                     }
@@ -364,7 +364,7 @@ Item {
                     text: "Share Station"
                     onClicked: {
                         hide();
-                        webView.url = stationsView.model[_pressAndHoldIndex]["stationSharingUrl"]
+                        webviewURL = stationsView.model[_pressAndHoldIndex]["stationSharingUrl"]
                         pagestack.push(webViewPage);
                     }
                 }
