@@ -37,6 +37,7 @@ Item {
     property string currentStationToken
     property var playlistData
     property int playlistCurrentIndex
+    property var stationSearchResults
 
     /* Initialization operations */
     Component.onCompleted: {
@@ -147,6 +148,22 @@ Item {
         Pandora.sendFeedback(favorable, trackToken, null);
     }
 
+    function searchForMusic(query) {
+        Pandora.searchMusic(query, searchForMusicResponse);
+    }
+
+    function updateQuickMix(stationIds) {
+        Pandora.setQuickMix(stationIds, updateQuickMixResponse);
+    }
+
+    function newUserStation(musicToken) {
+        Pandora.newStation(musicToken, newUserStationResponse)
+    }
+
+    function deleteUserStation(stationToken) {
+        Pandora.deleteStation(stationToken, deleteUserStationResponse);
+    }
+
     /*
         Private functions
     */
@@ -172,8 +189,10 @@ Item {
     function retrieveStationsResponse(stationList) {
 //        console.log(JSON.stringify(stationList));
         userStationsByDate = stationList;
-        userStationsAlphabetical = userStationsByDate.slice();
-        __sortStationArrayAlphabetically(userStationsAlphabetical);
+        var userStationsTemp = [];
+        userStationsTemp = userStationsByDate.slice();
+        __sortStationArrayAlphabetically(userStationsTemp);
+        userStationsAlphabetical = userStationsTemp;
         console.log("stations received");
         stationsLoaded();
     }
@@ -201,6 +220,50 @@ Item {
             playlistData = tempPlaylistArray;
             playlistCurrentIndex = 0;
             currentStationId = playlistStationId;
+        }
+    }
+
+    function searchForMusicResponse(searchResult) {
+        /* experimental: insert match field identifier */
+//        for(var i = 0; i < stationSearchResults.length; i++) {
+//            if(stationSearchResults[i].likelyMatch !== null) {
+//                stationSearchResults[i].matchType = "Artists"
+//            } else {
+//                stationSearchResults[i].matchType = "Songs"
+//            }
+//        }
+        for(var i = 0; i < searchResult.songs.length; i++) {
+            searchResult.songs[i].matchType = "Songs"
+        }
+
+        for(var i = 0; i < searchResult.artists.length; i++) {
+            searchResult.artists[i].matchType = "Artists"
+        }
+
+        stationSearchResults = searchResult.songs;
+        stationSearchResults = stationSearchResults.concat(searchResult.artists);
+//        console.log(JSON.stringify(stationSearchResults));
+    }
+
+    function updateQuickMixResponse(statusCode) {
+        console.log("update QuickMix status code: " + statusCode);
+
+        if(statusCode === "ok") {
+            retrieveStations();
+        }
+    }
+
+    function newUserStationResponse(result) {
+        console.log("New station result: " + result);
+
+        retrieveStations();
+    }
+
+    function deleteUserStationResponse(statusCode) {
+        console.log("Delete user station status code: " + statusCode);
+
+        if(statusCode === "ok") {
+            retrieveStations();
         }
     }
 

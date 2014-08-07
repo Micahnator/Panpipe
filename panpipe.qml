@@ -142,6 +142,7 @@ MainView {
         stationName: i18n.tr(pandoraModel.currentStationName)
         playlist: pandoraModel.playlistData
         currentPlaylistIndex: pandoraModel.playlistCurrentIndex
+        stationSearchResultList: pandoraModel.stationSearchResults
 
         /* Bindings to audioPlayer */
         audioPlaying: (audioPlayer.playbackState == Audio.PlayingState)
@@ -205,6 +206,10 @@ MainView {
         onSortPreferenceProvided: {
             /* Store the user's preferred station sort method */
             Storage.setSetting("station_sort_method", preferredSort);
+        }
+
+        onNewStationSearchQuery: {
+            pandoraModel.searchForMusic(query);
         }
 
     }

@@ -46,6 +46,8 @@ var currentSyncTime = 0;
 var timeOffset = 0;
 var thisDate = new Date();
 
+var musicSearchResult = {};
+
 /* Send / Receive Function */
 function transceive(httpMethod, url, method, data, encrypt, callback) {
     var xhr = new XMLHttpRequest;
@@ -334,4 +336,131 @@ function sendFeedback(favorable, trackToken, callback) {
 function retrieveSendFeedbackResponse(data) {
     console.log("feedback response:");
     console.log(JSON.stringify(data));
+}
+
+/* Function to search available music */
+function searchMusic(queryString, callback) {
+
+    function searchMusicRequest() {
+        var search = {
+            "searchText": queryString
+        }
+
+        transceive("POST",
+                   HTTP_ENTRY_POINT,
+                   "music.search",
+                   search,
+                   true,
+                   searchMusicResponse);
+    }
+
+    function searchMusicResponse(data) {
+        musicSearchResult = data.result;
+
+        /* Ensure success */
+        if(data.stat != "ok") {
+            console.log("Music search failed. Status: " + data.stat);
+            console.log(JSON.stringify(data));
+            callback(false);
+            return;
+        }
+
+        callback(musicSearchResult);
+    }
+
+    searchMusicRequest();
+}
+
+/* Function to set the stations included in the QuickMix */
+function setQuickMix(stationIds, callback) {
+
+    function setQuickMixRequest() {
+        var stationIdList = {
+            "quickMixStationIds": stationIds
+        }
+
+        transceive("POST",
+                   HTTP_ENTRY_POINT,
+                   "user.setQuickMix",
+                   stationIdList,
+                   true,
+                   setQuickMixResponse);
+    }
+
+    function setQuickMixResponse(data) {
+        /* Ensure success */
+        if(data.stat != "ok") {
+            console.log("QuickMix update failed. Status: " + data.stat);
+            console.log(JSON.stringify(data));
+            callback(false);
+            return;
+        }
+
+        callback(data.stat);
+    }
+
+    setQuickMixRequest();
+}
+
+/* Function to create a new user station */
+function newStation(musicToken, callback) {
+
+    function newStationRequest() {
+        var request = {
+            "musicToken": musicToken
+        }
+
+        transceive("POST",
+                   HTTP_ENTRY_POINT,
+                   "station.createStation",
+                   request,
+                   true,
+                   newStationResponse);
+    }
+
+    function newStationResponse(data) {
+        console.log(data);
+        if(data.stat != "ok") {
+            console.log("Create station operation failed. Status: " + data.stat);
+            console.log(JSON.stringify(data));
+            callback(false);
+            return;
+        }
+
+        callback(data.result);
+    }
+
+    newStationRequest();
+}
+
+/* Function to delete a user station */
+function deleteStation(stationToken, callback) {
+
+    function deleteStationRequest() {
+        var request = {
+            "stationToken": stationToken
+        }
+
+        transceive("POST",
+                   HTTP_ENTRY_POINT,
+                   "station.deleteStation",
+                   request,
+                   true,
+                   deleteStationResponse);
+    }
+
+    function deleteStationResponse(data) {
+        console.log(data);
+        /* Ensure success */
+        if(data.stat != "ok") {
+            console.log("Delete station operation failed. Status: " + data.stat);
+            console.log(JSON.stringify(data));
+            callback(false);
+            return;
+        }
+
+        callback(data.stat);
+    }
+
+    deleteStationRequest();
 }

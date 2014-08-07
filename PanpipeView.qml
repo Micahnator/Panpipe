@@ -35,6 +35,7 @@ Item {
     signal loginCredentialsProvided(string username, string password)
     signal userLogout()
     signal sortPreferenceProvided(string preferredSort)
+    signal newStationSearchQuery(string query)
 
     /* Public properties */
     property var stationsList
@@ -49,6 +50,7 @@ Item {
     property string audioSourceUrl
     property string username_auto_fill
     property string webviewURL
+    property var stationSearchResultList
 
     /* Private properties */
     property int _temp_song_thumbs_up
@@ -205,6 +207,72 @@ Item {
                 }
             ]
         }
+
+        Page {
+            id: manageStationsPage
+            title: "Manage Stations"
+            visible: false
+
+            onVisibleChanged: {
+                if(manageStationsPage.visible) {
+                    manageStationsPageLoader.sourceComponent = manageStationspageComponent
+                } else {
+                    manageStationsPageLoader.sourceComponent = undefined
+                }
+            }
+
+            Loader {
+                id: manageStationsPageLoader
+                anchors.fill: parent
+
+                onLoaded: {
+                    /* Connect the station management's flickable property to the listview */
+//                    manageStationsPage.flickable = manageStationsPageLoader.item.stationsListItem;
+                }
+            }
+
+            /* Toolbar */
+            tools: ToolbarItems {
+                id: manageStationsToolbar
+                ToolbarButton {
+                    objectName: logoutAction
+                    iconSource: Qt.resolvedUrl("resources/icons/close.svg")
+                    text: i18n.tr("Logout")
+                    onTriggered: {
+                        /* Hide toolbar */
+                        stationsToolbar.opened = false;
+
+                        /* show login dialog */
+                        PopupUtils.open(logoutDialog);
+                    }
+                }
+                ToolbarButton {
+                    iconSource: Qt.resolvedUrl("resources/icons/properties.svg")
+                    text: i18n.tr("Settings")
+                    onTriggered: {
+                        PopupUtils.open(settingsDialog);
+                    }
+                }
+//                ToolbarButton {
+//                    iconSource: Qt.resolvedUrl("resources/icons/filter.svg")
+//                    text: i18n.tr("Sort")
+//                    onTriggered: {
+//                        /* Hide toolbar */
+//                        stationsToolbar.opened = false;
+
+//                        /* Show sorting options popup */
+//                        PopupUtils.open(stationsPageContents.stationSortingPopup);
+//                    }
+//                }
+                ToolbarButton {
+                    iconSource: Qt.resolvedUrl("resources/icons/add.svg")
+                    text: i18n.tr("Add/Remove")
+                    onTriggered: {
+                        PopupUtils.open(addStationsDialog);
+                    }
+                }
+            }
+        }
     }
 
     /* Define the webview component */
@@ -212,6 +280,16 @@ Item {
         id: webviewComponent
 
         WebView {}
+    }
+
+    /* Define the ManageStationsPage component */
+    Component {
+        id: manageStationspageComponent
+
+        ManageStationsPage {
+            id: manageStationsPageContents
+            anchors.fill: parent
+        }
     }
 
     /* Define login credential dialog */
@@ -389,6 +467,53 @@ Item {
                 onClicked: {
                     /* close dialog */
                     PopupUtils.close(aboutScreen)
+                }
+            }
+        }
+    }
+
+    /* Add stations dialog */
+    Component {
+        id: addStationsDialog
+
+        Popups.Dialog {
+            id: addStationsScreen
+            title: i18n.tr("Manage Stations")
+
+            Component.onCompleted: {
+                searchQueryForm.forceActiveFocus();
+            }
+
+            TextField {
+                id: searchQueryForm
+                placeholderText: i18n.tr("Song or Artist")
+
+                onTextChanged: {
+                    newStationSearchQuery(searchQueryForm.text);
+                }
+            }
+
+            ListView {
+                height: units.gu(40)
+                model: stationSearchResultList
+
+                delegate: ListItem.Empty {
+                    //text: stationSearchResultList[index].artistName
+                    Text {
+                        anchors.centerIn: parent
+                        text: stationSearchResultList[index].artistName
+                        color: "white"
+                    }
+                }
+            }
+
+            /* Close dialog */
+            Button {
+                text: i18n.tr("Close")
+                color: "gray"
+
+                onClicked: {
+                    PopupUtils.close(addStationsScreen)
                 }
             }
         }
