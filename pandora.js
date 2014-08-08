@@ -56,17 +56,17 @@ function transceive(httpMethod, url, method, data, encrypt, callback) {
     method = "&method=" + method;
     var urlParameters = "";
 
-    //partner id
+    /* partner id */
     if (partnerResponse.partnerId)
     {
         urlParameters = urlParameters + "&partner_id=" + partnerResponse.partnerId;
     }
-    //user id
+    /* user id */
     if (userResponse.userId)
     {
         urlParameters = urlParameters + "&user_id=" + userResponse.userId;
     }
-    //authorization token
+    /* authorization token */
     if (userResponse.userAuthToken)
     {
         urlParameters = urlParameters + "&auth_token=" + encodeURIComponent(userResponse.userAuthToken);
@@ -271,6 +271,7 @@ function getStation(stationToken, callback) {
 
         /* Ensure success */
         if(data.stat != "ok") {
+            console.log(data);
             callback(false);
             return;
         }
@@ -463,4 +464,100 @@ function deleteStation(stationToken, callback) {
     }
 
     deleteStationRequest();
+}
+
+/* Function to delete user feedback */
+function deleteFeedback(feedbackId, callback) {
+
+    function deleteFeedbackRequest() {
+        var request = {
+            "feedbackId": feedbackId
+        }
+
+        transceive("POST",
+                   HTTP_ENTRY_POINT,
+                   "station.deleteFeedback",
+                   request,
+                   true,
+                   deleteFeedbackResponse);
+    }
+
+    function deleteFeedbackResponse(data) {
+        /* Ensure success */
+        if(data.stat != "ok") {
+            console.log("Delete feedback operation failed. Status: " + data.stat);
+            console.log(JSON.stringify(data));
+            callback(false);
+            return;
+        }
+
+        callback(data.stat);
+    }
+
+    deleteFeedbackRequest();
+}
+
+/* Function to delete a music seed */
+function deleteSeed(seedId, callback) {
+
+    function deleteSeedRequest() {
+        var request = {
+            "seedId": seedId
+        }
+
+        transceive("POST",
+                   HTTP_ENTRY_POINT,
+                   "station.deleteMusic",
+                   request,
+                   true,
+                   deleteSeedResponse);
+    }
+
+    function deleteSeedResponse(data) {
+        /* Ensure success */
+        if(data.stat != "ok") {
+            console.log("Delete seed operation failed. Status: " + data.stat);
+            console.log(JSON.stringify(data));
+            callback(false);
+            return;
+        }
+
+        callback(data.stat);
+    }
+
+    deleteSeedRequest();
+}
+
+/* Function to add a seed to a station */
+function addSeed(musicToken, stationToken, callback) {
+
+    function addSeedRequest() {
+        var request = {
+            "musicToken": musicToken,
+            "stationToken": stationToken,
+        }
+
+        transceive("POST",
+                   HTTP_ENTRY_POINT,
+                   "station.addMusic",
+                   request,
+                   true,
+                   addSeedResponse);
+    }
+
+    function addSeedResponse(data) {
+        /* Ensure success */
+        if(data.stat != "ok") {
+            console.log("Add seed to station operation failed. Status: " + data.stat);
+            console.log(JSON.stringify(data));
+            callback(false);
+            return;
+        }
+
+        if(callback !== null) {
+            callback(data.stat);
+        }
+    }
+
+    addSeedRequest();
 }

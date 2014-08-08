@@ -31,12 +31,10 @@ Item {
     property int _pressAndHoldIndex
     property int _pressIndex
     property var _tempQuickMixIdsArray
-//    property var _stationdDataTemp: pandoraModel.userStationsAlphabetical;
     property string _tempStationToBeDeletedName
     property var _tempStationToBeDeletedToken
     property int _tempStationToBeDeletedIndex
 
-//    property bool searchMode: searchQueryForm.focus
 
     Component.onCompleted: {
         updateManageStations();
@@ -49,66 +47,19 @@ Item {
         pandoraModel.retrieveStations();
     }
 
-//    onSearchModeChanged: {
-//        stationsView.model = (searchModel) ? searchDataModel.model : dataModel.model;
-//    }
-
     function updateManageStations() {
         /* Extract the list of QuickMix station ids */
         _tempQuickMixIdsArray = pandoraModel.userStationsAlphabetical[0].quickMixStationIds.slice();
 
         /* Update the data model */
-//        dataModel.json = JSON.stringify(_stationdDataTemp);
-//        stationsView.model = (searchModel) ? searchDataModel.model : dataModel.model;
-//        stationsView.model = dataModel.model;
         dataModel.json = JSON.stringify(pandoraModel.userStationsAlphabetical);
     }
 
-//    TextField {
-//        id: searchQueryForm
-//        placeholderText: i18n.tr("Create a New Station")
-
-//        anchors {
-//            top: parent.top
-//            topMargin: units.gu(2)
-//            left: parent.left
-//            leftMargin: units.gu(2)
-//            right: parent.right
-//            rightMargin: units.gu(2)
-//        }
-
-//        onTextChanged: {
-//            newStationSearchQuery(searchQueryForm.text);
-//        }
-//    }
-
-//    Button {
-//        id: cancelSearchButton
-
-//        text: "Cancel Search"
-
-//        visible: (searchModel)
-//        enabled: (searchModel)
-
-//        anchors {
-//            left: parent.left
-//            leftMargin: units.gu(5)
-//            right: parent.right
-//            rightMargin: units.gu(5)
-//            bottom: parent.bottom
-//            bottomMargin: units.gu(1)
-//        }
-
-//        onClicked: {
-//            searchQueryForm.focus = false;
-//        }
-//    }
 
     Button {
         id: searchNewStationButton
 
         text: "Create a New Station"
-//        color: "orange"
 
         anchors {
             top: parent.top
@@ -124,49 +75,32 @@ Item {
         }
     }
 
-//    JSONListModel {
-//        id: searchDataModel
-
-//        json: JSON.stringify(pandoraModel.stationSearchResults)
-//    }
 
     JSONListModel {
         id: dataModel
-//        json: JSON.stringify(pandoraModel.userStationsAlphabetical)
-//        json: (searchQueryForm.focus) ? JSON.stringify(pandoraModel.stationSearchResults) : JSON.stringify(pandoraModel.userStationsAlphabetical)
-
-//        query: "$[*]"
     }
 
     ListView {
         id: stationsView
         clip: true
 
-//        anchors.top: parent.top
-//        anchors.top: searchQueryForm.bottom
         anchors.top: searchNewStationButton.bottom
         anchors.topMargin: units.gu(2)
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-//        anchors.bottom: (searchModel) ? cancelSearchButton.top : parent.bottom
-//        anchors.bottomMargin: (searchModel) ? units.gu(2) : units.gu(0)
 
-//        model: (searchModel) ? searchDataModel.model : dataModel.model//dataModel.model
         model: dataModel.model
 
         onModelChanged: {
             currentIndex = -1;
             console.log("Manage station model changed");
-//            _tempQuickMixIdsArray = pandoraModel.userStationsAlphabetical[0].quickMixStationIds.slice();
-//            console.log(JSON.stringify(model) + "\n\n");
         }
 
         Component.onCompleted: {
             currentIndex = -1;
         }
 
-//        delegate: (searchModel) ? searchStationDelegateComponent : manageStationDelegateComponent
         delegate: manageStationDelegateComponent
     }
 
@@ -214,12 +148,14 @@ Item {
                     if(index != 0) {
                         if(stationsView.currentIndex !== index) {
                             stationsView.currentIndex = index;
+                            selectedStationToken = model.stationToken;
                         } else {
                             stationsView.currentIndex = -1;
                         }
                     }
                 }
             }
+
 
             Label {
                 id: manageListText
@@ -316,6 +252,26 @@ Item {
                 }
             }
 
+            Button {
+                id: detailsButton
+                text: "Details"
+
+                /* These properties changed when state === "expanded" */
+                enabled: false
+                visible: false
+                opacity: 0
+
+                anchors {
+                    left: deleteButton.right
+                    leftMargin: units.gu(2)
+                    verticalCenter: deleteButton.verticalCenter
+                }
+
+                onClicked: {
+                    pagestack.push(stationDetailsPage)
+                }
+            }
+
             states: [
                 State {
                     name: "expanded"
@@ -324,6 +280,9 @@ Item {
                     }
                     PropertyChanges {
                         target: deleteButton; enabled: true; visible:true; opacity: 1
+                    }
+                    PropertyChanges {
+                        target: detailsButton; enabled: true; visible:true; opacity: 1
                     }
                 }
             ]
@@ -408,7 +367,6 @@ Item {
 
             Component.onCompleted: {
                 stationPicked = false;
-//                searchDataModel.model.clear();
                 pandoraModel.stationSearchResults = {};
                 searchQueryForm.forceActiveFocus();
             }
@@ -416,10 +374,6 @@ Item {
             Component.onDestruction: {
                 searchDataModel.model.clear();
                 searchQueryForm.text = "";
-
-//                if(stationPicked) {
-//                    pagestack.pop();
-//                }
             }
 
             TextField {
@@ -493,7 +447,6 @@ Item {
                 }
 
                 delegate: ListItem.Empty {
-//                    id: searchStationDelegate
 
                     Label {
                         id: searchResultText
@@ -516,7 +469,7 @@ Item {
                         anchors.fill: parent
 
                         onClicked: {
-//                            pandoraModel.newUserStation(model.musicToken);
+                            pandoraModel.newUserStation(model.musicToken);
                             PopupUtils.close(searchStationScreen);
                             stationPicked = true;
                             pagestack.pop();
@@ -524,11 +477,6 @@ Item {
                     }
                 }
             }
-
-//            onCloseClicked: {
-//                searchDataModel.model.clear();
-//                searchQueryForm.text = "";
-//            }
         }
     }
 }

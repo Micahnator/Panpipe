@@ -39,6 +39,8 @@ Item {
     property int playlistCurrentIndex
     property var stationSearchResults
 
+    property var stationDetails
+
     /* Initialization operations */
     Component.onCompleted: {
         stationSelected = false;
@@ -164,6 +166,23 @@ Item {
         Pandora.deleteStation(stationToken, deleteUserStationResponse);
     }
 
+    function getUserStation(stationToken) {
+        console.log("Getting details for " + stationToken);
+        Pandora.getStation(stationToken, getUserStationResponse);
+    }
+
+    function deleteUserFeedback(feedbackId) {
+        Pandora.deleteFeedback(feedbackId, deleteUserFeedbackResponse);
+    }
+
+    function addMusicSeed(musicToken, stationToken) {
+        Pandora.addSeed(musicToken, stationToken, null);
+    }
+
+    function removeMusicSeed(seedId) {
+        Pandora.deleteSeed(seedId, deleteSeedResponse);
+    }
+
     /*
         Private functions
     */
@@ -187,7 +206,6 @@ Item {
     }
 
     function retrieveStationsResponse(stationList) {
-//        console.log(JSON.stringify(stationList));
         userStationsByDate = stationList;
         var userStationsTemp = [];
         userStationsTemp = userStationsByDate.slice();
@@ -225,13 +243,6 @@ Item {
 
     function searchForMusicResponse(searchResult) {
         /* experimental: insert match field identifier */
-//        for(var i = 0; i < stationSearchResults.length; i++) {
-//            if(stationSearchResults[i].likelyMatch !== null) {
-//                stationSearchResults[i].matchType = "Artists"
-//            } else {
-//                stationSearchResults[i].matchType = "Songs"
-//            }
-//        }
         for(var i = 0; i < searchResult.songs.length; i++) {
             searchResult.songs[i].matchType = "Songs"
         }
@@ -242,7 +253,6 @@ Item {
 
         stationSearchResults = searchResult.songs;
         stationSearchResults = stationSearchResults.concat(searchResult.artists);
-//        console.log(JSON.stringify(stationSearchResults));
     }
 
     function updateQuickMixResponse(statusCode) {
@@ -265,6 +275,21 @@ Item {
         if(statusCode === "ok") {
             retrieveStations();
         }
+    }
+
+    function getUserStationResponse(stationData) {
+        console.log("Station details received.");
+        stationDetails = stationData;
+
+        console.log("details url: " + stationDetails.stationDetailUrl);
+    }
+
+    function deleteUserFeedbackResponse(statusCode) {
+        console.log("Delete user feedback status code: " + statusCode);
+    }
+
+    function deleteSeedResponse(statusCode) {
+        console.log("Delete seed status code: " + statusCode);
     }
 
     /*
@@ -312,7 +337,7 @@ Item {
         }
     }
 
-    //Function to sort the stations list alphabetically
+    /* Function to sort the stations list alphabetically */
     function __sortStationArrayAlphabetically(stationsList) {
         stationsList.sort(function(a,b){return __strcmp(a.stationName, b.stationName)});
         __moveQuickMix(stationsList);

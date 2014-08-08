@@ -52,6 +52,8 @@ Item {
     property string webviewURL
     property var stationSearchResultList
 
+    property string selectedStationToken
+
     /* Private properties */
     property int _temp_song_thumbs_up
 
@@ -215,7 +217,7 @@ Item {
 
             onVisibleChanged: {
                 if(manageStationsPage.visible) {
-                    manageStationsPageLoader.sourceComponent = manageStationspageComponent
+                    manageStationsPageLoader.sourceComponent = manageStationsPageComponent
                 } else {
                     manageStationsPageLoader.sourceComponent = undefined
                 }
@@ -225,10 +227,6 @@ Item {
                 id: manageStationsPageLoader
                 anchors.fill: parent
 
-                onLoaded: {
-                    /* Connect the station management's flickable property to the listview */
-//                    manageStationsPage.flickable = manageStationsPageLoader.item.stationsListItem;
-                }
             }
 
             /* Toolbar */
@@ -253,23 +251,37 @@ Item {
                         PopupUtils.open(settingsDialog);
                     }
                 }
-//                ToolbarButton {
-//                    iconSource: Qt.resolvedUrl("resources/icons/filter.svg")
-//                    text: i18n.tr("Sort")
-//                    onTriggered: {
-//                        /* Hide toolbar */
-//                        stationsToolbar.opened = false;
-
-//                        /* Show sorting options popup */
-//                        PopupUtils.open(stationsPageContents.stationSortingPopup);
-//                    }
-//                }
                 ToolbarButton {
                     iconSource: Qt.resolvedUrl("resources/icons/add.svg")
                     text: i18n.tr("Add/Remove")
                     onTriggered: {
                         PopupUtils.open(addStationsDialog);
                     }
+                }
+            }
+        }
+
+        /* Station details page */
+        Page {
+            id: stationDetailsPage
+            title: "Station Details"
+            visible: false
+
+            onVisibleChanged: {
+                if(stationDetailsPage.visible) {
+                    stationDetailsPageLoader.sourceComponent = stationDetailsPageComponent
+                } else {
+                    stationDetailsPageLoader.sourceComponent = undefined
+                }
+            }
+
+            Loader {
+                id: stationDetailsPageLoader
+                anchors.fill: parent
+
+                onLoaded: {
+                    /* Connect the station management's flickable property to the listview */
+                    stationDetailsPage.flickable = stationDetailsPageLoader.item.flickerable;
                 }
             }
         }
@@ -284,10 +296,20 @@ Item {
 
     /* Define the ManageStationsPage component */
     Component {
-        id: manageStationspageComponent
+        id: manageStationsPageComponent
 
         ManageStationsPage {
             id: manageStationsPageContents
+            anchors.fill: parent
+        }
+    }
+
+    /* Define the StationDetailsPage component */
+    Component {
+        id: stationDetailsPageComponent
+
+        StationDetailsPage {
+            id: stationDetailsPageContents
             anchors.fill: parent
         }
     }

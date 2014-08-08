@@ -98,7 +98,6 @@ Item {
         }
 
         onModelChanged: {
-            console.log("model length: " + model.length );
             if( model.length == 0 ) {
                 currentIndex = -1;
                 _currentStationToken = "";
