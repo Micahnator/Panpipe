@@ -41,6 +41,8 @@ MainView {
     width: units.gu(50)
     height: units.gu(80)
 
+    useDeprecatedToolbar: false
+
     /* Suru colors */
     headerColor: "#343C60"
     backgroundColor: "#6A69A2"
@@ -69,25 +71,16 @@ MainView {
         }
     }
 
-    /* HUD actions */
-
 
     Action {
         id: logoutAction
         text: i18n.tr("Logout")
-
-//        action: Action {}
-
-//        keywords: i18n.tr("Logout")
         onTriggered: {
-            //logout();
             viewComponent.confirmLogout();
         }
     }
 
     actions: [logoutAction]
-
-
 
     /* Manage Pandora activity */
     PandoraInterface {

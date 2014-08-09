@@ -163,10 +163,6 @@ Item {
     UbuntuShape {
         id: controlBar
 
-        /* Hide the media controls when the player page's toolbar is shown */
-        visible: !playerToolbar.opened
-        enabled: !playerToolbar.opened
-
         anchors {
             bottom: parent.bottom
             bottomMargin: units.gu(1)
