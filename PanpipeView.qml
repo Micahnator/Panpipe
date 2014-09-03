@@ -142,6 +142,14 @@ Item {
             playerPageContents.displaySongOptions();
         }
     }
+    Action {
+        id: stationManagementAction
+        iconSource: Qt.resolvedUrl("resources/icons/add.svg")
+        text: i18n.tr("Add/Remove")
+        onTriggered: {
+            pagestack.push(manageStationsPage)
+        }
+    }
 
     PageStack {
         id: pagestack
@@ -160,7 +168,7 @@ Item {
                 anchors.fill: parent
             }
 
-            head.actions: [logoutAction, settingsAction, sortAction]
+            head.actions: [sortAction, stationManagementAction, settingsAction, logoutAction]
         }
 
         Page {
@@ -173,7 +181,8 @@ Item {
                 anchors.fill: parent
             }
 
-            head.actions: [logoutAction, settingsAction, songMenuAction]
+            //head.actions: [logoutAction, settingsAction, songMenuAction]
+            head.actions: [songMenuAction]
         }
 
         Page {
@@ -229,36 +238,37 @@ Item {
 
             }
 
-            /* Toolbar */
-            tools: ToolbarItems {
-                id: manageStationsToolbar
-                ToolbarButton {
-                    objectName: logoutAction
-                    iconSource: Qt.resolvedUrl("resources/icons/close.svg")
-                    text: i18n.tr("Logout")
-                    onTriggered: {
-                        /* Hide toolbar */
-                        stationsToolbar.opened = false;
+            //head.actions: [logoutAction, settingsAction]
+//            /* Toolbar */
+//            tools: ToolbarItems {
+//                id: manageStationsToolbar
+//                ToolbarButton {
+//                    objectName: logoutAction
+//                    iconSource: Qt.resolvedUrl("resources/icons/close.svg")
+//                    text: i18n.tr("Logout")
+//                    onTriggered: {
+//                        /* Hide toolbar */
+//                        stationsToolbar.opened = false;
 
-                        /* show login dialog */
-                        PopupUtils.open(logoutDialog);
-                    }
-                }
-                ToolbarButton {
-                    iconSource: Qt.resolvedUrl("resources/icons/properties.svg")
-                    text: i18n.tr("Settings")
-                    onTriggered: {
-                        PopupUtils.open(settingsDialog);
-                    }
-                }
-                ToolbarButton {
-                    iconSource: Qt.resolvedUrl("resources/icons/add.svg")
-                    text: i18n.tr("Add/Remove")
-                    onTriggered: {
-                        PopupUtils.open(addStationsDialog);
-                    }
-                }
-            }
+//                        /* show login dialog */
+//                        PopupUtils.open(logoutDialog);
+//                    }
+//                }
+//                ToolbarButton {
+//                    iconSource: Qt.resolvedUrl("resources/icons/properties.svg")
+//                    text: i18n.tr("Settings")
+//                    onTriggered: {
+//                        PopupUtils.open(settingsDialog);
+//                    }
+//                }
+//                ToolbarButton {
+//                    iconSource: Qt.resolvedUrl("resources/icons/add.svg")
+//                    text: i18n.tr("Add/Remove")
+//                    onTriggered: {
+//                        PopupUtils.open(addStationsDialog);
+//                    }
+//                }
+//            }
         }
 
         /* Station details page */
