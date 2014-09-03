@@ -18,10 +18,10 @@ along with Panpipe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
+import Ubuntu.Components 1.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import Ubuntu.Components.Popups 0.1 as Popups
-import Ubuntu.Components.Extras.Browser 0.1
+import Ubuntu.Web 0.2
 
 /* View component for Panpipe */
 Item {
@@ -72,7 +72,6 @@ Item {
 
     onStationSelected: {
         pagestack.push(playerPage);
-        playerToolbar.opened = false;
     }
 
     onStationsListChanged: {
@@ -104,6 +103,42 @@ Item {
         stationsPageContents.updateStations();
     }
 
+    Action {
+        id: logoutAction
+        objectName: logoutAction
+        iconSource: Qt.resolvedUrl("resources/icons/close.svg")
+        text: i18n.tr("Logout")
+        onTriggered: {
+            /* show login dialog */
+            PopupUtils.open(logoutDialog);
+        }
+    }
+    Action {
+        id: settingsAction
+        iconSource: Qt.resolvedUrl("resources/icons/properties.svg")
+        text: i18n.tr("Settings")
+        onTriggered: {
+            PopupUtils.open(settingsDialog)
+        }
+    }
+    Action {
+        id: sortAction
+        iconSource: Qt.resolvedUrl("resources/icons/filter.svg")
+        text: i18n.tr("Sort")
+        onTriggered: {
+            /* Show sorting options popup */
+            PopupUtils.open(stationsPageContents.stationSortingPopup);
+        }
+    }
+    Action {
+        id: songMenuAction
+        iconSource: Qt.resolvedUrl("resources/icons/navigation-menu.svg")
+        text: i18n.tr("Song Menu")
+        onTriggered: {
+            playerPageContents.displaySongOptions();
+        }
+    }
+
     PageStack {
         id: pagestack
         Component.onCompleted: push(stationsPage)
@@ -121,40 +156,7 @@ Item {
                 anchors.fill: parent
             }
 
-            /* Toolbar */
-            tools: ToolbarItems {
-                id: stationsToolbar
-                ToolbarButton {
-                    objectName: logoutAction
-                    iconSource: Qt.resolvedUrl("resources/icons/close.svg")
-                    text: i18n.tr("Logout")
-                    onTriggered: {
-                        /* Hide toolbar */
-                        stationsToolbar.opened = false;
-
-                        /* show login dialog */
-                        PopupUtils.open(logoutDialog);
-                    }
-                }
-                ToolbarButton {
-                    iconSource: Qt.resolvedUrl("resources/icons/properties.svg")
-                    text: i18n.tr("Settings")
-                    onTriggered: {
-                        PopupUtils.open(settingsDialog)
-                    }
-                }
-                ToolbarButton {
-                    iconSource: Qt.resolvedUrl("resources/icons/filter.svg")
-                    text: i18n.tr("Sort")
-                    onTriggered: {
-                        /* Hide toolbar */
-                        stationsToolbar.opened = false;
-
-                        /* Show sorting options popup */
-                        PopupUtils.open(stationsPageContents.stationSortingPopup);
-                    }
-                }
-            }
+            head.actions: [logoutAction, settingsAction, sortAction]
         }
 
         Page {
@@ -167,40 +169,12 @@ Item {
                 anchors.fill: parent
             }
 
-            tools: ToolbarItems {
-                id: playerToolbar
-
-                ToolbarButton {
-                    objectName: logoutAction
-                    iconSource: Qt.resolvedUrl("resources/icons/close.svg")
-                    text: i18n.tr("Logout")
-                    onTriggered: {
-                        /* Hide toolbar */
-                        stationsToolbar.opened = false;
-
-                        /* show login dialog */
-                        PopupUtils.open(logoutDialog);
-                    }
-                }
-                ToolbarButton {
-                    iconSource: Qt.resolvedUrl("resources/icons/properties.svg")
-                    text: i18n.tr("Settings")
-                    onTriggered: {
-                        PopupUtils.open(settingsDialog)
-                    }
-                }
-                ToolbarButton {
-                    iconSource: Qt.resolvedUrl("resources/icons/navigation-menu.svg")
-                    text: i18n.tr("Song Menu")
-                    onTriggered: {
-                        playerPageContents.displaySongOptions();
-                    }
-                }
-            }
+            head.actions: [logoutAction, settingsAction, songMenuAction]
         }
 
         Page {
             id: webViewPage
+            title: i18n.tr("Details")
             visible: false
 
             onVisibleChanged: {
@@ -216,25 +190,20 @@ Item {
                 anchors.fill: parent
 
                 onLoaded: {
-                    item.url = webviewURL
+                    item.url = webviewURL;
                 }
             }
 
-            /* Toolbar */
-            tools: ToolbarItems {
-                id: webViewToolbar
-                ToolbarButton {
+            head.actions: [
+                Action {
                     iconSource: Qt.resolvedUrl("resources/icons/go-to.svg")
                     text: i18n.tr("In Browser")
-                    onTriggered: {
-                        /* Hide toolbar */
-                        webViewToolbar.opened = false;
-
+                    onTriggered: {                 
                         /* show login dialog */
                         Qt.openUrlExternally(webviewURL);
                     }
                 }
-            }
+            ]
         }
     }
 
@@ -242,7 +211,7 @@ Item {
     Component {
         id: webviewComponent
 
-        UbuntuWebView {}
+        WebView {}
     }
 
     /* Define login credential dialog */

@@ -261,7 +261,6 @@ Item {
             onClicked: {
                 if(!justSwiped.running) {
                     pagestack.push(playerPage);
-                    playerToolbar.opened = false;
                 }
             }
         }
