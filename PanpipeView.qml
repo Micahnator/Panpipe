@@ -476,6 +476,7 @@ Item {
             Label {
                 text: i18n.tr("Panpipe is a Pandora Internet Radio client for Ubuntu, licensed under the GPLv3.")
                 wrapMode: Text.WordWrap
+                color: UbuntuColors.darkGrey
                 fontSize: "medium"
             }
 

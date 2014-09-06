@@ -18,8 +18,8 @@ along with Panpipe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1 as ListItem
+import Ubuntu.Components 1.1
+import Ubuntu.Components.ListItems 1.0 as ListItem
 import Ubuntu.Components.Popups 0.1 as Popups
 import "components"
 
@@ -80,7 +80,7 @@ Item {
         stationsView.currentIndex = __findStationIndexFromToken(_currentStationToken, stationsView.model);
     }
 
-    ListView {
+    UbuntuListView {
         id: stationsView
         clip: true
 
@@ -90,8 +90,6 @@ Item {
         anchors.bottom: (audioSourceUrl != "") ? nowPlayingBar.top : parent.bottom
 
         cacheBuffer: 1000
-
-        highlight: highlightBlock
 
         Component.onCompleted: {
             currentIndex = -1;
@@ -106,14 +104,23 @@ Item {
 
         delegate: ListItem.Standard {
             text: stationsView.model[index]["stationName"];
-            icon: Image {
-                source: stationsView.model[index]["artUrl"]
-                sourceSize.height: 40
-                sourceSize.width: 40
-                height: 40
-                width: height
-                fillMode: Image.PreserveAspectFit
-                anchors.verticalCenter: parent.verticalCenter
+
+            iconSource: stationsView.model[index]["artUrl"]
+            fallbackIconSource: Qt.resolvedUrl("resources/icons/help.svg")
+            iconFrame: false
+
+            // Current station indicator
+            Rectangle {
+                id: currentStationHighlight
+
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: parent.left
+                }
+
+                width: units.gu(0.75)
+                color: (stationsView.currentIndex == index) ? UbuntuColors.orange : "transparent"
             }
 
             onClicked: {
@@ -279,22 +286,6 @@ Item {
             progressColor: UbuntuColors.orange
         }
     }
-
-    /* Highligh object */
-    Component {
-         id: highlightBlock
-         Rectangle {
-             visible: _selectionMade
-             width: units.gu(0.75); height: stationsView.currentItem.height
-             color: UbuntuColors.orange
-             y: stationsView.currentItem.y
-             Behavior on y {
-                 SmoothedAnimation {
-                     duration: 300
-                 }
-             }
-         }
-     }
 
     /* Stations menu popover */
     Component {
