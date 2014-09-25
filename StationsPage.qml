@@ -22,6 +22,7 @@ import Ubuntu.Components 1.1
 import Ubuntu.Components.ListItems 1.0 as ListItem
 import Ubuntu.Components.Popups 0.1 as Popups
 import "components"
+import "models"
 
 Item {
     /* Aliases */
@@ -59,25 +60,32 @@ Item {
     Connections {
         target: pandoraModel
 
-        onStationsLoaded: {
-            if(!sortMethod) {
-                sortMethod = startupPreferredStationSort;
-            } else {
-                updateStationSort(sortMethod);
-            }
+//        onStationsLoaded: {
+//            if(!sortMethod) {
+//                sortMethod = startupPreferredStationSort;
+//            } else {
+//                updateStationSort(sortMethod);
+//            }
+//        }
+        onLoginSuccess: {
+            stationsModel.getData();
         }
     }
 
-    function updateStations() {
-        updateStationSort(sortMethod);
-    }
+//    function updateStations() {
+//        updateStationSort(sortMethod);
+//    }
 
-    function updateStationSort(method) {
-        //Update the view model
-        stationsView.model = (method === "by_date") ? pandoraModel.userStationsByDate : pandoraModel.userStationsAlphabetical;
+//    function updateStationSort(method) {
+//        //Update the view model
+//        stationsView.model = (method === "by_date") ? pandoraModel.userStationsByDate : pandoraModel.userStationsAlphabetical;
 
-        //Update the currently selected index
-        stationsView.currentIndex = __findStationIndexFromToken(_currentStationToken, stationsView.model);
+//        //Update the currently selected index
+//        stationsView.currentIndex = __findStationIndexFromToken(_currentStationToken, stationsView.model);
+//    }
+
+    StationModel {
+        id: stationsModel
     }
 
     UbuntuListView {
@@ -95,12 +103,14 @@ Item {
             currentIndex = -1;
         }
 
-        onModelChanged: {
-            if( model.length == 0 ) {
-                currentIndex = -1;
-                _currentStationToken = "";
-            }
-        }
+        model: stationsModel
+
+//        onModelChanged: {
+//            if( model.length == 0 ) {
+//                currentIndex = -1;
+//                _currentStationToken = "";
+//            }
+//        }
 
         delegate: ListItem.Standard {
             text: stationsView.model[index]["stationName"];

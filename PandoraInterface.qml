@@ -26,6 +26,7 @@ Item {
     /* Signals */
     signal loginFailed()
     signal stationsLoaded()
+    signal loginSuccess()
 
     /* public properties */
     property bool connected
@@ -114,7 +115,7 @@ Item {
     }
 
     function retrieveStations() {
-        Pandora.getUserStations(retrieveStationsResponse);
+        //Pandora.getUserStations(retrieveStationsResponse);
     }
 
     function setStation(stationToken) {
@@ -198,6 +199,7 @@ Item {
         if (success == true) {
             console.log("Login succeeded!");
             connected = true;
+            loginSuccess();
         } else {
             console.log("Login failed :/");
             loginFailed(_lastAttemptedUsername);
