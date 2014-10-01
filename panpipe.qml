@@ -86,12 +86,12 @@ MainView {
     PandoraInterface {
         id: pandoraModel
 
-        onConnectedChanged: {
-            /* If connection was successful, retrieve the station list */
-            if (pandoraModel.connected == true) {
-                pandoraModel.retrieveStations();
-            }
-        }
+//        onConnectedChanged: {
+//            /* If connection was successful, retrieve the station list */
+//            if (pandoraModel.connected == true) {
+//                pandoraModel.retrieveStations();
+//            }
+//        }
 
         onLoginFailed: {
             viewComponent.requestCredentials(_lastAttemptedUsername);

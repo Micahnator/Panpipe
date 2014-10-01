@@ -115,7 +115,7 @@ Item {
     }
 
     function retrieveStations() {
-        //Pandora.getUserStations(retrieveStationsResponse);
+        Pandora.getUserStations(retrieveStationsResponse);
     }
 
     function setStation(stationToken) {

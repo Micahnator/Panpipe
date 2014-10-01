@@ -67,8 +67,15 @@ Item {
 //                updateStationSort(sortMethod);
 //            }
 //        }
-        onLoginSuccess: {
-            stationsModel.getData();
+//        onLoginSuccess: {
+//            stationsModel.getData();
+//        }
+        onConnectedChanged: {
+            /* If connection was successful, retrieve the station list */
+            if (pandoraModel.connected == true) {
+                //pandoraModel.retrieveStations();
+                stationsModel.getData();
+            }
         }
     }
 
