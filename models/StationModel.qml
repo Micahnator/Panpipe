@@ -17,73 +17,169 @@ You should have received a copy of the GNU General Public License
 along with Panpipe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.0
-
-import "../pandora.js" as Pandora
+import QtQuick 2.3
 
 Item {
-    id: baseModel
-//    property string source: ""
-    property string json: ""
-//    property int status: XMLHttpRequest.UNSENT
+    id: stationModel
 
-    property ListModel model: ListModel { id: model }
+    /* Signals */
+    signal updated()
+    signal receivedError()
+    signal dataTimeout()
+
+    /* Aliases */
+    property alias model: model
     property alias count: model.count
 
-    property bool loading: false
+    /* Public properties */
+    property bool loading
+    property var pandoraInterface   //Must be bound to a PandoraInterface component
+    property string sortMethod      //Supported Options: "alphabetical", "date"
+    property string jsonCopy
+    property int timeoutTime
 
-    signal updated()
+    /* Private properties */
+    property var stationArray
+    property var lastReceivedGoodData
 
-//    onSourceChanged: {
-//        loading = true
-//        var xhr = new XMLHttpRequest;
-//        xhr.open("GET", source);
-//        xhr.onreadystatechange = function() {
-//            status = xhr.readyState;
-//            if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200)
-//                json = xhr.responseText;
-//        }
-//        xhr.send();
-//    }
 
-    onJsonChanged: {
-        if ( json != "" ) {
-            updateJSONModel();
-            updated();
-            loading = false
+    /* Initialization */
+    Component.onCompleted: {
+        loading = false;
+
+        /* If sortMethod string is empty, assign it to "date" by default */
+        if(!sortMethod || 0 === sortMethod.length) {
+            sortMethod = "date";
+        }
+
+        /* If timeoutTime is nil, set it to a default of 10 seconds */
+        if(!timeoutTime || 0 === timeoutTime) {
+            timeoutTime = 10000;
         }
     }
 
-    function getData() {
-        function dataRetrieved() {
-            json = Pandora.userStationsString;
-        }
-
-        Pandora.getUserStations(dataRetrieved);
+    ListModel {
+        id: model
     }
 
-    function updateJSONModel() {
+    Timer {
+        id: requestResponseTimeout
+
+        interval: timeoutTime
+        repeat: false
+
+        /* Handle data timeout */
+        onTriggered: {
+            dataTimeout();
+            console.log("Failed to receive request for station data inside timeout time of", timeoutTime / 1000, "seconds");
+        }
+    }
+
+    /* Event handlers */
+    onSortMethodChanged: {
+        sortStations();
+    }
+
+
+    /* Public functions */
+
+    function getStationData() {
+        function dataRetrieved(data) {
+            requestResponseTimeout.stop();
+            if(data.stat == "ok") {
+                jsonCopy = JSON.stringify(data);
+                lastReceivedGoodData = data;
+                stationArray = data.result.stations;
+                sortStations(); //listmodel is updated after sorting is completed
+            } else {
+                console.log("station retrieval failed!");
+                console.log("stat:", data.stat);
+                console.log("checksum:", data.result.checksum);
+                console.log("stations:", data.result);
+                receivedError();
+            }
+        }
+
+        requestResponseTimeout.start();
+        pandoraInterface.retrieveStations(dataRetrieved);
+    }
+
+    function sortStations() {
+        switch(sortMethod) {
+            case "alphabetical":
+                sortStationsAlphabetically();
+                break;
+            case "date":
+                sortStationsByDate();
+                break;
+            default:
+                sortStationsByDate();
+                break;
+        }
+
+        updateModel();
+    }
+
+    function updateModel() {
         model.clear();
-
-        //var objectArray = JSON.parse(json).results;
-        var objectArray = JSON.parse(json).result.stations;
-        for ( var key in objectArray ) {
-            var jo = objectArray[key];
+        for ( var key in stationArray ) {
+            var jo = stationArray[key];
             model.append(jo);
-//            model.append({
-//                'name': jo.name,
-//                'id': jo.id,
-//                'thumb_url': thumbnail_url(jo.profile_path, "person")
-//            });
+        }
+
+        /* Send the updated signal */
+        updated();
+    }
+
+    /* Private functions */
+
+    function sortStationsAlphabetically() {
+        stationArray.sort(function(a,b){return __strcmp(a.stationName, b.stationName)});
+        __moveQuickMix(stationArray);
+    }
+
+    function sortStationsByDate() {
+        stationArray.sort(function(a,b){return __pandoraDateCompare(a.dateCreated, b.dateCreated)});
+        __moveQuickMix(stationArray);
+    }
+
+    /* Helper functions */
+
+    /* Function to place the "QuickMix" station back at the top of the station list */
+    function __moveQuickMix(stationList) {
+        var temp;
+        for(var i = 0; i < stationList.length; i++) {
+            if(stationList[i].stationName == "QuickMix") {
+                temp = stationList[i];
+
+                //now shift other items down
+                for(var j = i; j > 0; j--) {
+                    stationList[j] = stationList[(j - 1)];
+                }
+
+                stationList[0] = temp;
+                break;
+            }
         }
     }
 
-//    function thumbnail_url(thumb_path, type) {
-//        if (thumb_path)
-//            return "http://d3gtl9l2a4fn1j.cloudfront.net/t/p/" + "w185/" + thumb_path;
-//        else if (type !== "person")
-//            return Qt.resolvedUrl("../graphics/no-poster.jpg");
-//        else if (type === "person")
-//            return Qt.resolvedUrl("../graphics/no-passport.png");
-//    }
+    /* A function to compare station creation times */
+    function __pandoraDateCompare(a, b) {
+        return ( ( a.time == b.time ) ? 0 : ( ( a.time > b.time ) ? -1 : 1 ) );
+    }
+
+    /* A string comparison function used to sort stations by station name */
+    function __strcmp ( str1, str2 ) {
+        // http://kevin.vanzonneveld.net
+        // +   original by: Waldo Malqui Silva
+        // +      input by: Steve Hilder
+        // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+        // +    revised by: gorthaur
+        // *     example 1: strcmp( 'waldo', 'owald' );
+        // *     returns 1: 1
+        // *     example 2: strcmp( 'owald', 'waldo' );
+        // *     returns 2: -1
+
+        return ( ( str1 == str2 ) ? 0 : ( ( str1 > str2 ) ? 1 : -1 ) );
+    }
 }

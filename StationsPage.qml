@@ -38,6 +38,8 @@ Item {
     property bool _selectionMade
     property string _currentStationToken
 
+    property var pandoraInterface: root.pandoraInterface
+
     Timer {
         id: delayStationSelected
         interval: 500
@@ -57,27 +59,27 @@ Item {
         updateStationSort(sortMethod);
     }
 
-    Connections {
-        target: pandoraModel
+//    Connections {
+//        target: pandoraInterface
 
-//        onStationsLoaded: {
-//            if(!sortMethod) {
-//                sortMethod = startupPreferredStationSort;
-//            } else {
-//                updateStationSort(sortMethod);
+////        onStationsLoaded: {
+////            if(!sortMethod) {
+////                sortMethod = startupPreferredStationSort;
+////            } else {
+////                updateStationSort(sortMethod);
+////            }
+////        }
+////        onLoginSuccess: {
+////            stationsModel.getData();
+////        }
+//        onConnectedChanged: {
+//            /* If connection was successful, retrieve the station list */
+//            if (pandoraInterface.connected == true) {
+//                //pandoraModel.retrieveStations();
+//                stationsModel.getData();
 //            }
 //        }
-//        onLoginSuccess: {
-//            stationsModel.getData();
-//        }
-        onConnectedChanged: {
-            /* If connection was successful, retrieve the station list */
-            if (pandoraModel.connected == true) {
-                //pandoraModel.retrieveStations();
-                stationsModel.getData();
-            }
-        }
-    }
+//    }
 
 //    function updateStations() {
 //        updateStationSort(sortMethod);
@@ -91,9 +93,9 @@ Item {
 //        stationsView.currentIndex = __findStationIndexFromToken(_currentStationToken, stationsView.model);
 //    }
 
-    StationModel {
-        id: stationsModel
-    }
+//    StationModel {
+//        id: stationsModel
+//    }
 
     UbuntuListView {
         id: stationsView
@@ -110,7 +112,9 @@ Item {
             currentIndex = -1;
         }
 
-        model: stationsModel
+        //model: stationsModel.model
+        model: root.stationsModel.model
+//        model: root.stationsModel.sortedModel
 
 //        onModelChanged: {
 //            if( model.length == 0 ) {
@@ -120,9 +124,15 @@ Item {
 //        }
 
         delegate: ListItem.Standard {
-            text: stationsView.model[index]["stationName"];
+//            Component.onCompleted: {
+//                console.log(JSON.stringify(stationsView.model[index]))
+//            }
 
-            iconSource: stationsView.model[index]["artUrl"]
+            //text: stationsView.model[index]["stationName"];
+            //text: stationsView.model[index]["stationName"];
+            text: stationName
+
+            iconSource: artUrl//stationsView.model[index]["artUrl"]
             fallbackIconSource: Qt.resolvedUrl("resources/icons/help.svg")
             iconFrame: false
 

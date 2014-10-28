@@ -17,12 +17,13 @@ You should have received a copy of the GNU General Public License
 along with Panpipe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.0
-import QtMultimedia 5.0
-import Ubuntu.Components 0.1
+import QtQuick 2.3
+import QtMultimedia 5.2
+import Ubuntu.Components 1.1
 import Ubuntu.Unity.Action 1.0 as UnityActions
-
 import "storage.js" as Storage
+import "pandora"
+import "models"
 
 MainView {
     /* objectName for functional testing purposes (autopilot-qt5) */
@@ -55,6 +56,9 @@ MainView {
 
     property string _lastAttemptedUsername
 
+    property alias pandoraInterface: pandoraInterface
+    property alias stationsModel: stationsModel
+
     /* Startup operations */
     Component.onCompleted: {
         /* Initialize the storage database */
@@ -67,7 +71,7 @@ MainView {
         if(("Unknown" == pandoraUsername) || ("Unknown" == pandoraPassword)) {
             viewComponent.requestCredentials();
         } else {
-            pandoraModel.login(pandoraUsername, pandoraPassword);
+            pandoraInterface.login(pandoraUsername, pandoraPassword);
         }
     }
 
@@ -83,25 +87,44 @@ MainView {
     actions: [logoutAction]
 
     /* Manage Pandora activity */
-    PandoraInterface {
-        id: pandoraModel
+//    pandoraInterface {
+//        id: pandoraModel
 
-//        onConnectedChanged: {
-//            /* If connection was successful, retrieve the station list */
-//            if (pandoraModel.connected == true) {
-//                pandoraModel.retrieveStations();
-//            }
+////        onConnectedChanged: {
+////            /* If connection was successful, retrieve the station list */
+////            if (pandoraModel.connected == true) {
+////                pandoraModel.retrieveStations();
+////            }
+////        }
+
+//        onLoginFailed: {
+//            viewComponent.requestCredentials(_lastAttemptedUsername);
 //        }
+//    }
 
-        onLoginFailed: {
-            viewComponent.requestCredentials(_lastAttemptedUsername);
+    PandoraInterface {
+        id: pandoraInterface
+
+        onConnectedChanged: {
+            /* If connection was successful, retrieve the station list */
+            if (pandoraInterface.connected == true) {
+                stationsModel.getStationData();
+            }
         }
+    }
+
+    /* Centralised data model of user stations */
+    StationModel {
+        id: stationsModel
+        pandoraInterface: pandoraInterface
+
+        sortMethod: "alphabetical"
     }
     
     /* Audio component */
     Audio {
         id: audioPlayer
-        source: pandoraModel.playlistData[pandoraModel.playlistCurrentIndex].audioUrlMap.mediumQuality.audioUrl
+        source: pandoraInterface.playlistData[pandoraInterface.playlistCurrentIndex].audioUrlMap.mediumQuality.audioUrl
 
         onStatusChanged: {
             switch (audioPlayer.status) {
@@ -109,7 +132,7 @@ MainView {
                 audioPlayer.play();
                 break;
             case Audio.EndOfMedia:
-                pandoraModel.loadNextSong();
+                pandoraInterface.loadNextSong();
                 audioPlayer.play();
                 break;
             }
@@ -122,7 +145,7 @@ MainView {
 
             /* Play next song */
             audioPlayer.stop();
-            pandoraModel.loadNextSong();
+            pandoraInterface.loadNextSong();
             audioPlayer.play();
         }
 
@@ -137,12 +160,12 @@ MainView {
         id: viewComponent
         anchors.fill: parent
 
-        /* Bindings to PandoraInterface */
-        stationsList: pandoraModel.userStations
-        stationName: i18n.tr(pandoraModel.currentStationName)
-        playlist: pandoraModel.playlistData
-        currentPlaylistIndex: pandoraModel.playlistCurrentIndex
-        stationSearchResultList: pandoraModel.stationSearchResults
+        /* Bindings to pandoraInterface */
+        stationsList: pandoraInterface.userStations
+        stationName: i18n.tr(pandoraInterface.currentStationName)
+        playlist: pandoraInterface.playlistData
+        currentPlaylistIndex: pandoraInterface.playlistCurrentIndex
+        stationSearchResultList: pandoraInterface.stationSearchResults
 
         /* Bindings to audioPlayer */
         audioPlaying: (audioPlayer.playbackState == Audio.PlayingState)
@@ -165,34 +188,34 @@ MainView {
         onNextTrackPressed: {
             console.log("next track requested");
             audioPlayer.stop();
-            pandoraModel.loadNextSong();
+            pandoraInterface.loadNextSong();
             audioPlayer.play();
         }
 
         onThumbsUpPressed: {
             console.log("thumbs up");
-            pandoraModel.giveFeedback(true, pandoraModel.playlistData[pandoraModel.playlistCurrentIndex].trackToken);
+            pandoraInterface.giveFeedback(true, pandoraInterface.playlistData[pandoraInterface.playlistCurrentIndex].trackToken);
         }
 
         onThumbsDownPressed: {
             console.log("thumbs down");
-            pandoraModel.giveFeedback(false, pandoraModel.playlistData[pandoraModel.playlistCurrentIndex].trackToken);
+            pandoraInterface.giveFeedback(false, pandoraInterface.playlistData[pandoraInterface.playlistCurrentIndex].trackToken);
 
             /* Skip thumbs-down song */
             audioPlayer.stop();
-            pandoraModel.loadNextSong();
+            pandoraInterface.loadNextSong();
             audioPlayer.play();
         }
 
         onStationSelected: {
             /* Request playlist for selected station */
-            pandoraModel.setStation(stationToken)
+            pandoraInterface.setStation(stationToken)
         }
 
         onLoginCredentialsProvided: {
             /* Perform login */
             _lastAttemptedUsername = username
-            pandoraModel.login(username, password);
+            pandoraInterface.login(username, password);
 
             /* Store login credientials */
             Storage.setSetting("pandora_username", username);
@@ -209,7 +232,7 @@ MainView {
         }
 
         onNewStationSearchQuery: {
-            pandoraModel.searchForMusic(query);
+            pandoraInterface.searchForMusic(query);
         }
 
     }
@@ -220,7 +243,7 @@ MainView {
         audioPlayer.stop();
 
         /* Clear pandora interface */
-        pandoraModel.logout();
+        pandoraInterface.logout();
 
         /* Clear the UI */
         viewComponent.updateInterface();
