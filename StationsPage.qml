@@ -43,7 +43,8 @@ Item {
     Timer {
         id: delayStationSelected
         interval: 500
-        onTriggered: stationSelected(stationsView.model[_pressIndex].stationToken)
+        //onTriggered: stationSelected(stationsView.model[_pressIndex].stationToken)
+        onTriggered: stationSelected(_currentStationToken)
     }
 
     Timer {
@@ -124,6 +125,7 @@ Item {
 //        }
 
         delegate: ListItem.Standard {
+            id: delegate
 //            Component.onCompleted: {
 //                console.log(JSON.stringify(stationsView.model[index]))
 //            }
@@ -131,6 +133,7 @@ Item {
             //text: stationsView.model[index]["stationName"];
             //text: stationsView.model[index]["stationName"];
             text: stationName
+//            text: stationToken
 
             iconSource: artUrl//stationsView.model[index]["artUrl"]
             fallbackIconSource: Qt.resolvedUrl("resources/icons/help.svg")
@@ -154,7 +157,7 @@ Item {
                 stationsView.currentIndex = index;
                 _selectionMade = true;
                 _pressIndex = index;
-                _currentStationToken = stationsView.model[index].stationToken;
+                _currentStationToken = stationToken;//stationsView.model[index].stationToken;
                 delayStationSelected.start();
             }
 

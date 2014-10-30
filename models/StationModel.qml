@@ -120,11 +120,47 @@ Item {
         updateModel();
     }
 
+    /*****************************************************
+    Example station object appended to the ListModel
+
+    {
+        "suppressVideoAds":true,
+        "isQuickMix":true,
+        "stationId":"3914377363925265",
+        "stationDetailUrl":"https://www.pandora.com/login?target=%2Fstations%2Fa61985110ea3d6c6c8d8a9c038588b26425ba2910f7abf8b",
+        "isShared":false,
+        "dateCreated":{
+            "date":8,
+            "day":4,
+            "hours":22,
+            "minutes":44,
+            "month":10,
+            "nanos":241000000,
+            "seconds":46,
+            "time":1194590686241,
+            "timezoneOffset":480,
+            "year":107
+        },
+        "stationToken":"3914377363925265",
+        "stationName":"QuickMix",
+        "stationSharingUrl":"https://www.pandora.com/login?target=%2Fshare%2Fstation%2Fa61985110ea3d6c6c8d8a9c038588b26425ba2910f7abf8b",
+        "requiresCleanAds":true,
+        "allowRename":false,
+        "allowAddMusic":false,
+        "quickMixStationIds":[
+            "339646069607180561",
+            "339644480469281041"
+        ],
+        "allowDelete":false
+    }
+    *****************************************************/
+
     function updateModel() {
         model.clear();
         for ( var key in stationArray ) {
             var jo = stationArray[key];
             model.append(jo);
+            console.log(JSON.stringify(model.get(model.count - 1)));
         }
 
         /* Send the updated signal */
