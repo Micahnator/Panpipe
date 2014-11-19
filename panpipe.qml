@@ -87,21 +87,6 @@ MainView {
     actions: [logoutAction]
 
     /* Manage Pandora activity */
-//    pandoraInterface {
-//        id: pandoraModel
-
-////        onConnectedChanged: {
-////            /* If connection was successful, retrieve the station list */
-////            if (pandoraModel.connected == true) {
-////                pandoraModel.retrieveStations();
-////            }
-////        }
-
-//        onLoginFailed: {
-//            viewComponent.requestCredentials(_lastAttemptedUsername);
-//        }
-//    }
-
     PandoraInterface {
         id: pandoraInterface
 
@@ -111,6 +96,10 @@ MainView {
                 stationsModel.getStationData();
             }
         }
+
+        onLoginFailed: {
+            viewComponent.requestCredentials();
+        }
     }
 
     /* Centralised data model of user stations */
@@ -118,7 +107,9 @@ MainView {
         id: stationsModel
         pandoraInterface: pandoraInterface
 
-        sortMethod: "alphabetical"
+        Component.onCompleted: {
+            sortMethod = "alphabetical";
+        }
     }
     
     /* Audio component */

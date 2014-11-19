@@ -199,7 +199,7 @@ Item {
         stationSelected = true;
 
         currentStationToken = stationToken;
-        currentStationName = userStationsByDate[__findStationIndexFromToken(currentStationToken, userStationsByDate)].stationName;
+        //currentStationName = userStationsByDate[__findStationIndexFromToken(currentStationToken, userStationsByDate)].stationName;
 
         retrievePlaylist(currentStationToken);
     }
@@ -260,9 +260,10 @@ Item {
         Callback functions
     */
 
-    function retrievePlaylistResponse(playlist) {
+    function retrievePlaylistResponse(playlistResult) {
         var tempPlaylistArray = [];
         var playlistStationId;
+        var playlist = playlistResult.result.items;
 
         for (var i = 0; i < playlist.length; i++) {
             /* Make sure this item is a song and not an ad */

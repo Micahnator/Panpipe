@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2013 Micah Losli <micah.losli@gmail.com>
+Copyright (C) 2013-2014 Micah Losli <micah.losli@gmail.com>
 
 This file is part of Panpipe.
 
@@ -17,12 +17,11 @@ You should have received a copy of the GNU General Public License
 along with Panpipe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.0
+import QtQuick 2.3
 import Ubuntu.Components 1.1
 import Ubuntu.Components.ListItems 1.0 as ListItem
 import Ubuntu.Components.Popups 0.1 as Popups
 import "components"
-import "models"
 
 Item {
     /* Aliases */
@@ -43,7 +42,6 @@ Item {
     Timer {
         id: delayStationSelected
         interval: 500
-        //onTriggered: stationSelected(stationsView.model[_pressIndex].stationToken)
         onTriggered: stationSelected(_currentStationToken)
     }
 
@@ -60,44 +58,6 @@ Item {
         updateStationSort(sortMethod);
     }
 
-//    Connections {
-//        target: pandoraInterface
-
-////        onStationsLoaded: {
-////            if(!sortMethod) {
-////                sortMethod = startupPreferredStationSort;
-////            } else {
-////                updateStationSort(sortMethod);
-////            }
-////        }
-////        onLoginSuccess: {
-////            stationsModel.getData();
-////        }
-//        onConnectedChanged: {
-//            /* If connection was successful, retrieve the station list */
-//            if (pandoraInterface.connected == true) {
-//                //pandoraModel.retrieveStations();
-//                stationsModel.getData();
-//            }
-//        }
-//    }
-
-//    function updateStations() {
-//        updateStationSort(sortMethod);
-//    }
-
-//    function updateStationSort(method) {
-//        //Update the view model
-//        stationsView.model = (method === "by_date") ? pandoraModel.userStationsByDate : pandoraModel.userStationsAlphabetical;
-
-//        //Update the currently selected index
-//        stationsView.currentIndex = __findStationIndexFromToken(_currentStationToken, stationsView.model);
-//    }
-
-//    StationModel {
-//        id: stationsModel
-//    }
-
     UbuntuListView {
         id: stationsView
         clip: true
@@ -113,29 +73,14 @@ Item {
             currentIndex = -1;
         }
 
-        //model: stationsModel.model
         model: root.stationsModel.model
-//        model: root.stationsModel.sortedModel
-
-//        onModelChanged: {
-//            if( model.length == 0 ) {
-//                currentIndex = -1;
-//                _currentStationToken = "";
-//            }
-//        }
 
         delegate: ListItem.Standard {
             id: delegate
-//            Component.onCompleted: {
-//                console.log(JSON.stringify(stationsView.model[index]))
-//            }
 
-            //text: stationsView.model[index]["stationName"];
-            //text: stationsView.model[index]["stationName"];
             text: stationName
-//            text: stationToken
 
-            iconSource: artUrl//stationsView.model[index]["artUrl"]
+            iconSource: artUrl
             fallbackIconSource: Qt.resolvedUrl("resources/icons/help.svg")
             iconFrame: false
 
@@ -157,7 +102,7 @@ Item {
                 stationsView.currentIndex = index;
                 _selectionMade = true;
                 _pressIndex = index;
-                _currentStationToken = stationToken;//stationsView.model[index].stationToken;
+                _currentStationToken = stationToken;
                 delayStationSelected.start();
             }
 
@@ -335,19 +280,17 @@ Item {
                 }
                 ListItem.Header { text: "Sort stations" }
                 ListItem.Standard {
-                    text: (sortMethod == "by_date") ? "*By Date Created" : "By Date Created"
+                    text: (root.stationsModel.sortMethod == "date") ? "*By Date Created" : "By Date Created"
                     onClicked: {
                         hide();
-                        sortPreferenceProvided("by_date");
-                        sortMethod = "by_date";
+                        root.stationsModel.sortMethod = "date"
                     }
                 }
                 ListItem.Standard {
-                    text: (sortMethod == "alphabetical") ? "*Alphabetically" : "Alphabetically"
+                    text: (root.stationsModel.sortMethod == "alphabetical") ? "*Alphabetically" : "Alphabetically"
                     onClicked: {
                         hide();
-                        sortPreferenceProvided("alphabetical");
-                        sortMethod = "alphabetical";
+                        root.stationsModel.sortMethod = "alphabetical"
                     }
                 }
             }
@@ -389,21 +332,5 @@ Item {
                 }
             }
         }
-    }
-
-    /*
-        Helper Functions
-    */
-
-    /* A function to identify the index of the station in the list, given a stationToken */
-    function __findStationIndexFromToken(stationToken, stationList) {
-        for(var i = 0; i < stationList.length; i++) {
-            if( stationToken === stationList[i].stationToken ) {
-                return i;
-            }
-        }
-
-        //If token not found, return negative one
-        return -1;
     }
 }
