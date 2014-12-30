@@ -37,6 +37,7 @@ Item {
     property string sortMethod      //Supported Options: "alphabetical", "date"
     property string jsonCopy
     property int timeoutTime
+    property var quickMixStationIds //Array of station Ids in the QuickMix
 
     /* Private properties */
     property var stationArray
@@ -160,7 +161,9 @@ Item {
         for ( var key in stationArray ) {
             var jo = stationArray[key];
             model.append(jo);
-            console.log(JSON.stringify(model.get(model.count - 1)));
+            if (jo.isQuickMix) {
+                quickMixStationIds = jo.quickMixStationIds;
+            }
         }
 
         /* Send the updated signal */
