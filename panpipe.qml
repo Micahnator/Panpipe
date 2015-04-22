@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2013 Micah Losli <micah.losli@gmail.com>
+Copyright (C) 2013-2015 Micah Losli <micah.losli@gmail.com>
 
 This file is part of Panpipe.
 
@@ -103,7 +103,7 @@ MainView {
     }
 
     /* Centralised data model of user stations */
-    StationModel {
+    PandoraStationsModel {
         id: stationsModel
         pandoraInterface: pandoraInterface
 

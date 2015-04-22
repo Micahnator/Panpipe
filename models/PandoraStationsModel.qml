@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2013-2014 Micah Losli <micah.losli@gmail.com>
+Copyright (C) 2013-2015 Micah Losli <micah.losli@gmail.com>
 
 This file is part of Panpipe.
 
@@ -20,8 +20,6 @@ along with Panpipe.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 2.3
 
 Item {
-    id: stationModel
-
     /* Signals */
     signal updated()
     signal receivedError()
