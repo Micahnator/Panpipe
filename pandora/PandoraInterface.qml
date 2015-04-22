@@ -256,6 +256,12 @@ Item {
         Pandora.getStationPlaylist(stationToken, retrievePlaylistResponse);
     }
 
+    //alternate version with specified callback function
+    function retrieveMoreSongs(stationToken, callback) {
+        console.log("retrieving more songs!");
+        Pandora.getStationPlaylist(stationToken, callback);
+    }
+
     /*
         Callback functions
     */

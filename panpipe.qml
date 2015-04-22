@@ -110,6 +110,21 @@ MainView {
         Component.onCompleted: {
             sortMethod = "alphabetical";
         }
+
+        //
+        onUpdated: {
+            playlistModel.currentStationToken = model.get(0).stationToken;
+        }
+    }
+
+    //Testing: Centralised data model of playlist data */
+    PandoraPlaylistModel {
+        id: playlistModel
+        pandoraInterface: pandoraInterface
+
+        onCurrentStationTokenChanged: {
+            retrieveMoreSongs();
+        }
     }
     
     /* Audio component */
