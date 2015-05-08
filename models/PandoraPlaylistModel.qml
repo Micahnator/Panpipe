@@ -33,15 +33,12 @@ Item {
     property bool loading
     property var pandoraInterface   //Must be bound to a PandoraInterface component
     property int timeoutTime        //Defaults to 10 seconds if not set
-
     property var currentStationToken
     property string currentStationName
-
     property int currentPlaylistIndex
-    property var currentPlaylistItem: model.get(currentPlaylistIndex)
+    property var currentPlaylistItem: getAnyPlaylistItem(currentPlaylistIndex)
 
     /* Private properties */
-    property var stationArray
     property var lastReceivedGoodData
 
 
@@ -58,6 +55,15 @@ Item {
         currentPlaylistIndex = 0;
     }
 
+    onCurrentPlaylistItemChanged: {
+        console.log("current playlist item:", currentPlaylistItem);
+    }
+
+    onCurrentStationTokenChanged: {
+        clearPlaylist();
+        retrieveMoreSongs();
+    }
+
     ListModel {
         id: model
     }
@@ -71,6 +77,7 @@ Item {
         /* Handle data timeout */
         onTriggered: {
             dataTimeout();
+            loading = false;
             console.log("Failed to receive request for playlist data inside timeout time of", timeoutTime / 1000, "seconds");
         }
     }
@@ -81,16 +88,27 @@ Item {
     function retrieveMoreSongs() {
         function dataRetrieved(data) {
             requestResponseTimeout.stop();
+            loading = false;
+
             if(data.stat == "ok") {
                 console.log("Playlist data received!!!");
+                lastReceivedGoodData = data;
 
                 /* Add received playlist data to the model */
                 var playlistArray = data.result.items;
 
+                if(model.count == 0) {
+                    currentPlaylistIndex = 0;
+                }
+
                 for ( var key in playlistArray ) {
                     var jo = playlistArray[key];
-                    model.append(jo);
-                    console.log(jo.songName);
+
+                    /* Only add songs to the playlist model */
+                    if( jo.songName ) {
+                        model.append(jo);
+                        console.log(jo.songName);
+                    }
                 }
 
                 updated();
@@ -105,6 +123,8 @@ Item {
         }
 
         requestResponseTimeout.start();
+        loading = true;
+
         pandoraInterface.retrieveMoreSongs(currentStationToken, dataRetrieved);
     }
 
@@ -120,6 +140,17 @@ Item {
     function getAnyPlaylistItem(index) {
         if(index <= count) {
             return model.get(index);
+        }
+    }
+
+    function loadNextSong() {
+        /* Update location in the playlist */
+        currentPlaylistIndex = currentPlaylistIndex + 1;
+        console.log("advancing to the next song!");
+
+        /* Retrieve more songs for playlist if necessary */
+        if (currentPlaylistIndex >= (model.count - 1)) {
+            retrieveMoreSongs();
         }
     }
 
