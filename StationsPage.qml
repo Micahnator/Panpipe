@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2013 Micah Losli <micah.losli@gmail.com>
+Copyright (C) 2013-2014 Micah Losli <micah.losli@gmail.com>
 
 This file is part of Panpipe.
 
@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with Panpipe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1 as ListItem
-import Ubuntu.Components.Popups 0.1 as Popups
+import QtQuick 2.4
+import Ubuntu.Components 1.3
+import Ubuntu.Components.ListItems 1.0 as ListItem
+import Ubuntu.Components.Popups 1.0 as Popups
 import "components"
 
 Item {
@@ -37,10 +37,12 @@ Item {
     property bool _selectionMade
     property string _currentStationToken
 
+    property var pandoraInterface: root.pandoraInterface
+
     Timer {
         id: delayStationSelected
         interval: 500
-        onTriggered: stationSelected(stationsView.model[_pressIndex].stationToken)
+        onTriggered: stationSelected(_currentStationToken)
     }
 
     Timer {
@@ -56,31 +58,7 @@ Item {
         updateStationSort(sortMethod);
     }
 
-    Connections {
-        target: pandoraModel
-
-        onStationsLoaded: {
-            if(!sortMethod) {
-                sortMethod = startupPreferredStationSort;
-            } else {
-                updateStationSort(sortMethod);
-            }
-        }
-    }
-
-    function updateStations() {
-        updateStationSort(sortMethod);
-    }
-
-    function updateStationSort(method) {
-        //Update the view model
-        stationsView.model = (method === "by_date") ? pandoraModel.userStationsByDate : pandoraModel.userStationsAlphabetical;
-
-        //Update the currently selected index
-        stationsView.currentIndex = __findStationIndexFromToken(_currentStationToken, stationsView.model);
-    }
-
-    ListView {
+    UbuntuListView {
         id: stationsView
         clip: true
 
@@ -91,36 +69,40 @@ Item {
 
         cacheBuffer: 1000
 
-        highlight: highlightBlock
-
         Component.onCompleted: {
             currentIndex = -1;
         }
 
-        onModelChanged: {
-            if( model.length == 0 ) {
-                currentIndex = -1;
-                _currentStationToken = "";
-            }
-        }
+        model: root.stationsModel.model
 
         delegate: ListItem.Standard {
-            text: stationsView.model[index]["stationName"];
-            icon: Image {
-                source: stationsView.model[index]["artUrl"]
-                sourceSize.height: 40
-                sourceSize.width: 40
-                height: 40
-                width: height
-                fillMode: Image.PreserveAspectFit
-                anchors.verticalCenter: parent.verticalCenter
+            id: delegate
+
+            text: stationName
+
+            iconSource: artUrl
+            fallbackIconSource: Qt.resolvedUrl("resources/icons/help.svg")
+            iconFrame: false
+
+            // Current station indicator
+            Rectangle {
+                id: currentStationHighlight
+
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: parent.left
+                }
+
+                width: units.gu(0.75)
+                color: (stationsView.currentIndex == index) ? UbuntuColors.orange : "transparent"
             }
 
             onClicked: {
                 stationsView.currentIndex = index;
                 _selectionMade = true;
                 _pressIndex = index;
-                _currentStationToken = stationsView.model[index].stationToken;
+                _currentStationToken = stationToken;
                 delayStationSelected.start();
             }
 
@@ -280,22 +262,6 @@ Item {
         }
     }
 
-    /* Highligh object */
-    Component {
-         id: highlightBlock
-         Rectangle {
-             visible: _selectionMade
-             width: units.gu(0.75); height: stationsView.currentItem.height
-             color: UbuntuColors.orange
-             y: stationsView.currentItem.y
-             Behavior on y {
-                 SmoothedAnimation {
-                     duration: 300
-                 }
-             }
-         }
-     }
-
     /* Stations menu popover */
     Component {
         id: stationSortingMenu
@@ -314,19 +280,17 @@ Item {
                 }
                 ListItem.Header { text: "Sort stations" }
                 ListItem.Standard {
-                    text: (sortMethod == "by_date") ? "*By Date Created" : "By Date Created"
+                    text: (root.stationsModel.sortMethod == "date") ? "*By Date Created" : "By Date Created"
                     onClicked: {
                         hide();
-                        sortPreferenceProvided("by_date");
-                        sortMethod = "by_date";
+                        root.stationsModel.sortMethod = "date"
                     }
                 }
                 ListItem.Standard {
-                    text: (sortMethod == "alphabetical") ? "*Alphabetically" : "Alphabetically"
+                    text: (root.stationsModel.sortMethod == "alphabetical") ? "*Alphabetically" : "Alphabetically"
                     onClicked: {
                         hide();
-                        sortPreferenceProvided("alphabetical");
-                        sortMethod = "alphabetical";
+                        root.stationsModel.sortMethod = "alphabetical"
                     }
                 }
             }
@@ -368,21 +332,5 @@ Item {
                 }
             }
         }
-    }
-
-    /*
-        Helper Functions
-    */
-
-    /* A function to identify the index of the station in the list, given a stationToken */
-    function __findStationIndexFromToken(stationToken, stationList) {
-        for(var i = 0; i < stationList.length; i++) {
-            if( stationToken === stationList[i].stationToken ) {
-                return i;
-            }
-        }
-
-        //If token not found, return negative one
-        return -1;
     }
 }

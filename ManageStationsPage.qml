@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with Panpipe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1 as ListItem
-import Ubuntu.Components.Popups 0.1 as Popups
+import QtQuick 2.4
+import Ubuntu.Components 1.3
+import Ubuntu.Components.ListItems 1.0 as ListItem
+import Ubuntu.Components.Popups 1.0 as Popups
 import "components"
 
 Item {
@@ -37,22 +37,15 @@ Item {
 
 
     Component.onCompleted: {
-        updateManageStations();
+        /* Get the list of stations in the QuickMix from the data model */
+        _tempQuickMixIdsArray = root.stationsModel.quickMixStationIds;
     }
 
     Component.onDestruction: {
         console.log("Updating quickmix.");
-        pandoraModel.updateQuickMix(_tempQuickMixIdsArray);
+        pandoraInterface.updateQuickMix(_tempQuickMixIdsArray);
 
-        pandoraModel.retrieveStations();
-    }
-
-    function updateManageStations() {
-        /* Extract the list of QuickMix station ids */
-        _tempQuickMixIdsArray = pandoraModel.userStationsAlphabetical[0].quickMixStationIds.slice();
-
-        /* Update the data model */
-        dataModel.json = JSON.stringify(pandoraModel.userStationsAlphabetical);
+        pandoraInterface.retrieveStations();
     }
 
 
@@ -75,11 +68,6 @@ Item {
         }
     }
 
-
-    JSONListModel {
-        id: dataModel
-    }
-
     ListView {
         id: stationsView
         clip: true
@@ -90,7 +78,7 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
-        model: dataModel.model
+        model: root.stationsModel.model
 
         onModelChanged: {
             currentIndex = -1;
@@ -159,7 +147,7 @@ Item {
 
             Label {
                 id: manageListText
-                text: model.stationName
+                text: stationName
                 color: "white"
                 fontSize: "medium"
                 elide: Text.ElideRight
@@ -187,9 +175,7 @@ Item {
                     topMargin: units.gu(0.5)
                 }
 
-                Component.onCompleted: {
-                    checked = (_tempQuickMixIdsArray.indexOf(model.stationId) !== -1);
-                }
+                checked: (_tempQuickMixIdsArray.indexOf(stationId) !== -1)
 
                 MouseArea {
                     anchors.fill: parent
@@ -197,11 +183,11 @@ Item {
                     onClicked: {
                         if(!checkBox.checked) {
                             console.log("Adding station to list.");
-                            _tempQuickMixIdsArray.push(model.stationId);
+                            _tempQuickMixIdsArray.push(stationId);
                             checkBox.checked = true;
                         }
                         else {
-                            var tempIndex = _tempQuickMixIdsArray.indexOf(model.stationId);
+                            var tempIndex = _tempQuickMixIdsArray.indexOf(stationId);
                             if(tempIndex >= 0) {
                                 console.log("Removing station from list.");
                                 _tempQuickMixIdsArray.splice(tempIndex, 1);
@@ -245,8 +231,8 @@ Item {
                 }
 
                 onClicked: {
-                    _tempStationToBeDeletedName = model.stationName;
-                    _tempStationToBeDeletedToken = model.stationToken;
+                    _tempStationToBeDeletedName = stationName;
+                    _tempStationToBeDeletedToken = stationToken;
                     _tempStationToBeDeletedIndex = index;
                     PopupUtils.open(deleteStationDialog);
                 }
@@ -341,7 +327,7 @@ Item {
             Button {
                 id: cancelButton
                 text: i18n.tr("Cancel")
-                color: "gray"
+                color: UbuntuColors.darkGrey
 
                 onClicked: {
                     /* Clear temp variables */

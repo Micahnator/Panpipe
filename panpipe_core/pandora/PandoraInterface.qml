@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2013 Micah Losli <micah.losli@gmail.com>
+Copyright (C) 2013-2014 Micah Losli <micah.losli@gmail.com>
 
 This file is part of Panpipe.
 
@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with Panpipe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.0
-
+import QtQuick 2.4
 import "pandora.js" as Pandora
 import "Song.js" as Song
 
 Item {
     /* Signals */
     signal loginFailed()
+    signal loginSucceeded()
     signal stationsLoaded()
 
     /* public properties */
@@ -41,29 +41,50 @@ Item {
 
     property var stationDetails
 
+    //property alias userResponseString: Pandora.userResponse
+
     /* Initialization operations */
     Component.onCompleted: {
         stationSelected = false;
-        currentStationToken = null;
+        //currentStationToken = null;
         playlistData = []; /* Define playlistData as an array */
     }
 
-    /*
-        Public functions
-    */
-    function login(username, password) {
-        _lastAttemptedUsername = username;
-        if (username && password) {
-            Pandora.connect(username, password, loginResponse);
+    /* Login */
+    function login(username, password, callback) {
 
-            playlistCurrentIndex = 0;
-            playlistData = []; /* Define playlistData as an array */
+        function loginAttempt(username, password) {
+            //_lastAttemptedUsername = username;
+            if (username && password) {
+                Pandora.connect(username, password, loginResponse);
 
-        } else {
-            loginFailed();
+                playlistCurrentIndex = 0;
+                playlistData = []; /* Define playlistData as an array */
+
+            } else {
+                loginFailed();
+            }
         }
+
+        function loginResponse(data) {
+            if (data.stat == "ok") {
+                console.log("Login succeeded!");
+                connected = true;
+                loginSucceeded();
+                if (callback) {
+                    callback(data);
+                }
+            } else {
+                console.log("Login failed :/");
+                loginFailed(_lastAttemptedUsername);
+                connected = false;
+            }
+        }
+
+        loginAttempt(username, password);
     }
 
+    /* Logout */
     function logout() {
 
         playlistData = []; /* Define playlistData as an array */
@@ -113,16 +134,72 @@ Item {
         connected = false;
     }
 
-    function retrieveStations() {
-        Pandora.getUserStations(retrieveStationsResponse);
+    /* Retrieve stations */
+    function retrieveStations(callback) {
+
+        function retrieveStationsAttempt() {
+            Pandora.getUserStations(retrieveStationsResponse);
+        }
+
+        function retrieveStationsResponse(pandoraResponse) {
+            userStationsByDate = pandoraResponse.result;
+//            var userStationsTemp = [];
+//            userStationsTemp = userStationsByDate.slice();
+//            __sortStationArrayAlphabetically(userStationsTemp);
+//            userStationsAlphabetical = userStationsTemp;
+            if (pandoraResponse.stat === "ok") {
+                console.log("stations received");
+                stationsLoaded();
+            } else {
+                console.log("station request failed");
+            }
+
+            if (callback) {
+                //callback(stationList)
+                callback(pandoraResponse)
+            }
+        }
+
+        retrieveStationsAttempt();
     }
+
+    /* Send feedback */
+    function giveFeedback(favorable, trackToken, callback) {
+        /* Update data model */
+//        if(favorable) {
+//            playlistData[playlistCurrentIndex].songRating = 1;
+//        } else {
+//            playlistData[playlistCurrentIndex].songRating = -1;
+//        }
+
+        function giveFeedbackAttempt() {
+            /* Send the feedback to Pandora */
+            Pandora.sendFeedback(favorable, trackToken, receiveFeedbackResponse);
+        }
+
+        function receiveFeedbackResponse(pandoraResponse) {
+            if (pandoraResponse.stat === "ok") {
+
+            } else {
+                console.log("feedback failed");
+            }
+
+            if (callback) {
+                callback(pandoraResponse);
+            }
+        }
+    }
+
+    /*
+        Public functions
+    */
 
     function setStation(stationToken) {
         /* Indicate that a station has been selected */
         stationSelected = true;
 
         currentStationToken = stationToken;
-        currentStationName = userStationsByDate[__findStationIndexFromToken(currentStationToken, userStationsByDate)].stationName;
+        //currentStationName = userStationsByDate[__findStationIndexFromToken(currentStationToken, userStationsByDate)].stationName;
 
         retrievePlaylist(currentStationToken);
     }
@@ -136,18 +213,6 @@ Item {
         if (playlistCurrentIndex >= (playlistData.length - 1)) {
             retrievePlaylist(currentStationToken);
         }
-    }
-
-    function giveFeedback(favorable, trackToken) {
-        /* Update data model */
-        if(favorable) {
-            playlistData[playlistCurrentIndex].songRating = 1;
-        } else {
-            playlistData[playlistCurrentIndex].songRating = -1;
-        }
-
-        /* Send the feedback to Pandora */
-        Pandora.sendFeedback(favorable, trackToken, null);
     }
 
     function searchForMusic(query) {
@@ -191,33 +256,20 @@ Item {
         Pandora.getStationPlaylist(stationToken, retrievePlaylistResponse);
     }
 
+    //alternate version with specified callback function
+    function retrieveMoreSongs(stationToken, callback) {
+        console.log("retrieving more songs!");
+        Pandora.getStationPlaylist(stationToken, callback);
+    }
+
     /*
         Callback functions
     */
-    function loginResponse(success) {
-        if (success == true) {
-            console.log("Login succeeded!");
-            connected = true;
-        } else {
-            console.log("Login failed :/");
-            loginFailed(_lastAttemptedUsername);
-            connected = false;
-        }
-    }
 
-    function retrieveStationsResponse(stationList) {
-        userStationsByDate = stationList;
-        var userStationsTemp = [];
-        userStationsTemp = userStationsByDate.slice();
-        __sortStationArrayAlphabetically(userStationsTemp);
-        userStationsAlphabetical = userStationsTemp;
-        console.log("stations received");
-        stationsLoaded();
-    }
-
-    function retrievePlaylistResponse(playlist) {
+    function retrievePlaylistResponse(playlistResult) {
         var tempPlaylistArray = [];
         var playlistStationId;
+        var playlist = playlistResult.result.items;
 
         for (var i = 0; i < playlist.length; i++) {
             /* Make sure this item is a song and not an ad */
