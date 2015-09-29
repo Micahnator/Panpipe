@@ -123,34 +123,90 @@ Item {
     Example station object appended to the ListModel
 
     {
-        "suppressVideoAds":true,
-        "isQuickMix":true,
-        "stationId":"3914377363925265",
-        "stationDetailUrl":"https://www.pandora.com/login?target=%2Fstations%2Fa61985110ea3d6c6c8d8a9c038588b26425ba2910f7abf8b",
-        "isShared":false,
-        "dateCreated":{
-            "date":8,
-            "day":4,
-            "hours":22,
-            "minutes":44,
-            "month":10,
-            "nanos":241000000,
-            "seconds":46,
-            "time":1194590686241,
-            "timezoneOffset":480,
-            "year":107
+        "suppressVideoAds": false,
+        "stationId": "404958383414849005",
+        "allowAddMusic": true,
+        "dateCreated": {
+            "date": 26,
+            "day": 6,
+            "hours": 5,
+            "minutes": 58,
+            "month": 1,
+            "nanos": 490000000,
+            "seconds": 18,
+            "time": 1298728698490,
+            "timezoneOffset": 480,
+            "year": 111
         },
-        "stationToken":"3914377363925265",
-        "stationName":"QuickMix",
-        "stationSharingUrl":"https://www.pandora.com/login?target=%2Fshare%2Fstation%2Fa61985110ea3d6c6c8d8a9c038588b26425ba2910f7abf8b",
-        "requiresCleanAds":true,
-        "allowRename":false,
-        "allowAddMusic":false,
-        "quickMixStationIds":[
-            "339646069607180561",
-            "339644480469281041"
-        ],
-        "allowDelete":false
+        "stationDetailUrl": "https://www.pandora.com/login?target=%2Fstations%2Fecfe5435b97670bc785084a124264b5bd77f841a33b02f68",
+        "artUrl": "http://cont-sv5-1.pandora.com/images/public/amz/9/4/9/7/602517487949_500W_498H.jpg",
+        "requiresCleanAds": false,
+        "stationToken": "404958383414849005",
+        "stationName": "Bring Me Wine Radio",
+        "music": {
+            "songs": [{
+                "artistName": "Wallis Bird",
+                "dateCreated": {
+                    "date": 26,
+                    "day": 6,
+                    "hours": 5,
+                    "minutes": 58,
+                    "month": 1,
+                    "nanos": 490000000,
+                    "seconds": 18,
+                    "time": 1298728698490,
+                    "timezoneOffset": 480,
+                    "year": 111
+                },
+                "seedId": "461226891693665773",
+                "songName": "Bring Me Wine"
+            }],
+            "artists": []
+        },
+        "isShared": false,
+        "allowDelete": true,
+        "genre": ["Rock"],
+        "isQuickMix": false,
+        "allowRename": true,
+        "stationSharingUrl": "https://www.pandora.com/login?target=%2Fshare%2Fstation%2Fecfe5435b97670bc785084a124264b5bd77f841a33b02f68",
+        "feedback": {
+            "thumbsDown": [{
+                "isPositive": false,
+                "artistName": "Xavier Rudd",
+                "feedbackId": "4789217787505683949",
+                "dateCreated": {
+                    "date": 2,
+                    "day": 3,
+                    "hours": 8,
+                    "minutes": 27,
+                    "month": 4,
+                    "nanos": 869000000,
+                    "seconds": 35,
+                    "time": 1335972455869,
+                    "timezoneOffset": 420,
+                    "year": 112
+                },
+                "songName": "Where Do We Fit"
+            }],
+            "thumbsUp": [{
+                "isPositive": true,
+                "artistName": "Masha Qrella",
+                "feedbackId": "3631100575061519853",
+                "dateCreated": {
+                    "date": 16,
+                    "day": 3,
+                    "hours": 10,
+                    "minutes": 54,
+                    "month": 10,
+                    "nanos": 426000000,
+                    "seconds": 54,
+                    "time": 1321469694426,
+                    "timezoneOffset": 480,
+                    "year": 111
+                },
+                "songName": "Don't Stop The Dance"
+            }]
+        }
     }
     *****************************************************/
 

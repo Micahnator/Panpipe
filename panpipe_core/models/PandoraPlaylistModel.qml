@@ -35,8 +35,10 @@ Item {
     property int timeoutTime        //Defaults to 10 seconds if not set
     property var currentStationToken
     property string currentStationName
-    property int currentPlaylistIndex
+    property int currentPlaylistIndex: -1
     property var currentPlaylistItem: getAnyPlaylistItem(currentPlaylistIndex)
+
+    property bool playlistDataAvailable: false//: (currentPlaylistIndex !== -1)
 
     /* Private properties */
     property var lastReceivedGoodData
@@ -60,6 +62,8 @@ Item {
     }
 
     onCurrentStationTokenChanged: {
+        playlistDataAvailable = false;
+        currentPlaylistIndex = -1;
         clearPlaylist();
         retrieveMoreSongs();
     }
@@ -112,6 +116,7 @@ Item {
                 }
 
                 updated();
+                playlistDataAvailable = true;
             }
             else {
                 console.log("Playlist data retrieval failed");

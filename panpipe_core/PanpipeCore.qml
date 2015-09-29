@@ -45,6 +45,7 @@ Item {
     property alias playlistData: currentStationPlaylist.model
     property alias currentSong: currentStationPlaylist.currentPlaylistItem
 //    property alias quickMixStationIdList
+    property alias playlistAvailable: currentStationPlaylist.playlistDataAvailable
 
     /* Public properties */
     property bool loggingIn

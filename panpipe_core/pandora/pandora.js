@@ -304,6 +304,7 @@ function getStationPlaylist(stationToken, callback) {
         /* Station request */
         var stationPlaylistRequest = {
             "stationToken": stationToken,
+            "additionalAudioUrl": "HTTP_128_MP3",   //experiment
         }
 
         /* Request stations */

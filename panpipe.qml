@@ -18,9 +18,9 @@ along with Panpipe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import QtQuick 2.4
-import QtMultimedia 5.2
+import QtMultimedia 5.4
 import Ubuntu.Components 1.3
-import Ubuntu.Unity.Action 1.0 as UnityActions
+//import Ubuntu.Unity.Action 1.0 as UnityActions
 import "storage.js" as Storage
 //import "pandora"
 //import "models"
@@ -55,6 +55,8 @@ MainView {
 //    backgroundColor: "#1A1A80"
 //    footerColor: "#FFFFFF"
 
+    backgroundColor: "#193366"
+
     /* Properties */
     property string pandoraUsername: Storage.getSetting("pandora_username");
     property string pandoraPassword: Storage.getSetting("pandora_password");
@@ -78,33 +80,33 @@ MainView {
             viewComponent.requestCredentials();
         } else {
             //pandoraInterface.login(pandoraUsername, pandoraPassword);
-//            pandoraBackend.login(pandoraUsername, pandoraPassword);
+            pandoraBackend.login(pandoraUsername, pandoraPassword);
         }
     }
 
 
-    Action {
-        id: logoutAction
-        text: i18n.tr("Logout")
-        onTriggered: {
-            viewComponent.confirmLogout();
-        }
-    }
+//    Action {
+//        id: logoutAction
+//        text: i18n.tr("Logout")
+//        onTriggered: {
+//            viewComponent.confirmLogout();
+//        }
+//    }
 
-    actions: [logoutAction]
+//    actions: [logoutAction]
 
     PanpipeCore {
         id: pandoraBackend
 
-        onLoginSuccess: {
-            if(success) {
-                console.log("Micah, we logged in!");
-            }
-            else
-            {
-                console.log("Micah, we aren't there yet.");
-            }
-        }
+//        onLoginSuccess: {
+//            if(success) {
+//                console.log("Micah, we logged in!");
+//            }
+//            else
+//            {
+//                console.log("Micah, we aren't there yet.");
+//            }
+//        }
 
         onStationsUpdated: {
             console.log("Micah, we got stations!");
@@ -115,6 +117,16 @@ MainView {
 
         onPlaylistDataChanged: {
             console.log("Micah, we received some playlist data!");
+        }
+
+        onPlaylistAvailableChanged: {
+            if(playlistAvailable === true) {
+//                audioPlayer.source = pandoraBackend.currentSong.audioUrlMap.lowQuality.audioUrl;
+//                audioPlayer.source = "http://www.liberliber.it/mediateca/musica/m/mozart/abendempfindung_k_523/gw/mp3/mozart_k_523_gw_01.mp3";
+//                audioPlayer.source = "./5516897872547443989.mp4";
+                audioPlayer.source = pandoraBackend.currentSong.additionalAudioUrl;
+                audioPlayer.play();
+            }
         }
 
     }
@@ -164,6 +176,7 @@ MainView {
     Audio {
         id: audioPlayer
 //        source: pandoraInterface.playlistData[pandoraInterface.playlistCurrentIndex].audioUrlMap.mediumQuality.audioUrl
+//        source: pandoraBackend.currentSong.audioUrlMap.mediumQuality.audioUrl
 
         onStatusChanged: {
             switch (audioPlayer.status) {
@@ -171,11 +184,16 @@ MainView {
                 audioPlayer.play();
                 break;
             case Audio.EndOfMedia:
-                pandoraInterface.loadNextSong();
+//                pandoraInterface.loadNextSong();
+                pandoraBackend.nextSong();
                 audioPlayer.play();
                 break;
             }
         }
+
+//        onSourceChanged: {
+//            audioPlayer.play();
+//        }
 
         onError: {
             console.log("Audio element error:");
@@ -196,7 +214,16 @@ MainView {
 
     /* View for Panpipe */
     PanpipeView {
+        anchors.fill: parent
 
+
+        /* Data binding */
+        stationData: pandoraBackend.stationsData
+
+        /* Event handling */
+        onStationSelected: {
+            pandoraBackend.selectStation(stationToken);
+        }
     }
 
 //    PanpipeView {
@@ -279,6 +306,9 @@ MainView {
 //        }
 
 //    }
+
+
+
 
     /* Action functions */
     function logout() {
