@@ -297,14 +297,21 @@ function getStation(stationToken, callback) {
 }
 
 /* Function to get the playlist of the selected station */
-function getStationPlaylist(stationToken, callback) {
+function getStationPlaylist(stationToken, additionalAudioFormat, callback) {
 
     function requestStationPlaylist() {
 
         /* Station request */
-        var stationPlaylistRequest = {
-            "stationToken": stationToken,
-            "additionalAudioUrl": "HTTP_128_MP3",   //experiment
+        var stationPlaylistRequest;
+        if(-1 !== additionalAudioFormat.search("HTTP")) {
+            stationPlaylistRequest = {
+                "stationToken": stationToken,
+                "additionalAudioUrl": additionalAudioFormat,
+            }
+        } else {
+            stationPlaylistRequest = {
+                "stationToken": stationToken,
+            }
         }
 
         /* Request stations */

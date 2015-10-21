@@ -27,6 +27,8 @@ import "storage.js" as Storage
 import "panpipe_core"
 import "ui"
 
+import "./panpipe_core/AudioStream.js" as AudioStream
+
 MainView {
     /* objectName for functional testing purposes (autopilot-qt5) */
     objectName: "mainView"
@@ -75,6 +77,9 @@ MainView {
         /* Get the last used station sort method */
         startupPreferredStationSort = Storage.getSetting("station_sort_method");
 
+        /* Apply the selected audio format */
+        pandoraBackend.selectedAudioStream = AudioStream.Streams.MP3_128;   //Use MP3 for now, as default streams crash on Micah's Laptop
+
         /* If login credentials are available, attempt to use them to login */
         if(("Unknown" == pandoraUsername) || ("Unknown" == pandoraPassword)) {
             viewComponent.requestCredentials();
@@ -112,7 +117,7 @@ MainView {
             console.log("Micah, we got stations!");
 
             console.log(stationsData);
-            selectStation(stationsData.get(0).stationToken);
+//            selectStation(stationsData.get(0).stationToken);
         }
 
         onPlaylistDataChanged: {
@@ -124,7 +129,7 @@ MainView {
 //                audioPlayer.source = pandoraBackend.currentSong.audioUrlMap.lowQuality.audioUrl;
 //                audioPlayer.source = "http://www.liberliber.it/mediateca/musica/m/mozart/abendempfindung_k_523/gw/mp3/mozart_k_523_gw_01.mp3";
 //                audioPlayer.source = "./5516897872547443989.mp4";
-                audioPlayer.source = pandoraBackend.currentSong.additionalAudioUrl;
+//                audioPlayer.source = pandoraBackend.currentSong.additionalAudioUrl;
                 audioPlayer.play();
             }
         }
@@ -177,6 +182,7 @@ MainView {
         id: audioPlayer
 //        source: pandoraInterface.playlistData[pandoraInterface.playlistCurrentIndex].audioUrlMap.mediumQuality.audioUrl
 //        source: pandoraBackend.currentSong.audioUrlMap.mediumQuality.audioUrl
+        source: pandoraBackend.currentSongAudioUrl
 
         onStatusChanged: {
             switch (audioPlayer.status) {

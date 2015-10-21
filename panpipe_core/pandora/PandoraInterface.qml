@@ -21,6 +21,8 @@ import QtQuick 2.4
 import "pandora.js" as Pandora
 import "Song.js" as Song
 
+import "../AudioStream.js" as AudioStream
+
 Item {
     /* Signals */
     signal loginFailed()
@@ -40,6 +42,8 @@ Item {
     property var stationSearchResults
 
     property var stationDetails
+
+    property string audioStreamString
 
     //property alias userResponseString: Pandora.userResponse
 
@@ -253,13 +257,13 @@ Item {
     */
     function retrievePlaylist(stationToken) {
         console.log("retrieving more songs!");
-        Pandora.getStationPlaylist(stationToken, retrievePlaylistResponse);
+        Pandora.getStationPlaylist(stationToken, audioStreamString, retrievePlaylistResponse);
     }
 
     //alternate version with specified callback function
     function retrieveMoreSongs(stationToken, callback) {
         console.log("retrieving more songs!");
-        Pandora.getStationPlaylist(stationToken, callback);
+        Pandora.getStationPlaylist(stationToken, audioStreamString, callback);
     }
 
     /*
@@ -406,4 +410,5 @@ Item {
         //If token not found, return negative one
         return -1;
     }
+
 }

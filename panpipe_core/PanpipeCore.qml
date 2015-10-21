@@ -22,6 +22,8 @@ import QtQuick 2.4
 import "models"
 import "pandora"
 
+import "./AudioStream.js" as AudioStream
+
 Item {
     /* Signals */
     signal loginSuccess(bool success)
@@ -59,13 +61,16 @@ Item {
     property string currentStationToken
 
     property var currentSongItem
+    property string currentSongAudioUrl:_selectAudioUrl(selectedAudioStream)//: currentSong.additionalAudioUrl;
     property string currentSongArtist
+    property string selectedAudioStream
 
     /* Private properties */
 
 
     /* Initialization */
     Component.onCompleted: {
+        selectedAudioStream = AudioStream.Streams.DFLT_MED;
 
     }
 
@@ -128,6 +133,10 @@ Item {
         }
     }
 
+    onSelectedAudioStreamChanged: {
+        currentStationPlaylist.pandoraInterface.audioStreamString = selectedAudioStream;
+    }
+
 
 
     /* Public method implementations */
@@ -165,5 +174,31 @@ Item {
 
     /* Private methods */
 
+    function _selectAudioUrl(selectedAudioStreamName) {
+        switch(selectedAudioStreamName) {
+            case AudioStream.Streams.DFLT_LOW:
+                currentSongAudioUrl = currentSong.audioUrlMap.lowQuality.audioUrl;
+                break;
+            case AudioStream.Streams.DFLT_MED:
+                currentSongAudioUrl = currentSong.audioUrlMap.mediumQuality.audioUrl;
+                break;
+            case AudioStream.Streams.DFLT_HI:
+                currentSongAudioUrl = currentSong.audioUrlMap.highQuality.audioUrl;
+                break;
+            case AudioStream.Streams.AAC_MONO_40:
+            case AudioStream.Streams.AAC_64:
+            case AudioStream.Streams.AACP_32:
+            case AudioStream.Streams.AACP_64:
+            case AudioStream.Streams.AACP_ADTS_24:
+            case AudioStream.Streams.AACP_ADTS_32:
+            case AudioStream.Streams.AACP_ADTS_64:
+            case AudioStream.Streams.MP3_128:
+            case AudioStream.Streams.WMA_32:
+                currentSongAudioUrl = currentSong.additionalAudioUrl;
+                break;
+            default:
+                currentSongAudioUrl = currentSong.audioUrlMap.lowQuality.audioUrl;
+        }
+    }
 
 }
