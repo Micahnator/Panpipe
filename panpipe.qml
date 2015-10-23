@@ -226,6 +226,16 @@ MainView {
         /* Data binding */
         stationData: pandoraBackend.stationsData
 
+        /*
+        Note: See PandoraPlaylsitModel.qml
+        for a definition of what data fields
+        are in the currentSong object.
+        */
+        currentAlbumArtUrl: pandoraBackend.currentSong.albumArtUrl
+        currentSongName: pandoraBackend.currentSong.songName
+        currentSongAlbum: pandoraBackend.currentSong.albumName
+        currentSongArtist: pandoraBackend.currentSong.artistName
+
         /* Event handling */
         onStationSelected: {
             pandoraBackend.selectStation(stationToken);

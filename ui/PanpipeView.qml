@@ -33,6 +33,12 @@ Item {
     /* Aliases */
     property alias stationData: stationsPage.dataModel
 
+    property alias currentAlbumArtUrl: playerPage.currentAlbumArtUrl
+    property alias currentSongName: playerPage.currentSongName
+    property alias currentSongAlbum: playerPage.currentSongAlbum
+    property alias currentSongArtist: playerPage.currentSongArtist
+
+
     AdaptivePageLayout {
         id: layout
         anchors.fill: parent
@@ -44,7 +50,21 @@ Item {
             /* Event handling */
             onStationClicked: {
                 stationSelected(stationToken);
+                playerPageTransitionDelayTimer.start();
             }
+            Timer {
+                id: playerPageTransitionDelayTimer
+                interval: 500
+                repeat: false
+
+                onTriggered: {
+                    layout.addPageToNextColumn(stationsPage, playerPage);
+                }
+            }
+        }
+
+        PlayerPage {
+            id: playerPage
         }
 
     }

@@ -22,7 +22,81 @@ import Ubuntu.Components 1.3
 
 Page {
     title: i18n.tr("Player")
-
+    head.foregroundColor: "white"
     anchors.fill: parent
 
+    /* Signals */
+
+
+    /* Aliases */
+
+
+    /* Properties */
+    property string currentAlbumArtUrl
+    property string currentSongName
+    property string currentSongAlbum
+    property string currentSongArtist
+
+
+
+    /* Gray background for player page */
+    Rectangle {
+        anchors.fill: parent
+        color: "#F0F0F0"
+    }
+
+    /* Album art */
+    Image {
+        id: albumArtImage
+
+        width: units.gu(20)
+        height: units.gu(20)
+        anchors {
+            top: parent.top
+            topMargin: units.gu(5)
+            horizontalCenter: parent.horizontalCenter
+        }
+
+        source: currentAlbumArtUrl
+    }
+
+    /* Song info */
+    Label {
+        id: currentSongNameLabel
+
+        anchors {
+            left: parent.left
+            leftMargin: units.gu(2)
+            bottom: currentSongAlbumLabel.top
+            bottomMargin: units.gu(2)
+        }
+
+        text: currentSongName
+    }
+
+    Label {
+        id: currentSongAlbumLabel
+
+        anchors {
+            left: parent.left
+            leftMargin: units.gu(2)
+            bottom: currentSongArtistLabel.top
+            bottomMargin: units.gu(2)
+        }
+
+        text: currentSongAlbum
+    }
+
+    Label {
+        id: currentSongArtistLabel
+
+        anchors {
+            left: parent.left
+            leftMargin: units.gu(2)
+            bottom:parent.bottom
+            bottomMargin: units.gu(2)
+        }
+
+        text: currentSongArtist
+    }
 }
