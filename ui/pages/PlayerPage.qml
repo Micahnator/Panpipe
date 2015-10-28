@@ -26,6 +26,7 @@ Page {
     anchors.fill: parent
 
     /* Signals */
+    signal skipButtonPressed
 
 
     /* Aliases */
@@ -58,6 +59,21 @@ Page {
         }
 
         source: currentAlbumArtUrl
+    }
+
+    //temp
+    Button {
+        anchors {
+            verticalCenter: parent.verticalCenter
+            left: parent.left
+            leftMargin: units.gu(5)
+            right: parent.right
+            rightMargin: units.gu(5)
+        }
+
+        onClicked: {
+            skipButtonPressed();
+        }
     }
 
     /* Song info */

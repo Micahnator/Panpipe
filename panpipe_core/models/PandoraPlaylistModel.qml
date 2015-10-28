@@ -54,11 +54,7 @@ Item {
         }
 
         /* Initially set the index to 0 */
-        currentPlaylistIndex = 0;
-    }
-
-    onCurrentPlaylistItemChanged: {
-        console.log("current playlist item:", currentPlaylistItem);
+//        currentPlaylistIndex = 0;
     }
 
     onCurrentStationTokenChanged: {
@@ -102,7 +98,8 @@ Item {
                 var playlistArray = data.result.items;
 
                 if(model.count == 0) {
-                    currentPlaylistIndex = 0;
+                    /* Don't reset index until model is updated */
+                    var resetPlaylistIndex = true;
                 }
 
                 for ( var key in playlistArray ) {
@@ -113,6 +110,10 @@ Item {
                         model.append(jo);
                         console.log(jo.songName);
                     }
+                }
+
+                if(resetPlaylistIndex) {
+                    currentPlaylistIndex = 0;
                 }
 
                 updated();
@@ -138,19 +139,16 @@ Item {
         model.clear();
     }
 
-    function incrementPlaylistIndex() {
-        currentPlaylistIndex++;
-    }
-
     function getAnyPlaylistItem(index) {
-        if(index <= count) {
+        console.log("getAnyPlaylistItem ran");
+        if( index <= model.count && index >= 0 && model.count > 0 ) {
             return model.get(index);
         }
     }
 
     function loadNextSong() {
         /* Update location in the playlist */
-        currentPlaylistIndex = currentPlaylistIndex + 1;
+        currentPlaylistIndex++;
         console.log("advancing to the next song!");
 
         /* Retrieve more songs for playlist if necessary */

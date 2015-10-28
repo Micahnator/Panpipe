@@ -45,7 +45,9 @@ Item {
     property alias stationsData: userStationsData.model
     property alias stationSortMethod: userStationsData.sortMethod
     property alias playlistData: currentStationPlaylist.model
-    property alias currentSong: currentStationPlaylist.currentPlaylistItem
+
+//    property alias currentSong: currentStationPlaylist.currentPlaylistItem
+    property var currentSong: currentStationPlaylist.currentPlaylistItem
 //    property alias quickMixStationIdList
     property alias playlistAvailable: currentStationPlaylist.playlistDataAvailable
 
@@ -58,10 +60,10 @@ Item {
     property bool stationSelected
     property string currentStationId
     property string currentStationName
-    property string currentStationToken
+//    property string currentStationToken
 
     property var currentSongItem
-    property string currentSongAudioUrl:_selectAudioUrl(selectedAudioStream)//: currentSong.additionalAudioUrl;
+    property string currentSongAudioUrl:_selectAudioUrl(currentSong)//: currentSong.additionalAudioUrl;
     property string currentSongArtist
     property string selectedAudioStream
 
@@ -148,7 +150,7 @@ Item {
     }
 
     function selectStation(stationToken) {
-        if(stationToken !== currentStationToken){
+        if(stationToken !== currentStationPlaylist.currentStationToken){
             loadingPlaylist = true;
             currentStationPlaylist.currentStationToken = stationToken;  //also loads some songs
         }
@@ -166,7 +168,7 @@ Item {
     }
 
     function nextSong() {
-        if(currentStationToken !== "") {
+        if(currentStationPlaylist.currentStationToken !== "") {
             currentStationPlaylist.loadNextSong();
         }
     }
@@ -174,17 +176,14 @@ Item {
 
     /* Private methods */
 
-    function _selectAudioUrl(selectedAudioStreamName) {
-        switch(selectedAudioStreamName) {
+    function _selectAudioUrl(currentSongObject) {
+        switch(selectedAudioStream) {
             case AudioStream.Streams.DFLT_LOW:
-                currentSongAudioUrl = currentSong.audioUrlMap.lowQuality.audioUrl;
-                break;
+                return currentSongObject.audioUrlMap.lowQuality.audioUrl;
             case AudioStream.Streams.DFLT_MED:
-                currentSongAudioUrl = currentSong.audioUrlMap.mediumQuality.audioUrl;
-                break;
+                return currentSongObject.audioUrlMap.mediumQuality.audioUrl;
             case AudioStream.Streams.DFLT_HI:
-                currentSongAudioUrl = currentSong.audioUrlMap.highQuality.audioUrl;
-                break;
+                return currentSongObject.audioUrlMap.highQuality.audioUrl;
             case AudioStream.Streams.AAC_MONO_40:
             case AudioStream.Streams.AAC_64:
             case AudioStream.Streams.AACP_32:
@@ -194,10 +193,9 @@ Item {
             case AudioStream.Streams.AACP_ADTS_64:
             case AudioStream.Streams.MP3_128:
             case AudioStream.Streams.WMA_32:
-                currentSongAudioUrl = currentSong.additionalAudioUrl;
-                break;
+                return currentSongObject.additionalAudioUrl;
             default:
-                currentSongAudioUrl = currentSong.audioUrlMap.lowQuality.audioUrl;
+                return currentSongObject.audioUrlMap.lowQuality.audioUrl;
         }
     }
 

@@ -89,6 +89,18 @@ MainView {
         }
     }
 
+    /* This delay in starting audio playback avoid audio glitchiness at beginning of track */
+    Timer {
+        id: playDelayTimer
+
+        interval: 100
+        repeat: false
+
+        onTriggered: {
+            audioPlayer.play();
+        }
+    }
+
 
 //    Action {
 //        id: logoutAction
@@ -124,15 +136,15 @@ MainView {
             console.log("Micah, we received some playlist data!");
         }
 
-        onPlaylistAvailableChanged: {
-            if(playlistAvailable === true) {
-//                audioPlayer.source = pandoraBackend.currentSong.audioUrlMap.lowQuality.audioUrl;
-//                audioPlayer.source = "http://www.liberliber.it/mediateca/musica/m/mozart/abendempfindung_k_523/gw/mp3/mozart_k_523_gw_01.mp3";
-//                audioPlayer.source = "./5516897872547443989.mp4";
-//                audioPlayer.source = pandoraBackend.currentSong.additionalAudioUrl;
-                audioPlayer.play();
-            }
-        }
+//        onPlaylistAvailableChanged: {
+//            if(playlistAvailable === true) {
+////                audioPlayer.source = pandoraBackend.currentSong.audioUrlMap.lowQuality.audioUrl;
+////                audioPlayer.source = "http://www.liberliber.it/mediateca/musica/m/mozart/abendempfindung_k_523/gw/mp3/mozart_k_523_gw_01.mp3";
+////                audioPlayer.source = "./5516897872547443989.mp4";
+////                audioPlayer.source = pandoraBackend.currentSong.additionalAudioUrl;
+//                audioPlayer.play();
+//            }
+//        }
 
     }
 
@@ -184,15 +196,22 @@ MainView {
 //        source: pandoraBackend.currentSong.audioUrlMap.mediumQuality.audioUrl
         source: pandoraBackend.currentSongAudioUrl
 
+//        onSourceChanged: {
+//            audioPlayer.stop();
+//            audioPlayer.play();
+//        }
+
         onStatusChanged: {
             switch (audioPlayer.status) {
             case Audio.Loaded:
-                audioPlayer.play();
+//                audioPlayer.play();
+                playDelayTimer.start();
                 break;
             case Audio.EndOfMedia:
 //                pandoraInterface.loadNextSong();
                 pandoraBackend.nextSong();
-                audioPlayer.play();
+//                audioPlayer.play();
+                playDelayTimer.start();
                 break;
             }
         }
@@ -239,6 +258,10 @@ MainView {
         /* Event handling */
         onStationSelected: {
             pandoraBackend.selectStation(stationToken);
+        }
+
+        onNextTrack: {
+            pandoraBackend.nextSong();
         }
     }
 

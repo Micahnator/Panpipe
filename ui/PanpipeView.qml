@@ -29,6 +29,7 @@ Item {
 
     /* Signals */
     signal stationSelected(string stationToken)
+    signal nextTrack()
 
     /* Aliases */
     property alias stationData: stationsPage.dataModel
@@ -65,6 +66,10 @@ Item {
 
         PlayerPage {
             id: playerPage
+
+            onSkipButtonPressed: {
+                nextTrack();
+            }
         }
 
     }
