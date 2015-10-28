@@ -38,7 +38,7 @@ Item {
     property int currentPlaylistIndex: -1
     property var currentPlaylistItem: getAnyPlaylistItem(currentPlaylistIndex)
 
-    property bool playlistDataAvailable: false//: (currentPlaylistIndex !== -1)
+    property bool playlistDataAvailable: false
 
     /* Private properties */
     property var lastReceivedGoodData
@@ -52,9 +52,6 @@ Item {
         if(!timeoutTime || 0 === timeoutTime) {
             timeoutTime = 10000;
         }
-
-        /* Initially set the index to 0 */
-//        currentPlaylistIndex = 0;
     }
 
     onCurrentStationTokenChanged: {

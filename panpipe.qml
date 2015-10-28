@@ -46,17 +46,6 @@ MainView {
     width: units.gu(50)
     height: units.gu(80)
 
-//    useDeprecatedToolbar: false
-
-    /* Suru colors */
-    //headerColor: "#343C60"
-    //backgroundColor: "#24248F"
-    //footerColor: "#8896D5"
-
-//    headerColor: "#FF0000"
-//    backgroundColor: "#1A1A80"
-//    footerColor: "#FFFFFF"
-
     backgroundColor: "#193366"
 
     /* Properties */
@@ -65,9 +54,6 @@ MainView {
     property string startupPreferredStationSort
 
     property string _lastAttemptedUsername
-
-//    property alias pandoraInterface: pandoraInterface
-//    property alias stationsModel: stationsModel
 
     /* Startup operations */
     Component.onCompleted: {
@@ -101,124 +87,36 @@ MainView {
         }
     }
 
-
-//    Action {
-//        id: logoutAction
-//        text: i18n.tr("Logout")
-//        onTriggered: {
-//            viewComponent.confirmLogout();
-//        }
-//    }
-
-//    actions: [logoutAction]
-
     PanpipeCore {
         id: pandoraBackend
-
-//        onLoginSuccess: {
-//            if(success) {
-//                console.log("Micah, we logged in!");
-//            }
-//            else
-//            {
-//                console.log("Micah, we aren't there yet.");
-//            }
-//        }
 
         onStationsUpdated: {
             console.log("Micah, we got stations!");
 
             console.log(stationsData);
-//            selectStation(stationsData.get(0).stationToken);
         }
 
         onPlaylistDataChanged: {
             console.log("Micah, we received some playlist data!");
         }
-
-//        onPlaylistAvailableChanged: {
-//            if(playlistAvailable === true) {
-////                audioPlayer.source = pandoraBackend.currentSong.audioUrlMap.lowQuality.audioUrl;
-////                audioPlayer.source = "http://www.liberliber.it/mediateca/musica/m/mozart/abendempfindung_k_523/gw/mp3/mozart_k_523_gw_01.mp3";
-////                audioPlayer.source = "./5516897872547443989.mp4";
-////                audioPlayer.source = pandoraBackend.currentSong.additionalAudioUrl;
-//                audioPlayer.play();
-//            }
-//        }
-
     }
-
-    /* Manage Pandora activity */
-//    PandoraInterface {
-//        id: pandoraInterface
-
-//        onConnectedChanged: {
-//            /* If connection was successful, retrieve the station list */
-//            if (pandoraInterface.connected == true) {
-//                stationsModel.getStationData();
-//            }
-//        }
-
-//        onLoginFailed: {
-//            viewComponent.requestCredentials();
-//        }
-//    }
-
-    /* Centralised data model of user stations */
-//    PandoraStationsModel {
-//        id: stationsModel
-//        pandoraInterface: pandoraInterface
-
-//        Component.onCompleted: {
-//            sortMethod = "alphabetical";
-//        }
-
-//        //
-//        onUpdated: {
-//            playlistModel.currentStationToken = model.get(0).stationToken;
-//        }
-//    }
-
-    //Testing: Centralised data model of playlist data */
-//    PandoraPlaylistModel {
-//        id: playlistModel
-//        pandoraInterface: pandoraInterface
-
-//        onCurrentStationTokenChanged: {
-//            retrieveMoreSongs();
-//        }
-//    }
     
     /* Audio component */
     Audio {
         id: audioPlayer
-//        source: pandoraInterface.playlistData[pandoraInterface.playlistCurrentIndex].audioUrlMap.mediumQuality.audioUrl
-//        source: pandoraBackend.currentSong.audioUrlMap.mediumQuality.audioUrl
         source: pandoraBackend.currentSongAudioUrl
-
-//        onSourceChanged: {
-//            audioPlayer.stop();
-//            audioPlayer.play();
-//        }
 
         onStatusChanged: {
             switch (audioPlayer.status) {
             case Audio.Loaded:
-//                audioPlayer.play();
                 playDelayTimer.start();
                 break;
             case Audio.EndOfMedia:
-//                pandoraInterface.loadNextSong();
                 pandoraBackend.nextSong();
-//                audioPlayer.play();
                 playDelayTimer.start();
                 break;
             }
         }
-
-//        onSourceChanged: {
-//            audioPlayer.play();
-//        }
 
         onError: {
             console.log("Audio element error:");
@@ -264,90 +162,6 @@ MainView {
             pandoraBackend.nextSong();
         }
     }
-
-//    PanpipeView {
-//        id: viewComponent
-//        anchors.fill: parent
-
-//        /* Bindings to pandoraInterface */
-//        stationsList: pandoraInterface.userStations
-//        stationName: i18n.tr(pandoraInterface.currentStationName)
-//        playlist: pandoraInterface.playlistData
-//        currentPlaylistIndex: pandoraInterface.playlistCurrentIndex
-//        stationSearchResultList: pandoraInterface.stationSearchResults
-
-//        /* Bindings to audioPlayer */
-//        audioPlaying: (audioPlayer.playbackState == Audio.PlayingState)
-//        playbackPercentage: (audioPlayer.position / audioPlayer.duration)
-//        playbackPosition: audioPlayer.position
-//        playbackDuration: audioPlayer.duration
-//        audioSourceUrl: audioPlayer.source
-
-//        /* Signal handlers */
-//        onPlayPausePressed: {
-//            if (playState == true) {
-//                console.log("playing");
-//                audioPlayer.play();
-//            } else {
-//                console.log("pausing");
-//                audioPlayer.pause();
-//            }
-//        }
-
-//        onNextTrackPressed: {
-//            console.log("next track requested");
-//            audioPlayer.stop();
-//            pandoraInterface.loadNextSong();
-//            audioPlayer.play();
-//        }
-
-//        onThumbsUpPressed: {
-//            console.log("thumbs up");
-//            pandoraInterface.giveFeedback(true, pandoraInterface.playlistData[pandoraInterface.playlistCurrentIndex].trackToken);
-//        }
-
-//        onThumbsDownPressed: {
-//            console.log("thumbs down");
-//            pandoraInterface.giveFeedback(false, pandoraInterface.playlistData[pandoraInterface.playlistCurrentIndex].trackToken);
-
-//            /* Skip thumbs-down song */
-//            audioPlayer.stop();
-//            pandoraInterface.loadNextSong();
-//            audioPlayer.play();
-//        }
-
-//        onStationSelected: {
-//            /* Request playlist for selected station */
-//            pandoraInterface.setStation(stationToken)
-//        }
-
-//        onLoginCredentialsProvided: {
-//            /* Perform login */
-//            _lastAttemptedUsername = username
-//            pandoraInterface.login(username, password);
-
-//            /* Store login credientials */
-//            Storage.setSetting("pandora_username", username);
-//            Storage.setSetting("pandora_password", password);
-//        }
-
-//        onUserLogout: {
-//            logout();
-//        }
-
-//        onSortPreferenceProvided: {
-//            /* Store the user's preferred station sort method */
-//            Storage.setSetting("station_sort_method", preferredSort);
-//        }
-
-//        onNewStationSearchQuery: {
-//            pandoraInterface.searchForMusic(query);
-//        }
-
-//    }
-
-
-
 
     /* Action functions */
     function logout() {

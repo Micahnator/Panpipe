@@ -46,9 +46,7 @@ Item {
     property alias stationSortMethod: userStationsData.sortMethod
     property alias playlistData: currentStationPlaylist.model
 
-//    property alias currentSong: currentStationPlaylist.currentPlaylistItem
     property var currentSong: currentStationPlaylist.currentPlaylistItem
-//    property alias quickMixStationIdList
     property alias playlistAvailable: currentStationPlaylist.playlistDataAvailable
 
     /* Public properties */
@@ -60,10 +58,9 @@ Item {
     property bool stationSelected
     property string currentStationId
     property string currentStationName
-//    property string currentStationToken
 
     property var currentSongItem
-    property string currentSongAudioUrl:_selectAudioUrl(currentSong)//: currentSong.additionalAudioUrl;
+    property string currentSongAudioUrl:_selectAudioUrl(currentSong)
     property string currentSongArtist
     property string selectedAudioStream
 
@@ -110,8 +107,6 @@ Item {
 
     }
 
-
-
     /* Current station playlist data */
     PandoraPlaylistModel {
         id: currentStationPlaylist
@@ -125,7 +120,6 @@ Item {
 
     }
 
-
     /* Event handlers */
     onLoginSuccess: {
         loggingIn = false;
@@ -138,7 +132,6 @@ Item {
     onSelectedAudioStreamChanged: {
         currentStationPlaylist.pandoraInterface.audioStreamString = selectedAudioStream;
     }
-
 
 
     /* Public method implementations */
@@ -175,7 +168,6 @@ Item {
 
 
     /* Private methods */
-
     function _selectAudioUrl(currentSongObject) {
         switch(selectedAudioStream) {
             case AudioStream.Streams.DFLT_LOW:
