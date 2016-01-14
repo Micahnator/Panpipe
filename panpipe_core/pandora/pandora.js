@@ -369,6 +369,9 @@ function sendFeedback(favorable, trackToken, callback) {
             callback(data);
         }
     }
+
+    console.log("Sending favorable: ", favorable, " feedback.");
+    sendTheFeedback();
 }
 
 //function retrieveSendFeedbackResponse(data) {

@@ -192,6 +192,8 @@ Item {
                 callback(pandoraResponse);
             }
         }
+
+        giveFeedbackAttempt();
     }
 
     /*

@@ -166,6 +166,21 @@ Item {
         }
     }
 
+    function giveFeedback(favorable, trackToken) {
+        /* Update data model */
+        if(favorable) {
+//            playlistData[playlistCurrentIndex].songRating = 1;
+            currentStationPlaylist.currentPlaylistItem.songRating = 1;
+        } else {
+//            playlistData[playlistCurrentIndex].songRating = -1;
+            currentStationPlaylist.currentPlaylistItem.songRating = -1;
+        }
+
+        /* Send the feedback to Pandora */
+//        Pandora.sendFeedback(favorable, trackToken, null);
+        pandoraInterfaceComponent.giveFeedback(favorable, trackToken, null);
+    }
+
 
     /* Private methods */
     function _selectAudioUrl(currentSongObject) {

@@ -161,6 +161,8 @@ MainView {
         playbackDuration: audioPlayer.duration
         audioSourceUrl: audioPlayer.source
 
+        currentSongRating: pandoraBackend.currentSong.songRating
+
         /* Event handling */
         onStationSelected: {
             pandoraBackend.selectStation(stationToken);
@@ -175,6 +177,15 @@ MainView {
         }
 
         onNextTrack: {
+            pandoraBackend.nextSong();
+        }
+
+        onThumbsUp: {
+            pandoraBackend.giveFeedback(true, pandoraBackend.currentSong.trackToken)
+        }
+
+        onThumbsDown: {
+            pandoraBackend.giveFeedback(false, pandoraBackend.currentSong.trackToken)
             pandoraBackend.nextSong();
         }
     }

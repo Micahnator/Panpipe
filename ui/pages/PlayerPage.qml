@@ -384,7 +384,10 @@ Page {
                         id: thumbsUpIcon
                         anchors.fill: parent
                         name: "thumb-up"
+                        color: ( currentSongRating > 0 ) ? "#FFFFFF" : "#808080"
                     }
+
+                    onClicked: thumbsUp()
                 }
 
                 AbstractButton {
@@ -396,7 +399,10 @@ Page {
                         id: thumbsDownIcon
                         anchors.fill: parent
                         name: "thumb-down"
+                        color: ( currentSongRating < 0 ) ? "#FFFFFF" : "#808080"
                     }
+
+                    onClicked: thumbsDown()
                 }
 
 //                Icon {

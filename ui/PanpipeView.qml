@@ -32,6 +32,8 @@ Item {
     signal nextTrack()
     signal play()
     signal pause()
+    signal thumbsUp()
+    signal thumbsDown()
 
     /* Aliases */
     property alias stationData: stationsPage.dataModel
@@ -49,6 +51,7 @@ Item {
     property int playbackPosition
     property int playbackDuration
     property string audioSourceUrl
+    property int currentSongRating
 
     AdaptivePageLayout {
         id: layout
