@@ -30,6 +30,8 @@ Item {
     /* Signals */
     signal stationSelected(string stationToken)
     signal nextTrack()
+    signal play()
+    signal pause()
 
     /* Aliases */
     property alias stationData: stationsPage.dataModel
@@ -39,6 +41,14 @@ Item {
     property alias currentSongAlbum: playerPage.currentSongAlbum
     property alias currentSongArtist: playerPage.currentSongArtist
 
+//    property alias currentStationName: playerPage.currentStationName
+
+    property alias playbackPercentage: playerPage.playbackPercentage
+
+    property bool audioPlaying
+    property int playbackPosition
+    property int playbackDuration
+    property string audioSourceUrl
 
     AdaptivePageLayout {
         id: layout
@@ -67,9 +77,9 @@ Item {
         PlayerPage {
             id: playerPage
 
-            onSkipButtonPressed: {
-                nextTrack();
-            }
+//            onSkipButtonPressed: {
+//                nextTrack();
+//            }
         }
 
     }

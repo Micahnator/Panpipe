@@ -58,21 +58,22 @@ MainView {
     /* Startup operations */
     Component.onCompleted: {
         /* Initialize the storage database */
-        Storage.initialize();
+//        Storage.initialize();
 
         /* Get the last used station sort method */
-        startupPreferredStationSort = Storage.getSetting("station_sort_method");
+//        startupPreferredStationSort = Storage.getSetting("station_sort_method");
 
         /* Apply the selected audio format */
         pandoraBackend.selectedAudioStream = AudioStream.Streams.MP3_128;   //Use MP3 for now, as default streams crash on Micah's Laptop
 
         /* If login credentials are available, attempt to use them to login */
-        if(("Unknown" == pandoraUsername) || ("Unknown" == pandoraPassword)) {
-            viewComponent.requestCredentials();
-        } else {
-            //pandoraInterface.login(pandoraUsername, pandoraPassword);
-            pandoraBackend.login(pandoraUsername, pandoraPassword);
-        }
+        pandoraBackend.login("mlosli@yahoo.com", "gonavy");
+//        if(("Unknown" == pandoraUsername) || ("Unknown" == pandoraPassword)) {
+//            viewComponent.requestCredentials();
+//        } else {
+//            //pandoraInterface.login(pandoraUsername, pandoraPassword);
+//            pandoraBackend.login(pandoraUsername, pandoraPassword);
+//        }
     }
 
     /* This delay in starting audio playback avoid audio glitchiness at beginning of track */
@@ -153,9 +154,24 @@ MainView {
         currentSongAlbum: pandoraBackend.currentSong.albumName
         currentSongArtist: pandoraBackend.currentSong.artistName
 
+        playbackPercentage: (audioPlayer.position / audioPlayer.duration)
+
+        audioPlaying: (audioPlayer.playbackState === Audio.PlayingState)
+        playbackPosition: audioPlayer.position
+        playbackDuration: audioPlayer.duration
+        audioSourceUrl: audioPlayer.source
+
         /* Event handling */
         onStationSelected: {
             pandoraBackend.selectStation(stationToken);
+        }
+
+        onPlay: {
+            audioPlayer.play();
+        }
+
+        onPause: {
+            audioPlayer.pause();
         }
 
         onNextTrack: {

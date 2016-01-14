@@ -1,7 +1,7 @@
 {
     "architecture": "all",
     "description": "Pandora client for Ubuntu Touch",
-    "framework": "ubuntu-sdk-14.10-qml-dev3",
+    "framework": "ubuntu-sdk-15.04.3-qml",
     "hooks": {
         "panpipe": {
             "apparmor": "panpipe.json",
@@ -11,5 +11,5 @@
     "maintainer": "Micah Losli <micah.losli@gmail.com>",
     "name": "com.ubuntu.developer.mlosli.panpipe",
     "title": "panpipe",
-    "version": "0.3"
+    "version": "0.4"
 }
