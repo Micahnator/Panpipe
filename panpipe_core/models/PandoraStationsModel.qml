@@ -224,6 +224,10 @@ Item {
         updated();
     }
 
+    function clearStations() {
+        model.clear();
+    }
+
     /* Private functions */
 
     function sortStationsAlphabetically() {

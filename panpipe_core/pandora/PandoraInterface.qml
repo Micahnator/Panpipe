@@ -91,51 +91,52 @@ Item {
     /* Logout */
     function logout() {
 
-        playlistData = []; /* Define playlistData as an array */
+//        playlistData = []; /* Define playlistData as an array */
 
-        var default_song_json = {
-            "artistName": "",
-            "albumName": "",
-            "songName": "",
-            "albumArtUrl": "./resources/images/cover_default.png",
-            "songRating": 0,
-            "audioUrlMap": {
-                "highQuality": {
-                    "bitrate": "",
-                    "encoding": "",
-                    "audioUrl": "",
-                    "protocol": "",
-                },
-                "mediumQuality": {
-                    "bitrate": "",
-                    "encoding": "",
-                    "audioUrl": "",
-                    "protocol": "",
-                },
-                "lowQuality": {
-                    "bitrate": "",
-                    "encoding": "",
-                    "audioUrl": "",
-                    "protocol": "",
-                },
-            },
-            "stationId": "",
-        }
+//        var default_song_json = {
+//            "artistName": "",
+//            "albumName": "",
+//            "songName": "",
+//            "albumArtUrl": "./resources/images/cover_default.png",
+//            "songRating": 0,
+//            "audioUrlMap": {
+//                "highQuality": {
+//                    "bitrate": "",
+//                    "encoding": "",
+//                    "audioUrl": "",
+//                    "protocol": "",
+//                },
+//                "mediumQuality": {
+//                    "bitrate": "",
+//                    "encoding": "",
+//                    "audioUrl": "",
+//                    "protocol": "",
+//                },
+//                "lowQuality": {
+//                    "bitrate": "",
+//                    "encoding": "",
+//                    "audioUrl": "",
+//                    "protocol": "",
+//                },
+//            },
+//            "stationId": "",
+//        }
 
-        playlistData[0] = new Song.Song(default_song_json);
+//        playlistData[0] = new Song.Song(default_song_json);
 
-        playlistCurrentIndex = 0;
+//        playlistCurrentIndex = 0;
 
-        userStationsAlphabetical = [];
-        userStationsByDate = [];
-        currentStationId = "";
-        currentStationName = "";
+//        userStationsAlphabetical = [];
+//        userStationsByDate = [];
+//        currentStationId = "";
+//        currentStationName = "";
 
-        Pandora.partnerResponse = {};
-        Pandora.userResponse = {};
-        Pandora.userStations = {};
+//        Pandora.partnerResponse = {};
+//        Pandora.userResponse = {};
+//        Pandora.userStations = {};
 
         connected = false;
+        currentStationId = "";
     }
 
     /* Retrieve stations */

@@ -178,7 +178,7 @@ Page {
                 bottomMargin: units.gu(0.5)
             }
 
-            text: "On \"" + currentSongAlbum + "\""
+            text: (currentSongAlbum != "") ? "On \"" + currentSongAlbum + "\"" : ""
             color: "White"
             fontSize: "small"
         }
@@ -195,7 +195,7 @@ Page {
                 bottomMargin: units.gu(1)
             }
 
-            text: "By " + currentSongArtist
+            text: (currentSongArtist != "") ? "By " + currentSongArtist : ""
             color: "White"
             fontSize: "small"
         }

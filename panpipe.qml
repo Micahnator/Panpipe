@@ -58,7 +58,7 @@ MainView {
     /* Startup operations */
     Component.onCompleted: {
         /* Initialize the storage database */
-//        Storage.initialize();
+        Storage.initialize();
 
         /* Get the last used station sort method */
 //        startupPreferredStationSort = Storage.getSetting("station_sort_method");
@@ -67,13 +67,13 @@ MainView {
         pandoraBackend.selectedAudioStream = AudioStream.Streams.MP3_128;   //Use MP3 for now, as default streams crash on Micah's Laptop
 
         /* If login credentials are available, attempt to use them to login */
-        pandoraBackend.login("mlosli@yahoo.com", "gonavy");
-//        if(("Unknown" == pandoraUsername) || ("Unknown" == pandoraPassword)) {
-//            viewComponent.requestCredentials();
-//        } else {
-//            //pandoraInterface.login(pandoraUsername, pandoraPassword);
-//            pandoraBackend.login(pandoraUsername, pandoraPassword);
-//        }
+//        pandoraBackend.login("mlosli@yahoo.com", "gonavy");
+        if(("Unknown" == pandoraUsername) || ("Unknown" == pandoraPassword)) {
+            appView.requestCredentials();
+        } else {
+            //pandoraInterface.login(pandoraUsername, pandoraPassword);
+            pandoraBackend.login(pandoraUsername, pandoraPassword);
+        }
     }
 
     /* This delay in starting audio playback avoid audio glitchiness at beginning of track */
@@ -100,6 +100,14 @@ MainView {
         onPlaylistDataChanged: {
             console.log("Micah, we received some playlist data!");
         }
+
+        onLoginSuccess: {
+            if(!success) {
+                appView.requestCredentials(_lastAttemptedUsername);
+            }
+
+            audioPlayer.autoLoad = true;
+        }
     }
     
     /* Audio component */
@@ -107,10 +115,20 @@ MainView {
         id: audioPlayer
         source: pandoraBackend.currentSongAudioUrl
 
+//        onSourceChanged: {
+//            console.log("\nAudio source changed to: ", source, "\n");
+//        }
+
+//        onPlaybackStateChanged: {
+//            console.log("\nAudio playback state changed to: ", playbackState, "\n");
+//        }
+
         onStatusChanged: {
             switch (audioPlayer.status) {
             case Audio.Loaded:
-                playDelayTimer.start();
+                if(pandoraBackend.connected) {
+                    playDelayTimer.start();
+                }
                 break;
             case Audio.EndOfMedia:
                 pandoraBackend.nextSong();
@@ -138,8 +156,8 @@ MainView {
 
     /* View for Panpipe */
     PanpipeView {
+        id: appView
         anchors.fill: parent
-
 
         /* Data binding */
         stationData: pandoraBackend.stationsData
@@ -188,24 +206,42 @@ MainView {
             pandoraBackend.giveFeedback(false, pandoraBackend.currentSong.trackToken)
             pandoraBackend.nextSong();
         }
+
+        onLoginCredentialsProvided: {
+            /* Perform login */
+            _lastAttemptedUsername = username
+            pandoraBackend.login(username, password);
+
+            /* Store login credientials */
+            Storage.setSetting("pandora_username", username);
+            Storage.setSetting("pandora_password", password);
+        }
+
+        onUserLogout: {
+            logout();
+        }
     }
 
     /* Action functions */
     function logout() {
-        /* Clear audio component */
+//        /* Clear audio component */
         audioPlayer.stop();
+//        audioPlayer.source = "";
+//        audioPlayer.
 
         /* Clear pandora interface */
-        pandoraInterface.logout();
+//        pandoraInterface.logout();
+        pandoraBackend.logout();
 
         /* Clear the UI */
-        viewComponent.updateInterface();
+//        viewComponent.updateInterface();
 
         /* Clear login credentials */
         Storage.setSetting("pandora_username", "Unknown");
         Storage.setSetting("pandora_password", "Unknown");
 
         /* Request login credentials */
-        viewComponent.requestCredentials(_lastAttemptedUsername);
+//        viewComponent.requestCredentials(_lastAttemptedUsername);
+        appView.requestCredentials(_lastAttemptedUsername);
     }
 }

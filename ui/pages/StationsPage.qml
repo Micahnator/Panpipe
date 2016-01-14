@@ -24,8 +24,23 @@ import "../components"
 
 Page {
     title: i18n.tr("Stations")
-    head.foregroundColor: "white"
     anchors.fill: parent
+
+    head.foregroundColor: "white"
+//    head.actions: [
+//        Action {
+//            id: logoutAction
+//            iconName: "close"
+//            text: i18n.tr("Logout")
+//            onTriggered: {
+////                userLogout();
+////                console.log("user logout attempt!");
+
+//                /* Confirm the user wants to logout */
+//                PopupUtils.open(logoutDialog);
+//            }
+//        }
+//    ]
 
     /* Signals */
     signal stationClicked(string stationToken)
@@ -123,7 +138,7 @@ Page {
 
 //        color: "#202020"
 
-        visible: (showBottomControl) ? true : false
+        visible: showBottomControl//(showBottomControl) ? true : false
 
         anchors.bottom: parent.bottom
         anchors.left: parent.left

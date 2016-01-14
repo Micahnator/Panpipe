@@ -142,6 +142,14 @@ Item {
         }
     }
 
+    function logout() {
+        pandoraInterfaceComponent.logout();
+        currentStationPlaylist.clearPlaylist();
+        currentStationPlaylist.currentStationToken = "";
+        userStationsData.clearStations();
+
+    }
+
     function selectStation(stationToken) {
         if(stationToken !== currentStationPlaylist.currentStationToken){
             loadingPlaylist = true;
@@ -184,25 +192,30 @@ Item {
 
     /* Private methods */
     function _selectAudioUrl(currentSongObject) {
-        switch(selectedAudioStream) {
-            case AudioStream.Streams.DFLT_LOW:
-                return currentSongObject.audioUrlMap.lowQuality.audioUrl;
-            case AudioStream.Streams.DFLT_MED:
-                return currentSongObject.audioUrlMap.mediumQuality.audioUrl;
-            case AudioStream.Streams.DFLT_HI:
-                return currentSongObject.audioUrlMap.highQuality.audioUrl;
-            case AudioStream.Streams.AAC_MONO_40:
-            case AudioStream.Streams.AAC_64:
-            case AudioStream.Streams.AACP_32:
-            case AudioStream.Streams.AACP_64:
-            case AudioStream.Streams.AACP_ADTS_24:
-            case AudioStream.Streams.AACP_ADTS_32:
-            case AudioStream.Streams.AACP_ADTS_64:
-            case AudioStream.Streams.MP3_128:
-            case AudioStream.Streams.WMA_32:
-                return currentSongObject.additionalAudioUrl;
-            default:
-                return currentSongObject.audioUrlMap.lowQuality.audioUrl;
+        if(connected) {
+            switch(selectedAudioStream) {
+                case AudioStream.Streams.DFLT_LOW:
+                    return currentSongObject.audioUrlMap.lowQuality.audioUrl;
+                case AudioStream.Streams.DFLT_MED:
+                    return currentSongObject.audioUrlMap.mediumQuality.audioUrl;
+                case AudioStream.Streams.DFLT_HI:
+                    return currentSongObject.audioUrlMap.highQuality.audioUrl;
+                case AudioStream.Streams.AAC_MONO_40:
+                case AudioStream.Streams.AAC_64:
+                case AudioStream.Streams.AACP_32:
+                case AudioStream.Streams.AACP_64:
+                case AudioStream.Streams.AACP_ADTS_24:
+                case AudioStream.Streams.AACP_ADTS_32:
+                case AudioStream.Streams.AACP_ADTS_64:
+                case AudioStream.Streams.MP3_128:
+                case AudioStream.Streams.WMA_32:
+                    return currentSongObject.additionalAudioUrl;
+                default:
+                    return currentSongObject.audioUrlMap.lowQuality.audioUrl;
+            }
+        }
+        else {
+            return "";
         }
     }
 

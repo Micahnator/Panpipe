@@ -55,10 +55,12 @@ Item {
     }
 
     onCurrentStationTokenChanged: {
-        playlistDataAvailable = false;
-        currentPlaylistIndex = -1;
-        clearPlaylist();
-        retrieveMoreSongs();
+        if(currentStationToken != "") {
+            playlistDataAvailable = false;
+            currentPlaylistIndex = -1;
+            clearPlaylist();
+            retrieveMoreSongs();
+        }
     }
 
     ListModel {
@@ -134,12 +136,51 @@ Item {
 
     function clearPlaylist() {
         model.clear();
+        currentPlaylistIndex = -1;
     }
 
     function getAnyPlaylistItem(index) {
+
+
+        var default_song_json = {
+            "artistName": "",
+            "albumName": "",
+            "songName": "",
+            "albumArtUrl": "./resources/images/cover_default.png",
+            "songRating": 0,
+            "audioUrlMap": {
+                "highQuality": {
+                    "bitrate": "",
+                    "encoding": "",
+                    "audioUrl": "",
+                    "protocol": "",
+                },
+                "mediumQuality": {
+                    "bitrate": "",
+                    "encoding": "",
+                    "audioUrl": "",
+                    "protocol": "",
+                },
+                "lowQuality": {
+                    "bitrate": "",
+                    "encoding": "",
+                    "audioUrl": "",
+                    "protocol": "",
+                },
+            },
+            "stationId": "",
+            "additionalAudioUrl": [
+                "",
+            ],
+        }
+
         console.log("getAnyPlaylistItem ran");
         if( index <= model.count && index >= 0 && model.count > 0 ) {
             return model.get(index);
+        }
+        else {
+            console.log("getAnyPlaylistItem returning an empty object");
+            return default_song_json;
         }
     }
 
