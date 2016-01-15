@@ -68,10 +68,10 @@ Item {
 
 
     /* Initialization */
-    Component.onCompleted: {
-        selectedAudioStream = AudioStream.Streams.DFLT_MED;
+//    Component.onCompleted: {
+//        selectedAudioStream = AudioStream.Streams.DFLT_MED;
 
-    }
+//    }
 
     /* Pandora interface component */
     PandoraInterface {
@@ -129,9 +129,9 @@ Item {
         }
     }
 
-    onSelectedAudioStreamChanged: {
-        currentStationPlaylist.pandoraInterface.audioStreamString = selectedAudioStream;
-    }
+//    onSelectedAudioStreamChanged: {
+//        currentStationPlaylist.pandoraInterface.audioStreamString = selectedAudioStream;
+//    }
 
 
     /* Public method implementations */
@@ -193,30 +193,69 @@ Item {
     /* Private methods */
     function _selectAudioUrl(currentSongObject) {
         if(connected) {
+            var selectedUrl
+
             switch(selectedAudioStream) {
                 case AudioStream.Streams.DFLT_LOW:
-                    return currentSongObject.audioUrlMap.lowQuality.audioUrl;
+                    console.log("Using low stream");
+                    selectedUrl = currentSongObject.audioUrlMap.lowQuality.audioUrl;
+                    break;
                 case AudioStream.Streams.DFLT_MED:
-                    return currentSongObject.audioUrlMap.mediumQuality.audioUrl;
+                    console.log("Using medium stream");
+                    selectedUrl = currentSongObject.audioUrlMap.mediumQuality.audioUrl;
+                    break;
                 case AudioStream.Streams.DFLT_HI:
-                    return currentSongObject.audioUrlMap.highQuality.audioUrl;
+                    console.log("Using hight stream");
+                    selectedUrl = currentSongObject.audioUrlMap.highQuality.audioUrl;
+                    break;
                 case AudioStream.Streams.AAC_MONO_40:
+                    console.log("Using AAC mono stream");
+                    selectedUrl = currentSongObject.audioUrlMap.extraUrls.aacMono;
+                    break;
                 case AudioStream.Streams.AAC_64:
+                    console.log("Using AAC 64 stream");
+                    selectedUrl = currentSongObject.audioUrlMap.extraUrls.aac64;
+                    break;
                 case AudioStream.Streams.AACP_32:
+                    console.log("Using AACP 32 stream");
+                    selectedUrl = currentSongObject.audioUrlMap.extraUrls.aacp32;
+                    break;
                 case AudioStream.Streams.AACP_64:
+                    console.log("Using AACP 64 stream");
+                    selectedUrl = currentSongObject.audioUrlMap.extraUrls.aacp64;
+                    break;
                 case AudioStream.Streams.AACP_ADTS_24:
+                    console.log("Using ADTS 24 stream");
+                    selectedUrl = currentSongObject.audioUrlMap.extraUrls.adts24;
+                    break;
                 case AudioStream.Streams.AACP_ADTS_32:
+                    console.log("Using ADTS 32 stream");
+                    selectedUrl = currentSongObject.audioUrlMap.extraUrls.adts32;
+                    break;
                 case AudioStream.Streams.AACP_ADTS_64:
+                    console.log("Using ADTS 64 stream");
+                    selectedUrl = currentSongObject.audioUrlMap.extraUrls.adts64;
+                    break;
                 case AudioStream.Streams.MP3_128:
+                    console.log("Using MP3 stream");
+                    selectedUrl = currentSongObject.audioUrlMap.extraUrls.mp3;
+                    break;
                 case AudioStream.Streams.WMA_32:
-                    return currentSongObject.additionalAudioUrl;
+                    console.log("Using WMA stream");
+                    selectedUrl = currentSongObject.audioUrlMap.extraUrls.wma;
+                    break;
                 default:
-                    return currentSongObject.audioUrlMap.lowQuality.audioUrl;
+                    console.log("Using default stream");
+                    selectedUrl = currentSongObject.audioUrlMap.lowQuality.audioUrl;
+                    break;
             }
         }
         else {
+            console.log("Not connected, returning empty url");
             return "";
         }
+
+        return selectedUrl;
     }
 
 }

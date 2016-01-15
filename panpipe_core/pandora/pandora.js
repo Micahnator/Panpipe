@@ -297,21 +297,30 @@ function getStation(stationToken, callback) {
 }
 
 /* Function to get the playlist of the selected station */
-function getStationPlaylist(stationToken, additionalAudioFormat, callback) {
+//function getStationPlaylist(stationToken, additionalAudioFormat, callback) {
+function getStationPlaylist(stationToken, callback) {
 
     function requestStationPlaylist() {
 
         /* Station request */
         var stationPlaylistRequest;
-        if(-1 !== additionalAudioFormat.search("HTTP")) {
-            stationPlaylistRequest = {
-                "stationToken": stationToken,
-                "additionalAudioUrl": additionalAudioFormat,
-            }
-        } else {
-            stationPlaylistRequest = {
-                "stationToken": stationToken,
-            }
+//        if(-1 !== additionalAudioFormat.search("HTTP")) {
+
+//            /* Also request all available additional audio url options */
+//            stationPlaylistRequest = {
+//                "stationToken": stationToken,
+////                "additionalAudioUrl": additionalAudioFormat,
+//                "additionalAudioUrl": "HTTP_40_AAC_MONO,HTTP_64_AAC,HTTP_32_AACPLUS,HTTP_64_AACPLUS,HTTP_24_AACPLUS_ADTS,HTTP_32_AACPLUS_ADTS,HTTP_64_AACPLUS_ADTS,HTTP_128_MP3,HTTP_32_WMA",
+//            }
+//        } else {
+//            stationPlaylistRequest = {
+//                "stationToken": stationToken,
+//            }
+//        }
+        /* Also request all available additional audio url options */
+        stationPlaylistRequest = {
+            "stationToken": stationToken,
+            "additionalAudioUrl": "HTTP_40_AAC_MONO,HTTP_64_AAC,HTTP_32_AACPLUS,HTTP_64_AACPLUS,HTTP_24_AACPLUS_ADTS,HTTP_32_AACPLUS_ADTS,HTTP_64_AACPLUS_ADTS,HTTP_128_MP3,HTTP_32_WMA",
         }
 
         /* Request stations */

@@ -104,6 +104,22 @@ Item {
                 for ( var key in playlistArray ) {
                     var jo = playlistArray[key];
 
+                    /* 'object-ify items in the additionalAudioUrl array */
+                    if(jo.additionalAudioUrl) {
+                        if(jo.additionalAudioUrl.constructor === Array) {
+                            jo.audioUrlMap.extraUrls = {};
+                            jo.audioUrlMap.extraUrls.aacMono = jo.additionalAudioUrl[0];
+                            jo.audioUrlMap.extraUrls.aac64 = jo.additionalAudioUrl[1];
+                            jo.audioUrlMap.extraUrls.aacp32 = jo.additionalAudioUrl[2];
+                            jo.audioUrlMap.extraUrls.aacp64 = jo.additionalAudioUrl[3];
+                            jo.audioUrlMap.extraUrls.adts24 = jo.additionalAudioUrl[4];
+                            jo.audioUrlMap.extraUrls.adts32 = jo.additionalAudioUrl[5];
+                            jo.audioUrlMap.extraUrls.adts64 = jo.additionalAudioUrl[6];
+                            jo.audioUrlMap.extraUrls.mp3 = jo.additionalAudioUrl[7];
+                            jo.audioUrlMap.extraUrls.wma = jo.additionalAudioUrl[8];
+                        }
+                    }
+
                     /* Only add songs to the playlist model */
                     if( jo.songName ) {
                         model.append(jo);

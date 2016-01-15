@@ -260,13 +260,15 @@ Item {
     */
     function retrievePlaylist(stationToken) {
         console.log("retrieving more songs!");
-        Pandora.getStationPlaylist(stationToken, audioStreamString, retrievePlaylistResponse);
+//        Pandora.getStationPlaylist(stationToken, audioStreamString, retrievePlaylistResponse);
+        Pandora.getStationPlaylist(stationToken, retrievePlaylistResponse);
     }
 
     //alternate version with specified callback function
     function retrieveMoreSongs(stationToken, callback) {
         console.log("retrieving more songs!");
-        Pandora.getStationPlaylist(stationToken, audioStreamString, callback);
+//        Pandora.getStationPlaylist(stationToken, audioStreamString, callback);
+        Pandora.getStationPlaylist(stationToken, callback);
     }
 
     /*

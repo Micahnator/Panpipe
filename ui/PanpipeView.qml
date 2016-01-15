@@ -22,6 +22,7 @@ import Ubuntu.Components 1.3
 import Ubuntu.Components.Popups 1.3 as Popups
 
 import "pages"
+import "../panpipe_core/AudioStream.js" as AudioStream
 
 //import Ubuntu.Colors
 
@@ -38,6 +39,8 @@ Item {
 
     signal loginCredentialsProvided(string username, string password)
     signal userLogout()
+
+    signal streamSelected(string streamEnum)
 
     /* Aliases */
     property alias stationData: stationsPage.dataModel
@@ -70,6 +73,16 @@ Item {
         }
     }
 
+    Action {
+        id: openSettingsAction
+        iconName: "settings"
+        text: i18n.tr("Settings")
+        onTriggered: {
+            /* Confirm the user wants to logout */
+            PopupUtils.open(settingsDialog);
+        }
+    }
+
     AdaptivePageLayout {
         id: layout
         anchors.fill: parent
@@ -78,7 +91,7 @@ Item {
         StationsPage {
             id: stationsPage
 
-            head.actions: [logoutAction]
+            head.actions: [openSettingsAction, logoutAction]
 
             /* Event handling */
             onStationClicked: {
@@ -320,6 +333,150 @@ Item {
             }
         }
     }
+
+    /* Application settings dialog */
+   Component {
+       id: settingsDialog
+
+       Popups.Dialog {
+           id: settingsScreen
+           title: i18n.tr("Panpipe Settings")
+
+//           property string selectedAudioEnum
+
+           /* Audio stream type / quality settings */
+           ListModel {
+               id: audioStreamsModel
+//               ListElement { name: "Low"; value: AudioStream.Streams.DFLT_LOW }
+//               ListElement { name: "Medium"; value: AudioStream.Streams.DFLT_MED }
+//               ListElement { name: "High"; value: AudioStream.Streams.DFLT_HI }
+//               ListElement { name: "AAC Mono"; value: AudioStream.Streams.AAC_MONO_40 }
+//               ListElement { name: "AAC"; value: AudioStream.Streams.AAC_64 }
+//               ListElement { name: "AAC+ 32"; value: AudioStream.Streams.AACP_32 }
+//               ListElement { name: "AAC+ 64"; value: AudioStream.Streams.AACP_64 }
+//               ListElement { name: "AAC+ ADTS 24"; value: AudioStream.Streams.AACP_ADTS_24 }
+//               ListElement { name: "AAC+ ADTS 32"; value: AudioStream.Streams.AACP_ADTS_32 }
+//               ListElement { name: "AAC+ ADTS 64"; value: AudioStream.Streams.AACP_ADTS_64 }
+//               ListElement { name: "MP3 128"; value: AudioStream.Streams.MP3_128 }
+//               ListElement { name: "WMA 32"; value: AudioStream.Streams.WMA_32 }
+
+               ListElement { name: "Low"; value: "LOW" }
+               ListElement { name: "Medium"; value: "MED" }
+               ListElement { name: "High"; value: "HI" }
+               ListElement { name: "AAC Mono"; value: "HTTP_40_AAC_MONO" }
+               ListElement { name: "AAC"; value: "HTTP_64_AAC" }
+               ListElement { name: "AAC+ 32"; value: "HTTP_32_AACPLUS" }
+               ListElement { name: "AAC+ 64"; value: "HTTP_64_AACPLUS" }
+               ListElement { name: "AAC+ ADTS 24"; value: "HTTP_24_AACPLUS_ADTS" }
+               ListElement { name: "AAC+ ADTS 32"; value: "HTTP_32_AACPLUS_ADTS" }
+               ListElement { name: "AAC+ ADTS 64"; value: "HTTP_64_AACPLUS_ADTS" }
+               ListElement { name: "MP3 128"; value: "HTTP_128_MP3" }
+               ListElement { name: "WMA 32"; value: "HTTP_32_WMA" }
+            }
+
+            Component {
+                id: selectorDelegate
+                OptionSelectorDelegate { text: name }
+            }
+
+            OptionSelector {
+                id: audioStreamSelector
+                text: i18n.tr("Select Audio Quality")
+
+                model: audioStreamsModel
+                delegate: selectorDelegate
+
+                Component.onCompleted: {
+                    for(var i = 0; i < model.count; i++) {
+                        if(model.get(i).value === selectedStream) {
+                            selectedIndex = i;
+                        }
+                    }
+                }
+
+                onDelegateClicked: {
+                    if(audioStreamsModel.get(index).value !== selectedStream) {
+                        streamSelected(audioStreamsModel.get(index).value);
+                    }
+//                    selectedAudioEnum = audioStreamsModel.get(index).value;
+                }
+            }
+
+           Button {
+               text: i18n.tr("About")
+               color: "orange"
+
+               onClicked: {
+                   /* close dialog */
+                   PopupUtils.close(settingsScreen);
+
+                   /* open new dialog */
+                   PopupUtils.open(aboutDialog);
+               }
+           }
+
+           Button {
+               text: i18n.tr("Close")
+               color: "gray"
+
+               onClicked: {
+                   /* Write settings changes */
+//                   streamSelected(selectedAudioEnum);
+
+                   /* close dialog */
+                   PopupUtils.close(settingsScreen)
+               }
+           }
+       }
+   }
+
+   /* About this app dialog */
+   Component {
+       id: aboutDialog
+
+       Popups.Dialog {
+           id: aboutScreen
+           title: i18n.tr("Panpipe")
+
+           Rectangle {
+               height: width
+               color: "transparent"
+               Image {
+                   source: Qt.resolvedUrl("../panpipe-256.png")
+                   anchors.fill: parent
+               }
+           }
+
+           Label {
+               text: i18n.tr("Panpipe is a Pandora Internet Radio client for Ubuntu, licensed under the GPLv3.")
+               wrapMode: Text.WordWrap
+               fontSize: "medium"
+           }
+
+           Button {
+               text: i18n.tr("Panpipe Website")
+               color: "orange"
+
+               onClicked: {
+                   /* close dialog */
+                   PopupUtils.close(aboutScreen);
+
+                   /* Open the Panpipe project website in the browser */
+                   Qt.openUrlExternally("http://micahnator.github.io/Panpipe/");
+               }
+           }
+
+           Button {
+               text: i18n.tr("Close")
+               color: "gray"
+
+               onClicked: {
+                   /* close dialog */
+                   PopupUtils.close(aboutScreen)
+               }
+           }
+       }
+   }
 
 
     /* Public functions */

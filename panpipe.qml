@@ -55,6 +55,10 @@ MainView {
 
     property string _lastAttemptedUsername
 
+    property string selectedStream: Storage.getSetting("selected_stream")
+
+    property bool audioNowPlaying: (audioPlayer.playbackState === Audio.PlayingState)
+
     /* Startup operations */
     Component.onCompleted: {
         /* Initialize the storage database */
@@ -64,7 +68,12 @@ MainView {
 //        startupPreferredStationSort = Storage.getSetting("station_sort_method");
 
         /* Apply the selected audio format */
-        pandoraBackend.selectedAudioStream = AudioStream.Streams.MP3_128;   //Use MP3 for now, as default streams crash on Micah's Laptop
+//        pandoraBackend.selectedAudioStream = AudioStream.Streams.MP3_128;   //Use MP3 for now, as default streams crash on Micah's Laptop
+//        selectedStream = AudioStream.Streams.MP3_128;   //Use MP3 for now, as default streams crash on Micah's Laptop
+//        selectedStream = AudioStream.Streams.DFLT_MED;
+        if("Unknown" == selectedStream) {
+            selectedStream = AudioStream.Streams.DFLT_MED;
+        }
 
         /* If login credentials are available, attempt to use them to login */
 //        pandoraBackend.login("mlosli@yahoo.com", "gonavy");
@@ -90,6 +99,8 @@ MainView {
 
     PanpipeCore {
         id: pandoraBackend
+
+        selectedAudioStream: selectedStream
 
         onStationsUpdated: {
             console.log("Micah, we got stations!");
@@ -174,7 +185,7 @@ MainView {
 
         playbackPercentage: (audioPlayer.position / audioPlayer.duration)
 
-        audioPlaying: (audioPlayer.playbackState === Audio.PlayingState)
+        audioPlaying: audioNowPlaying//(audioPlayer.playbackState === Audio.PlayingState)
         playbackPosition: audioPlayer.position
         playbackDuration: audioPlayer.duration
         audioSourceUrl: audioPlayer.source
@@ -219,6 +230,11 @@ MainView {
 
         onUserLogout: {
             logout();
+        }
+
+        onStreamSelected: {
+            Storage.setSetting("selected_stream", streamEnum);
+            selectedStream = streamEnum;
         }
     }
 
