@@ -78,6 +78,8 @@ Page {
             left: parent.left
         }
 
+        clip: true
+
         currentIndex: -1    /* Start with no station selected */
 
         delegate: ListItem {
