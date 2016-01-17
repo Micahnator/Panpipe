@@ -74,7 +74,6 @@ MainView {
         if(("Unknown" == pandoraUsername) || ("Unknown" == pandoraPassword)) {
             appView.requestCredentials();
         } else {
-            //pandoraInterface.login(pandoraUsername, pandoraPassword);
             pandoraBackend.login(pandoraUsername, pandoraPassword);
         }
     }
@@ -96,16 +95,6 @@ MainView {
 
         selectedAudioStream: selectedStream
 
-        onStationsUpdated: {
-            console.log("Micah, we got stations!");
-
-            console.log(stationsData);
-        }
-
-        onPlaylistDataChanged: {
-            console.log("Micah, we received some playlist data!");
-        }
-
         onLoginSuccess: {
             if(!success) {
                 appView.requestCredentials(_lastAttemptedUsername);
@@ -122,27 +111,7 @@ MainView {
     /* Audio component */
     Audio {
         id: audioPlayer
-//        source: pandoraBackend.currentSongAudioUrl
         playlist: pandoraBackend.playlist
-//        autoPlay: true
-
-//        onItemChanged: {
-//            play();
-//        }
-
-//        onSourceChanged: {
-//            console.log("\nAudio source changed to: ", source, "\n");
-//        }
-
-//        onPlaybackStateChanged: {
-//            console.log("\nAudio playback state changed to: ", playbackState, "\n");
-//        }
-
-//        playlist: Playlist {
-//            id: playlist
-//            playbackMode: Playlist.Sequential
-
-//        }
 
         onStatusChanged: {
             switch (audioPlayer.status) {
@@ -250,13 +219,10 @@ MainView {
 
     /* Action functions */
     function logout() {
-//        /* Clear audio component */
+        /* Stop the audio component */
         audioPlayer.stop();
-//        audioPlayer.source = "";
-//        audioPlayer.
 
         /* Clear pandora interface */
-//        pandoraInterface.logout();
         pandoraBackend.logout();
 
         /* Clear the UI */
@@ -267,7 +233,6 @@ MainView {
         Storage.setSetting("pandora_password", "Unknown");
 
         /* Request login credentials */
-//        viewComponent.requestCredentials(_lastAttemptedUsername);
         appView.requestCredentials(_lastAttemptedUsername);
     }
 }

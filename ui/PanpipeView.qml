@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2015 Micah Losli <micah.losli@gmail.com>
+Copyright (C) 2015-2016 Micah Losli <micah.losli@gmail.com>
 
 This file is part of Panpipe.
 
@@ -23,8 +23,6 @@ import Ubuntu.Components.Popups 1.3 as Popups
 
 import "pages"
 import "../panpipe_core/AudioStream.js" as AudioStream
-
-//import Ubuntu.Colors
 
 Item {
     id: mainLayout
@@ -111,128 +109,9 @@ Item {
 
         PlayerPage {
             id: playerPage
-
-//            onSkipButtonPressed: {
-//                nextTrack();
-//            }
         }
 
     }
-
-//    anchors.centerIn: parent
-//    anchors.fill: parent
-
-//    PageStack {
-//        id: mainStack
-
-////        anchors.fill: parent
-//        anchors {
-//            fill: undefined
-//            left: parent.left
-//            right: parent.right
-//            top: parent.top
-//            bottom: parent.bottom
-//        }
-
-
-//        Component.onCompleted: push(stationsView)
-
-//        StationsPage {
-//            id: stationsView
-//            anchors.fill: parent
-//        }
-
-
-//        PlayerPage {
-//            id: playerView
-//        }
-//    }
-
-
-//    AdaptivePageLayout {
-//        id: layout
-//        anchors.fill: parent
-//        primaryPage: rootPage
-
-//        Page {
-//            id: rootPage
-//            title: i18n.tr("Root page")
-
-//            Column {
-//                anchors {
-//                    top: parent.top
-//                    left: parent.left
-//                    margins: units.gu(1)
-//                }
-//                spacing: units.gu(1)
-
-//                Button {
-//                    text: "Add page left"
-//                    onClicked: layout.addPageToCurrentColumn(rootPage, leftPage)
-//                }
-//                Button {
-//                    text: "Add page right"
-//                    onClicked: layout.addPageToNextColumn(rootPage, rightPage)
-//                }
-//                Button {
-//                    text: "Add sections page right"
-//                    onClicked: layout.addPageToNextColumn(rootPage, sectionsPage)
-//                }
-//            }
-//        }
-
-//        Page {
-//            id: leftPage
-//            title: i18n.tr("First column")
-
-//            Rectangle {
-//                anchors {
-//                    fill: parent
-//                    margins: units.gu(2)
-//                }
-//                color: UbuntuColors.orange
-
-//                Button {
-//                    anchors.centerIn: parent
-//                    text: "right"
-//                    onTriggered: layout.addPageToNextColumn(leftPage, rightPage)
-//                }
-//            }
-//        }
-
-//        Page {
-//            id: rightPage
-//            title: i18n.tr("Second column")
-
-//            Rectangle {
-//                anchors {
-//                    fill: parent
-//                    margins: units.gu(2)
-//                }
-//                color: UbuntuColors.green
-
-//                Button {
-//                    anchors.centerIn: parent
-//                    text: "Another page!"
-//                    onTriggered: layout.addPageToCurrentColumn(rightPage, sectionsPage)
-//                }
-//            }
-//        }
-
-//        Page {
-//            id: sectionsPage
-//            title: i18n.tr("Page with sections")
-//            head.sections.model: [i18n.tr("one"), i18n.tr("two"), i18n.tr("three")]
-
-//            Rectangle {
-//                anchors {
-//                    fill: parent
-//                    margins: units.gu(2)
-//                }
-//                color: UbuntuColors.blue
-//            }
-//        }
-//    }
 
 
     /* Define login credential dialog */
@@ -342,8 +221,6 @@ Item {
            id: settingsScreen
            title: i18n.tr("Panpipe Settings")
 
-//           property string selectedAudioEnum
-
            /* Audio stream type / quality settings */
            ListModel {
                id: audioStreamsModel
@@ -390,6 +267,7 @@ Item {
                     for(var i = 0; i < model.count; i++) {
                         if(model.get(i).value === selectedStream) {
                             selectedIndex = i;
+                            break;
                         }
                     }
                 }
@@ -398,7 +276,6 @@ Item {
                     if(audioStreamsModel.get(index).value !== selectedStream) {
                         streamSelected(audioStreamsModel.get(index).value);
                     }
-//                    selectedAudioEnum = audioStreamsModel.get(index).value;
                 }
             }
 
@@ -420,9 +297,6 @@ Item {
                color: "gray"
 
                onClicked: {
-                   /* Write settings changes */
-//                   streamSelected(selectedAudioEnum);
-
                    /* close dialog */
                    PopupUtils.close(settingsScreen)
                }
@@ -436,7 +310,7 @@ Item {
 
        Popups.Dialog {
            id: aboutScreen
-           title: i18n.tr("Panpipe")
+           title: i18n.tr("Panpipe 0.4")
 
            Rectangle {
                height: width
@@ -492,7 +366,7 @@ Item {
     }
 
     function clearView() {
-
+        //implement later
     }
 
 }

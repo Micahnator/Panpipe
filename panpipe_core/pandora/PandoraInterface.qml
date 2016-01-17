@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2013-2014 Micah Losli <micah.losli@gmail.com>
+Copyright (C) 2013-2016 Micah Losli <micah.losli@gmail.com>
 
 This file is part of Panpipe.
 
@@ -90,51 +90,6 @@ Item {
 
     /* Logout */
     function logout() {
-
-//        playlistData = []; /* Define playlistData as an array */
-
-//        var default_song_json = {
-//            "artistName": "",
-//            "albumName": "",
-//            "songName": "",
-//            "albumArtUrl": "./resources/images/cover_default.png",
-//            "songRating": 0,
-//            "audioUrlMap": {
-//                "highQuality": {
-//                    "bitrate": "",
-//                    "encoding": "",
-//                    "audioUrl": "",
-//                    "protocol": "",
-//                },
-//                "mediumQuality": {
-//                    "bitrate": "",
-//                    "encoding": "",
-//                    "audioUrl": "",
-//                    "protocol": "",
-//                },
-//                "lowQuality": {
-//                    "bitrate": "",
-//                    "encoding": "",
-//                    "audioUrl": "",
-//                    "protocol": "",
-//                },
-//            },
-//            "stationId": "",
-//        }
-
-//        playlistData[0] = new Song.Song(default_song_json);
-
-//        playlistCurrentIndex = 0;
-
-//        userStationsAlphabetical = [];
-//        userStationsByDate = [];
-//        currentStationId = "";
-//        currentStationName = "";
-
-//        Pandora.partnerResponse = {};
-//        Pandora.userResponse = {};
-//        Pandora.userStations = {};
-
         connected = false;
         currentStationId = "";
     }
@@ -148,10 +103,6 @@ Item {
 
         function retrieveStationsResponse(pandoraResponse) {
             userStationsByDate = pandoraResponse.result;
-//            var userStationsTemp = [];
-//            userStationsTemp = userStationsByDate.slice();
-//            __sortStationArrayAlphabetically(userStationsTemp);
-//            userStationsAlphabetical = userStationsTemp;
             if (pandoraResponse.stat === "ok") {
                 console.log("stations received");
                 stationsLoaded();
@@ -160,7 +111,6 @@ Item {
             }
 
             if (callback) {
-                //callback(stationList)
                 callback(pandoraResponse)
             }
         }
@@ -170,12 +120,6 @@ Item {
 
     /* Send feedback */
     function giveFeedback(favorable, trackToken, callback) {
-        /* Update data model */
-//        if(favorable) {
-//            playlistData[playlistCurrentIndex].songRating = 1;
-//        } else {
-//            playlistData[playlistCurrentIndex].songRating = -1;
-//        }
 
         function giveFeedbackAttempt() {
             /* Send the feedback to Pandora */
@@ -206,7 +150,6 @@ Item {
         stationSelected = true;
 
         currentStationToken = stationToken;
-        //currentStationName = userStationsByDate[__findStationIndexFromToken(currentStationToken, userStationsByDate)].stationName;
 
         retrievePlaylist(currentStationToken);
     }
@@ -260,14 +203,12 @@ Item {
     */
     function retrievePlaylist(stationToken) {
         console.log("retrieving more songs!");
-//        Pandora.getStationPlaylist(stationToken, audioStreamString, retrievePlaylistResponse);
         Pandora.getStationPlaylist(stationToken, retrievePlaylistResponse);
     }
 
     //alternate version with specified callback function
     function retrieveMoreSongs(stationToken, callback) {
         console.log("retrieving more songs!");
-//        Pandora.getStationPlaylist(stationToken, audioStreamString, callback);
         Pandora.getStationPlaylist(stationToken, callback);
     }
 

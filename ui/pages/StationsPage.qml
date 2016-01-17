@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2015 Micah Losli <micah.losli@gmail.com>
+Copyright (C) 2015-2016 Micah Losli <micah.losli@gmail.com>
 
 This file is part of Panpipe.
 
@@ -27,20 +27,6 @@ Page {
     anchors.fill: parent
 
     head.foregroundColor: "white"
-//    head.actions: [
-//        Action {
-//            id: logoutAction
-//            iconName: "close"
-//            text: i18n.tr("Logout")
-//            onTriggered: {
-////                userLogout();
-////                console.log("user logout attempt!");
-
-//                /* Confirm the user wants to logout */
-//                PopupUtils.open(logoutDialog);
-//            }
-//        }
-//    ]
 
     /* Signals */
     signal stationClicked(string stationToken)
@@ -49,7 +35,7 @@ Page {
     /* Aliases */
     property alias dataModel: stationListView.model
 
-    property bool showBottomControl: ((audioSourceUrl != "") && (!playerPage.visible))
+    property bool showBottomControl: ((audioPlayer.playlist.itemCount > 0) && (!playerPage.visible))
 
     Timer {
         id: justSwiped
@@ -70,7 +56,6 @@ Page {
     */
     UbuntuListView {
         id: stationListView
-//        anchors.fill: parent
         anchors {
             top: parent.top
             right: parent.right
@@ -96,8 +81,6 @@ Page {
                 height: parent.height
                 width: height
                 sourceSize {
-//                    height: stationArt.height
-//                    width: height
                     height: 40
                     width: height
                 }
@@ -129,24 +112,20 @@ Page {
 
     }
 
-
-
-//    Rectangle {
+    /* Now playing info / controls */
     Item {
         id: nowPlayingBar
 
         width: parent.width
         height: units.gu(7)
 
-//        color: "#202020"
-
-        visible: showBottomControl//(showBottomControl) ? true : false
+        visible: showBottomControl
 
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
 
-        /* Gray background for player page (in case a BlurredBackground isn't rendered) */
+        /* Gray background for nowPlayingBar (to provide an opaque background) */
         Rectangle {
             anchors.fill: parent
             color: "#F0F0F0"
@@ -167,20 +146,6 @@ Page {
             opacity: 0.85
         }
 
-//        CrossFadeImage {
-//            id: nowPlayingThumbnail
-
-//            height: parent.height
-//            width: height
-//            anchors {
-//                left: parent.left
-//                bottom: parent.bottom
-//            }
-
-//            fadeDuration: 1000
-//            fillMode: Image.PreserveAspectCrop
-//            source: playlist[currentPlaylistIndex].albumArtUrl
-//        }
         Image {
             id: nowPlayingThumbnail
 
@@ -194,30 +159,6 @@ Page {
             source: currentAlbumArtUrl
         }
 
-        /* Play / Pause button */
-//        Item {
-//            id: nowPlayingPlayPause
-
-//            height: parent.height
-//            width: height
-//            anchors {
-//                right: parent.right
-//                bottom: parent.bottom
-//            }
-
-//            Image {
-//                source: (playButtonState) ? Qt.resolvedUrl("resources/icons/media-playback-pause.svg") : Qt.resolvedUrl("./resources/icons/media-playback-start.svg")
-//                sourceSize.width: parent.width
-//                sourceSize.height: parent.height
-//            }
-
-//            MouseArea {
-//                anchors.fill: parent
-//                onClicked: {
-//                    playButtonState = !playButtonState;
-//                }
-//            }
-//        }
         AbstractButton {
             id: nowPlayingPlayPause
             height: parent.height
@@ -247,7 +188,6 @@ Page {
                 bottom: nowPlayingAlbum.top
             }
 
-//            text: playlist[currentPlaylistIndex].artistName
             text: currentSongName
             color: "white"
             fontSize: "medium"
@@ -265,7 +205,6 @@ Page {
                 bottom: nowPlayingSong.top
             }
 
-//            text: playlist[currentPlaylistIndex].albumName
             text: "On \"" + currentSongAlbum + "\""
             color: "white"
             fontSize: "small"
@@ -284,7 +223,6 @@ Page {
                 bottomMargin: units.gu(0.5)
             }
 
-//            text: playlist[currentPlaylistIndex].songName
             text: "By " + currentSongArtist
             color: "white"
             fontSize: "small"
@@ -306,14 +244,12 @@ Page {
 
                 /* When swiped leftward, skip to the next track */
                 if(direction == "left") {
-//                    nextTrackPressed();
                     nextTrack();
                 }
             }
 
             onClicked: {
                 if(!justSwiped.running) {
-//                    pagestack.push(playerPage);
                     layout.addPageToNextColumn(stationsPage, playerPage);
                 }
             }

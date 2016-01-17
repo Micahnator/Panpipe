@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2013 Micah Losli <micah.losli@gmail.com>
+Copyright (C) 2013-2016 Micah Losli <micah.losli@gmail.com>
 
 This file is part of Panpipe.
 
@@ -240,18 +240,16 @@ function getUserStations(callback) {
 
     function receiveStationsResponse(dataString) {
         /* Store away everything that needs to be kept for later */
-        //userStationsString = JSON.stringify(data);
         userStationsString = dataString;
         var data = JSON.parse(dataString);
-        //userStations = data.result.stations;
 
         /* Ensure success */
 //        if(data.stat != "ok") {
 //            callback(false);
 //            return;
 //        }
+
         /* Return the list of stations */
-        //callback(userStations);
         if (callback) {
             callback(data);
         }
@@ -279,8 +277,6 @@ function getStation(stationToken, callback) {
     }
 
     function receiveStationResponse(dataString) {
-        /* Store away everything that needs to be kept for later */
-        //currentStation = data.result;
         var data = JSON.parse(dataString);
 
         /* Ensure success */
@@ -289,6 +285,7 @@ function getStation(stationToken, callback) {
 //            callback(false);
 //            return;
 //        }
+
         if (callback) {
             callback(data);
         }
@@ -303,22 +300,7 @@ function getStationPlaylist(stationToken, callback) {
     function requestStationPlaylist() {
 
         /* Station request */
-        var stationPlaylistRequest;
-//        if(-1 !== additionalAudioFormat.search("HTTP")) {
-
-//            /* Also request all available additional audio url options */
-//            stationPlaylistRequest = {
-//                "stationToken": stationToken,
-////                "additionalAudioUrl": additionalAudioFormat,
-//                "additionalAudioUrl": "HTTP_40_AAC_MONO,HTTP_64_AAC,HTTP_32_AACPLUS,HTTP_64_AACPLUS,HTTP_24_AACPLUS_ADTS,HTTP_32_AACPLUS_ADTS,HTTP_64_AACPLUS_ADTS,HTTP_128_MP3,HTTP_32_WMA",
-//            }
-//        } else {
-//            stationPlaylistRequest = {
-//                "stationToken": stationToken,
-//            }
-//        }
-        /* Also request all available additional audio url options */
-        stationPlaylistRequest = {
+        var stationPlaylistRequest = { /* Also request all available additional audio url options */
             "stationToken": stationToken,
             "additionalAudioUrl": "HTTP_40_AAC_MONO,HTTP_64_AAC,HTTP_32_AACPLUS,HTTP_64_AACPLUS,HTTP_24_AACPLUS_ADTS,HTTP_32_AACPLUS_ADTS,HTTP_64_AACPLUS_ADTS,HTTP_128_MP3,HTTP_32_WMA",
         }
@@ -333,8 +315,6 @@ function getStationPlaylist(stationToken, callback) {
     }
 
     function receiveStationPlaylistResponse(dataString) {
-        /* Store away everything that needs to be kept for later */
-        //currentPlaylist = data.result.items;
         var data = JSON.parse(dataString);
 
         /* Ensure success */
@@ -347,6 +327,7 @@ function getStationPlaylist(stationToken, callback) {
 //        else {
 //            console.log("Playlist successfully retrieved.");
 //        }
+
         if (callback) {
             callback(data);
         }
@@ -405,7 +386,6 @@ function searchMusic(queryString, callback) {
     }
 
     function searchMusicResponse(dataString) {
-        //musicSearchResult = data.result;
         var data = JSON.parse(dataString);
 
         /* Ensure success */
@@ -440,6 +420,7 @@ function setQuickMix(stationIds, callback) {
 
     function setQuickMixResponse(dataString) {
         var data = JSON.parse(dataString);
+
         /* Ensure success */
 //        if(data.stat != "ok") {
 //            console.log("QuickMix update failed. Status: " + data.stat);
@@ -472,6 +453,7 @@ function newStation(musicToken, callback) {
 
     function newStationResponse(dataString) {
         var data = JSON.parse(dataString);
+
 //        console.log(data);
 //        if(data.stat != "ok") {
 //            console.log("Create station operation failed. Status: " + data.stat);
@@ -504,6 +486,7 @@ function deleteStation(stationToken, callback) {
 
     function deleteStationResponse(dataString) {
         var data = JSON.parse(dataString);
+
 //        console.log(data);
 //        /* Ensure success */
 //        if(data.stat != "ok") {
@@ -537,6 +520,7 @@ function deleteFeedback(feedbackId, callback) {
 
     function deleteFeedbackResponse(dataString) {
         var data = JSON.parse(dataString);
+
 //        /* Ensure success */
 //        if(data.stat != "ok") {
 //            console.log("Delete feedback operation failed. Status: " + data.stat);
@@ -569,6 +553,7 @@ function deleteSeed(seedId, callback) {
 
     function deleteSeedResponse(dataString) {
         var data = JSON.parse(dataString);
+
 //        /* Ensure success */
 //        if(data.stat != "ok") {
 //            console.log("Delete seed operation failed. Status: " + data.stat);
@@ -602,6 +587,7 @@ function addSeed(musicToken, stationToken, callback) {
 
     function addSeedResponse(dataString) {
         var data = JSON.parse(dataString);
+
 //        /* Ensure success */
 //        if(data.stat != "ok") {
 //            console.log("Add seed to station operation failed. Status: " + data.stat);

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2013-2015 Micah Losli <micah.losli@gmail.com>
+Copyright (C) 2015-2016 Micah Losli <micah.losli@gmail.com>
 
 This file is part of Panpipe.
 

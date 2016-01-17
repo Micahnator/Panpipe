@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2015 Micah Losli <micah.losli@gmail.com>
+Copyright (C) 2015-2016 Micah Losli <micah.losli@gmail.com>
 
 This file is part of Panpipe.
 
@@ -27,7 +27,6 @@ import "../components"
 Page {
     title: i18n.tr("Player")
     head.foregroundColor: "white"
-//    anchors.fill: parent
 
     /* Signals */
     signal skipButtonPressed
@@ -52,16 +51,6 @@ Page {
         State {
             name: "landscape"
             when: isLandscapeMode
-
-//            PropertyChanges {
-//                target: object
-
-//            }
-            /* Album art */
-//            PropertyChanges {
-//                target: albumArtContainer
-
-//            }
 
             AnchorChanges {
                 target: albumArtContainer
@@ -137,11 +126,9 @@ Page {
         color: "Black"
         opacity: 0.85
 
-//        height: units.gu(25)
-        height: units.gu(1) /* height above text */ + (controlBar.height + songProgressBar.height + currentSongArtistLabel.height + currentSongAlbumLabel.height + currentSongNameLabel.height + units.gu(4))
+        height: units.gu(1) + /* height above text */ (controlBar.height + songProgressBar.height + currentSongArtistLabel.height + currentSongAlbumLabel.height + currentSongNameLabel.height + units.gu(4))
 
         anchors {
-//            top: currentSongNameLabel.top
             bottom: parent.bottom
             left: parent.left
             right: parent.right
@@ -155,8 +142,6 @@ Page {
             anchors {
                 left: parent.left
                 leftMargin: units.gu(2)
-//                top: parent.top
-//                topMargin: units.gu(0.5)
                 bottom: currentSongAlbumLabel.top
                 bottomMargin: units.gu(0.5)
             }
@@ -172,8 +157,6 @@ Page {
             anchors {
                 left: parent.left
                 leftMargin: units.gu(2)
-//                top: currentSongNameLabel.bottom
-//                topMargin: units.gu(0.5)
                 bottom: currentSongArtistLabel.top
                 bottomMargin: units.gu(0.5)
             }
@@ -189,8 +172,6 @@ Page {
             anchors {
                 left: parent.left
                 leftMargin: units.gu(2)
-//                top: currentSongAlbumLabel.bottom
-//                topMargin: units.gu(0.5)
                 bottom: songProgressBar.top
                 bottomMargin: units.gu(1)
             }
@@ -232,7 +213,6 @@ Page {
         RectangleProgressBar {
             id: songProgressBar
             anchors {
-//                horizontalCenter: parent.horizontalCenter
                 bottom: controlBar.top
                 bottomMargin: units.gu(1)
                 left: playbackPositionLabel.right
@@ -240,7 +220,6 @@ Page {
                 right: playbackRemainingLabel.left
                 rightMargin: units.gu(0.5)
             }
-//            width: (0.9 * parent.width)
             height: units.gu(0.5)
 
             percentageComplete: playbackPercentage
@@ -249,90 +228,6 @@ Page {
         }
 
         /* Controls */
-        /* Play / Pause button */
-//        Item {
-//            id: playPause
-//            height: parent.height
-//            width: parent.height
-
-//            Image {
-//                source: (playButtonState) ? Qt.resolvedUrl("../resources/icons/media-playback-pause.svg") : Qt.resolvedUrl("resources/icons/media-playback-start.svg")
-//                sourceSize.width: parent.width
-//                sourceSize.height: parent.height
-//            }
-
-////            MouseArea {
-////                anchors.fill: parent
-////                onClicked: {
-////                    playButtonState = !playButtonState;
-////                }
-////            }
-//        }
-
-//        /* Next track button */
-//        Item {
-//            id: nextTrack
-//            height: parent.height
-//            width: parent.height
-
-//            Image {
-//                source: Qt.resolvedUrl("../resources/icons/media-skip-forward.svg")
-//                sourceSize.width: parent.width
-//                sourceSize.height: parent.height
-//            }
-
-////            MouseArea {
-////                anchors.fill: parent
-////                onClicked: {
-////                    nextTrackPressed();
-////                }
-////            }
-//        }
-
-//        /* Thumbs up button */
-//        Item {
-//            id: thumbsUp
-//            height: parent.height
-//            width: parent.height
-
-//            Image {
-//                source: Qt.resolvedUrl("../resources/icons/arrow-up.svg")
-//                anchors.fill: parent
-//            }
-
-////            MouseArea {
-////                anchors.fill: parent
-////                onClicked: {
-////                    if(playlist[currentPlaylistIndex].songRating != 1) {
-////                        thumbsUpPressed();
-////                        _temp_song_thumbs_up = 1;
-////                    }
-////                }
-////            }
-//        }
-
-//        /* Thumbs down button */
-//        Item {
-//            id: thumbsDown
-//            height: parent.height
-//            width: parent.height
-
-//            Image {
-//                source: Qt.resolvedUrl("../resources/icons/arrow-down.svg")
-//                anchors.fill: parent
-
-//            }
-
-////            MouseArea {
-////                anchors.fill: parent
-////                onClicked: {
-////                    if(playlist[currentPlaylistIndex].songRating != -1) {
-////                        thumbsDownPressed();
-////                    }
-////                }
-////            }
-//        }
-
         Item {
             id: controlBar
 
@@ -349,6 +244,7 @@ Page {
                 anchors.fill: parent
                 spacing: ( ( width - ( playPauseButton.width + skipButton.width + thumbsUpButton.width + thumbsDownButton.width ) ) / 3 )
 
+                /* Play / pause button */
                 AbstractButton {
                     id: playPauseButton
                     height: parent.height
@@ -363,6 +259,7 @@ Page {
                     onClicked: (mainLayout.audioPlaying) ? pause() : play()
                 }
 
+                /* Skip button */
                 AbstractButton {
                     id: skipButton
                     height: parent.height
@@ -377,6 +274,7 @@ Page {
                     onClicked: nextTrack()
                 }
 
+                /* Thumbs up button */
                 AbstractButton {
                     id: thumbsUpButton
                     height: parent.height
@@ -392,6 +290,7 @@ Page {
                     onClicked: thumbsUp()
                 }
 
+                /* Thumbs down button */
                 AbstractButton {
                     id: thumbsDownButton
                     height: parent.height
@@ -406,20 +305,6 @@ Page {
 
                     onClicked: thumbsDown()
                 }
-
-//                Icon {
-//                    id: thumbsUpButton
-//                    height: parent.height
-
-//                    name: "thumb-up"
-//                }
-
-//                Icon {
-//                    id: thumbsDownButton
-//                    height: parent.height
-
-//                    name: "thumb-down"
-//                }
 
             }
         }
