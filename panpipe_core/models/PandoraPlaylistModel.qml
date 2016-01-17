@@ -53,7 +53,7 @@ Item {
     property int _PLAYLISTS_REQUESTED_NEW_STATION: 2
     property int _PLAYLISTS_REQUESTED_PERIODIC: 1
     property int _PLAYLIST_REQUEST_PERIOD: 30000
-    property int _UNPLAYED_BUFFER_LIMIT: 2
+    property int _UNPLAYED_BUFFER_LIMIT: 20
 
 
     /* Initialization */
