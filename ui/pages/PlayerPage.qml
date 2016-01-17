@@ -210,7 +210,8 @@ Page {
             }
             fontSize: "x-small"
             color: "#ffffff"
-            text: (audioSourceUrl != "") ? __durationToString(playbackPosition) : "0:00"
+//            text: (audioSourceUrl != "") ? __durationToString(playbackPosition) : "0:00"
+            text: __durationToString(playbackPosition)
         }
 
         /* Playback remaining */
@@ -223,7 +224,8 @@ Page {
             }
             fontSize: "x-small"
             color: "#ffffff"
-            text: (audioSourceUrl != "") ? "-" + __durationToString(playbackDuration - playbackPosition) : "0:00"
+//            text: (audioSourceUrl != "") ? "-" + __durationToString(playbackDuration - playbackPosition) : "0:00"
+            text: __durationToString(playbackDuration - playbackPosition)
         }
 
         /* Progress bar */

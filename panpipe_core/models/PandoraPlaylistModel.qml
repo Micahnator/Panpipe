@@ -19,6 +19,12 @@ along with Panpipe.  If not, see <http://www.gnu.org/licenses/>.
 
 import QtQuick 2.4
 
+import QtMultimedia 5.6
+
+//import QtMultimedia. 5.6 as Playlist
+
+import "../AudioStream.js" as AudioStream
+
 Item {
     /* Signals */
     signal updated()
@@ -29,6 +35,8 @@ Item {
     property alias model: model
     property alias count: model.count
 
+    property alias playlist: playlist
+
     /* Public properties */
     property bool loading
     property var pandoraInterface   //Must be bound to a PandoraInterface component
@@ -36,12 +44,20 @@ Item {
     property var currentStationToken
     property string currentStationName
     property int currentPlaylistIndex: -1
-    property var currentPlaylistItem: getAnyPlaylistItem(currentPlaylistIndex)
+//    property var currentPlaylistItem: getAnyPlaylistItem(currentPlaylistIndex)
+    property var currentPlaylistItem: getAnyPlaylistItem(playlist.currentIndex)
 
     property bool playlistDataAvailable: false
 
     /* Private properties */
     property var lastReceivedGoodData
+
+    property date currentDateTime: new Date()
+
+    property int _PLAYLISTS_REQUESTED_NEW_STATION: 2
+    property int _PLAYLISTS_REQUESTED_PERIODIC: 1
+    property int _PLAYLIST_REQUEST_PERIOD: 30000
+    property int _UNPLAYED_BUFFER_LIMIT: 20
 
 
     /* Initialization */
@@ -57,10 +73,48 @@ Item {
     onCurrentStationTokenChanged: {
         if(currentStationToken != "") {
             playlistDataAvailable = false;
-            currentPlaylistIndex = -1;
+//            currentPlaylistIndex = -1;
             clearPlaylist();
-            retrieveMoreSongs();
+
+            /* Fill up the playlist with songs */
+//            retrieveMoreSongs();
+            for(var i = 0; i < _PLAYLISTS_REQUESTED_NEW_STATION; i++) {
+                retrieveMoreSongs();
+            }
+
+//            getMoreSongsTimer.lastRetrieveTime = currentDateTime.now();
         }
+    }
+
+    Timer {
+        id: getMoreSongsTimer
+
+//        property int lastRetrieveTime
+
+        interval: _PLAYLIST_REQUEST_PERIOD
+        repeat: true
+//        triggeredOnStart: true
+        //running: (playlist.itemCount > 0 && (((playlist.itemCount - playlist.currentIndex) <= _UNPLAYED_BUFFER_LIMIT)))
+        running: (playlist.itemCount > 0)
+
+        onTriggered: {
+            if(((playlist.itemCount - playlist.currentIndex) < _UNPLAYED_BUFFER_LIMIT)) {
+                for(var i = 0; i < _PLAYLISTS_REQUESTED_PERIODIC; i++) {
+                    retrieveMoreSongs();
+                }
+                console.log("The playlist now has ", playlist.itemCount, " items in it. Going to put ", (4* _PLAYLISTS_REQUESTED_PERIODIC), " more in.");
+            }
+        }
+    }
+
+    Playlist {
+        id: playlist
+        playbackMode: Playlist.Sequential
+
+//        onItemCountChanged: {
+//            console.log("\n\nItem added to the playlist!\n\n");
+//        }
+
     }
 
     ListModel {
@@ -124,11 +178,15 @@ Item {
                     if( jo.songName ) {
                         model.append(jo);
                         console.log(jo.songName);
+
+//                        playlist.addItem(jo.audioUrlMap.mediumQuality.audioUrl);
+                        playlist.addItem(_selectAudioUrl(jo));
                     }
                 }
 
                 if(resetPlaylistIndex) {
                     currentPlaylistIndex = 0;
+                    freshPlaylistPopulated();
                 }
 
                 updated();
@@ -152,6 +210,7 @@ Item {
 
     function clearPlaylist() {
         model.clear();
+        playlist.clear();
         currentPlaylistIndex = -1;
     }
 
@@ -190,25 +249,100 @@ Item {
             ],
         }
 
-        console.log("getAnyPlaylistItem ran");
+//        console.log("getAnyPlaylistItem ran");
         if( index <= model.count && index >= 0 && model.count > 0 ) {
             return model.get(index);
         }
         else {
-            console.log("getAnyPlaylistItem returning an empty object");
+//            console.log("getAnyPlaylistItem returning an empty object");
             return default_song_json;
         }
     }
 
     function loadNextSong() {
         /* Update location in the playlist */
-        currentPlaylistIndex++;
-        console.log("advancing to the next song!");
+//        currentPlaylistIndex++;
+//        console.log("advancing to the next song!");
+
+//        /* Retrieve more songs for playlist if necessary */
+//        if (currentPlaylistIndex >= (model.count - 1)) {
+//            retrieveMoreSongs();
+//        }
+        playlist.next();
 
         /* Retrieve more songs for playlist if necessary */
         if (currentPlaylistIndex >= (model.count - 1)) {
             retrieveMoreSongs();
         }
+    }
+
+
+
+    function _selectAudioUrl(aSongObject) {
+        if(true) {
+            var selectedUrl
+
+            switch(selectedAudioStream) {
+                case AudioStream.Streams.DFLT_LOW:
+                    console.log("Using low stream");
+                    selectedUrl = aSongObject.audioUrlMap.lowQuality.audioUrl;
+                    break;
+                case AudioStream.Streams.DFLT_MED:
+                    console.log("Using medium stream");
+                    selectedUrl = aSongObject.audioUrlMap.mediumQuality.audioUrl;
+                    break;
+                case AudioStream.Streams.DFLT_HI:
+                    console.log("Using hight stream");
+                    selectedUrl = aSongObject.audioUrlMap.highQuality.audioUrl;
+                    break;
+                case AudioStream.Streams.AAC_MONO_40:
+                    console.log("Using AAC mono stream");
+                    selectedUrl = aSongObject.audioUrlMap.extraUrls.aacMono;
+                    break;
+                case AudioStream.Streams.AAC_64:
+                    console.log("Using AAC 64 stream");
+                    selectedUrl = aSongObject.audioUrlMap.extraUrls.aac64;
+                    break;
+                case AudioStream.Streams.AACP_32:
+                    console.log("Using AACP 32 stream");
+                    selectedUrl = aSongObject.audioUrlMap.extraUrls.aacp32;
+                    break;
+                case AudioStream.Streams.AACP_64:
+                    console.log("Using AACP 64 stream");
+                    selectedUrl = aSongObject.audioUrlMap.extraUrls.aacp64;
+                    break;
+                case AudioStream.Streams.AACP_ADTS_24:
+                    console.log("Using ADTS 24 stream");
+                    selectedUrl = aSongObject.audioUrlMap.extraUrls.adts24;
+                    break;
+                case AudioStream.Streams.AACP_ADTS_32:
+                    console.log("Using ADTS 32 stream");
+                    selectedUrl = aSongObject.audioUrlMap.extraUrls.adts32;
+                    break;
+                case AudioStream.Streams.AACP_ADTS_64:
+                    console.log("Using ADTS 64 stream");
+                    selectedUrl = aSongObject.audioUrlMap.extraUrls.adts64;
+                    break;
+                case AudioStream.Streams.MP3_128:
+                    console.log("Using MP3 stream");
+                    selectedUrl = aSongObject.audioUrlMap.extraUrls.mp3;
+                    break;
+                case AudioStream.Streams.WMA_32:
+                    console.log("Using WMA stream");
+                    selectedUrl = aSongObject.audioUrlMap.extraUrls.wma;
+                    break;
+                default:
+                    console.log("Using default stream");
+                    selectedUrl = aSongObject.audioUrlMap.lowQuality.audioUrl;
+                    break;
+            }
+        }
+        else {
+            console.log("Not connected, returning empty url");
+            return "";
+        }
+
+        return selectedUrl;
     }
 
     /*****************************************************

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2013-2015 Micah Losli <micah.losli@gmail.com>
+Copyright (C) 2013-2016 Micah Losli <micah.losli@gmail.com>
 
 This file is part of Panpipe.
 
@@ -18,12 +18,10 @@ along with Panpipe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import QtQuick 2.4
-import QtMultimedia 5.4
+import QtMultimedia 5.6
 import Ubuntu.Components 1.3
-//import Ubuntu.Unity.Action 1.0 as UnityActions
+
 import "storage.js" as Storage
-//import "pandora"
-//import "models"
 import "panpipe_core"
 import "ui"
 
@@ -68,15 +66,11 @@ MainView {
 //        startupPreferredStationSort = Storage.getSetting("station_sort_method");
 
         /* Apply the selected audio format */
-//        pandoraBackend.selectedAudioStream = AudioStream.Streams.MP3_128;   //Use MP3 for now, as default streams crash on Micah's Laptop
-//        selectedStream = AudioStream.Streams.MP3_128;   //Use MP3 for now, as default streams crash on Micah's Laptop
-//        selectedStream = AudioStream.Streams.DFLT_MED;
         if("Unknown" == selectedStream) {
             selectedStream = AudioStream.Streams.DFLT_MED;
         }
 
         /* If login credentials are available, attempt to use them to login */
-//        pandoraBackend.login("mlosli@yahoo.com", "gonavy");
         if(("Unknown" == pandoraUsername) || ("Unknown" == pandoraPassword)) {
             appView.requestCredentials();
         } else {
@@ -119,12 +113,22 @@ MainView {
 
             audioPlayer.autoLoad = true;
         }
+
+        onFreshPlaylistPopulated: {
+            audioPlayer.play();
+        }
     }
     
     /* Audio component */
     Audio {
         id: audioPlayer
-        source: pandoraBackend.currentSongAudioUrl
+//        source: pandoraBackend.currentSongAudioUrl
+        playlist: pandoraBackend.playlist
+//        autoPlay: true
+
+//        onItemChanged: {
+//            play();
+//        }
 
 //        onSourceChanged: {
 //            console.log("\nAudio source changed to: ", source, "\n");
@@ -132,6 +136,12 @@ MainView {
 
 //        onPlaybackStateChanged: {
 //            console.log("\nAudio playback state changed to: ", playbackState, "\n");
+//        }
+
+//        playlist: Playlist {
+//            id: playlist
+//            playbackMode: Playlist.Sequential
+
 //        }
 
         onStatusChanged: {
