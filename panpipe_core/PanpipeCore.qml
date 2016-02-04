@@ -29,7 +29,6 @@ Item {
     signal stationsUpdated()
     signal moreSongsRetrieved()
     signal serverError()
-
     signal freshPlaylistPopulated()
 
     /* Public methods */
@@ -38,7 +37,7 @@ Item {
     selectStation(string stationToken)
     setStationSortingMethodAlphabetical(bool setAlphabetical)
     nextSong()
-
+    giveFeedback(favorable, trackToken)
     */
 
     /* Aliases */

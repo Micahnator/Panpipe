@@ -34,10 +34,8 @@ Item {
     signal pause()
     signal thumbsUp()
     signal thumbsDown()
-
     signal loginCredentialsProvided(string username, string password)
     signal userLogout()
-
     signal streamSelected(string streamEnum)
 
     /* Aliases */
@@ -48,10 +46,9 @@ Item {
     property alias currentSongAlbum: playerPage.currentSongAlbum
     property alias currentSongArtist: playerPage.currentSongArtist
 
-//    property alias currentStationName: playerPage.currentStationName
-
     property alias playbackPercentage: playerPage.playbackPercentage
 
+    /* Properties */
     property bool audioPlaying
     property int playbackPosition
     property int playbackDuration
@@ -61,6 +58,7 @@ Item {
     property string username_auto_fill
 
 
+    /* Top bar action icons */
     Action {
         id: logoutAction
         iconName: "close"
@@ -80,6 +78,7 @@ Item {
             PopupUtils.open(settingsDialog);
         }
     }
+
 
     AdaptivePageLayout {
         id: layout
@@ -170,10 +169,10 @@ Item {
                 color: "orange"
 
                 onTriggered: {
-                    //send data to controller
+                    /* Send data to controller */
                     loginCredentialsProvided(usernameForm.text, passwordForm.text);
 
-                    //close dialog
+                    /* Close dialog */
                     PopupUtils.close(loginScreen)
                 }
             }
@@ -193,10 +192,10 @@ Item {
                 color: "orange"
 
                 onClicked: {
-                    //Tell the controller that logout is requested
+                    /* Tell the controller that logout is requested */
                     userLogout();
 
-                    //close dialog
+                    /* Close dialog */
                     PopupUtils.close(logoutScreen)
                 }
             }
@@ -206,7 +205,7 @@ Item {
                 color: "gray"
 
                 onClicked: {
-                    /* close dialog */
+                    /* Close dialog */
                     PopupUtils.close(logoutScreen)
                 }
             }
@@ -224,19 +223,8 @@ Item {
            /* Audio stream type / quality settings */
            ListModel {
                id: audioStreamsModel
-//               ListElement { name: "Low"; value: AudioStream.Streams.DFLT_LOW }
-//               ListElement { name: "Medium"; value: AudioStream.Streams.DFLT_MED }
-//               ListElement { name: "High"; value: AudioStream.Streams.DFLT_HI }
-//               ListElement { name: "AAC Mono"; value: AudioStream.Streams.AAC_MONO_40 }
-//               ListElement { name: "AAC"; value: AudioStream.Streams.AAC_64 }
-//               ListElement { name: "AAC+ 32"; value: AudioStream.Streams.AACP_32 }
-//               ListElement { name: "AAC+ 64"; value: AudioStream.Streams.AACP_64 }
-//               ListElement { name: "AAC+ ADTS 24"; value: AudioStream.Streams.AACP_ADTS_24 }
-//               ListElement { name: "AAC+ ADTS 32"; value: AudioStream.Streams.AACP_ADTS_32 }
-//               ListElement { name: "AAC+ ADTS 64"; value: AudioStream.Streams.AACP_ADTS_64 }
-//               ListElement { name: "MP3 128"; value: AudioStream.Streams.MP3_128 }
-//               ListElement { name: "WMA 32"; value: AudioStream.Streams.WMA_32 }
 
+               //TODO: Look into using names from AudioStream.js rather than duplicating strings here
                ListElement { name: "Low"; value: "LOW" }
                ListElement { name: "Medium"; value: "MED" }
                ListElement { name: "High"; value: "HI" }
@@ -251,19 +239,15 @@ Item {
                ListElement { name: "WMA 32"; value: "HTTP_32_WMA" }
             }
 
-            Component {
-                id: selectorDelegate
-                OptionSelectorDelegate { text: name }
-            }
-
             OptionSelector {
                 id: audioStreamSelector
                 text: i18n.tr("Select Audio Quality")
 
                 model: audioStreamsModel
-                delegate: selectorDelegate
+                delegate: OptionSelectorDelegate { text: name }
 
                 Component.onCompleted: {
+                    /* Mark the correct item as currently selected */
                     for(var i = 0; i < model.count; i++) {
                         if(model.get(i).value === selectedStream) {
                             selectedIndex = i;
@@ -273,6 +257,7 @@ Item {
                 }
 
                 onDelegateClicked: {
+                    /* Emit signal declaring which stream was selected */
                     if(audioStreamsModel.get(index).value !== selectedStream) {
                         streamSelected(audioStreamsModel.get(index).value);
                     }
@@ -284,10 +269,10 @@ Item {
                color: "orange"
 
                onClicked: {
-                   /* close dialog */
+                   /* Close dialog */
                    PopupUtils.close(settingsScreen);
 
-                   /* open new dialog */
+                   /* Open new dialog */
                    PopupUtils.open(aboutDialog);
                }
            }
@@ -297,7 +282,7 @@ Item {
                color: "gray"
 
                onClicked: {
-                   /* close dialog */
+                   /* Close dialog */
                    PopupUtils.close(settingsScreen)
                }
            }
@@ -332,7 +317,7 @@ Item {
                color: "orange"
 
                onClicked: {
-                   /* close dialog */
+                   /* Close dialog */
                    PopupUtils.close(aboutScreen);
 
                    /* Open the Panpipe project website in the browser */

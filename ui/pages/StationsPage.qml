@@ -26,6 +26,7 @@ Page {
     title: i18n.tr("Stations")
     anchors.fill: parent
 
+    /* Set header text to white */
     head.foregroundColor: "white"
 
     /* Signals */
@@ -35,14 +36,17 @@ Page {
     /* Aliases */
     property alias dataModel: stationListView.model
 
+    /* Properties */
     property bool showBottomControl: ((audioPlayer.playlist.itemCount > 0) && (!playerPage.visible))
 
+
+    /* Timer used for swipe detection */
     Timer {
         id: justSwiped
         interval: 1
     }
 
-    /* White background for station list */
+    /* Set a white background for stations list */
     Rectangle {
         anchors.fill: parent
         color: "#FFFFFF"
@@ -63,7 +67,7 @@ Page {
             left: parent.left
         }
 
-        clip: true
+        clip: true  /* Keep list items properly contained */
 
         currentIndex: -1    /* Start with no station selected */
 
@@ -131,6 +135,7 @@ Page {
             color: "#F0F0F0"
         }
 
+        /* Blurred background version of current song art */
         BlurredBackground {
             id: blurredBackground
 
@@ -140,12 +145,14 @@ Page {
             backgroundStrength: 0.7
         }
 
+        /* Black semi-transparent filter */
         Rectangle {
             anchors.fill: parent
             color: "black"
             opacity: 0.85
         }
 
+        /* Current song art */
         Image {
             id: nowPlayingThumbnail
 
@@ -159,6 +166,7 @@ Page {
             source: currentAlbumArtUrl
         }
 
+        /* Play / pause button */
         AbstractButton {
             id: nowPlayingPlayPause
             height: parent.height

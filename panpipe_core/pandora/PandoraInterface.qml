@@ -20,7 +20,6 @@ along with Panpipe.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 2.4
 import "pandora.js" as Pandora
 import "Song.js" as Song
-
 import "../AudioStream.js" as AudioStream
 
 Item {
@@ -28,6 +27,24 @@ Item {
     signal loginFailed()
     signal loginSucceeded()
     signal stationsLoaded()
+
+    /* Public methods */
+    /*
+    login(username, password, callback)
+    logout()
+    retrieveStations(callback)
+    giveFeedback(favorable, trackToken, callback)
+    setStation(stationToken)
+    loadNextSong()
+    searchForMusic(query)
+    updateQuickMix(stationIds)
+    newUserStation(musicToken)
+    deleteUserStation(stationToken)
+    getUserStation(stationToken)
+    deleteUserFeedback(feedbackId)
+    addMusicSeed(musicToken, stationToken)
+    removeMusicSeed(seedId)
+    */
 
     /* public properties */
     property bool connected
@@ -40,19 +57,19 @@ Item {
     property var playlistData
     property int playlistCurrentIndex
     property var stationSearchResults
-
     property var stationDetails
-
     property string audioStreamString
 
-    //property alias userResponseString: Pandora.userResponse
 
     /* Initialization operations */
     Component.onCompleted: {
         stationSelected = false;
-        //currentStationToken = null;
         playlistData = []; /* Define playlistData as an array */
     }
+
+    /*
+        Public functions
+    */
 
     /* Login */
     function login(username, password, callback) {
@@ -141,10 +158,6 @@ Item {
         giveFeedbackAttempt();
     }
 
-    /*
-        Public functions
-    */
-
     function setStation(stationToken) {
         /* Indicate that a station has been selected */
         stationSelected = true;
@@ -201,12 +214,13 @@ Item {
     /*
         Private functions
     */
+
     function retrievePlaylist(stationToken) {
         console.log("retrieving more songs!");
         Pandora.getStationPlaylist(stationToken, retrievePlaylistResponse);
     }
 
-    //alternate version with specified callback function
+    /* Alternate version with specified callback function */
     function retrieveMoreSongs(stationToken, callback) {
         console.log("retrieving more songs!");
         Pandora.getStationPlaylist(stationToken, callback);
@@ -328,7 +342,7 @@ Item {
             if(stationList[i].stationName == "QuickMix") {
                 temp = stationList[i];
 
-                //now shift other items down
+                /* Now shift other items down */
                 for(var j = i; j > 0; j--) {
                     stationList[j] = stationList[(j - 1)];
                 }
@@ -353,7 +367,7 @@ Item {
             }
         }
 
-        //If token not found, return negative one
+        /* If token not found, return negative one */
         return -1;
     }
 

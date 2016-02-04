@@ -184,7 +184,7 @@ function connect(username, password, callback) {
         partnerResponse = data.result;
 
         /* Ensure success */
-        if(data.stat != "ok") {
+        if(data.stat !== "ok") {
             callback(false);
             return;
         }
@@ -204,7 +204,7 @@ function connect(username, password, callback) {
         userResponse = data.result;
 
         /* Ensure success */
-        if(data.stat != "ok") {
+        if(data.stat !== "ok") {
             callback(false);
             return;
         }
@@ -244,10 +244,10 @@ function getUserStations(callback) {
         var data = JSON.parse(dataString);
 
         /* Ensure success */
-//        if(data.stat != "ok") {
-//            callback(false);
-//            return;
-//        }
+        if(data.stat !== "ok") {
+            callback(false);
+            return;
+        }
 
         /* Return the list of stations */
         if (callback) {
@@ -280,11 +280,11 @@ function getStation(stationToken, callback) {
         var data = JSON.parse(dataString);
 
         /* Ensure success */
-//        if(data.stat != "ok") {
-//            console.log(data);
-//            callback(false);
-//            return;
-//        }
+        if(data.stat !== "ok") {
+            console.log(data);
+            callback(false);
+            return;
+        }
 
         if (callback) {
             callback(data);
@@ -294,7 +294,6 @@ function getStation(stationToken, callback) {
 }
 
 /* Function to get the playlist of the selected station */
-//function getStationPlaylist(stationToken, additionalAudioFormat, callback) {
 function getStationPlaylist(stationToken, callback) {
 
     function requestStationPlaylist() {
@@ -318,12 +317,12 @@ function getStationPlaylist(stationToken, callback) {
         var data = JSON.parse(dataString);
 
         /* Ensure success */
-//        if(data.stat != "ok") {
-//            console.log("Playlist retrieval failed. Status: " + data.stat);
-//            console.log(JSON.stringify(data));
-//            callback(false);
-//            return;
-//        }
+        if(data.stat !== "ok") {
+            console.log("Playlist retrieval failed. Status: " + data.stat);
+            console.log(JSON.stringify(data));
+            callback(false);
+            return;
+        }
 //        else {
 //            console.log("Playlist successfully retrieved.");
 //        }
@@ -364,11 +363,6 @@ function sendFeedback(favorable, trackToken, callback) {
     sendTheFeedback();
 }
 
-//function retrieveSendFeedbackResponse(data) {
-//    console.log("feedback response:");
-//    console.log(JSON.stringify(data));
-//}
-
 /* Function to search available music */
 function searchMusic(queryString, callback) {
 
@@ -389,12 +383,12 @@ function searchMusic(queryString, callback) {
         var data = JSON.parse(dataString);
 
         /* Ensure success */
-//        if(data.stat != "ok") {
-//            console.log("Music search failed. Status: " + data.stat);
-//            console.log(JSON.stringify(data));
-//            callback(false);
-//            return;
-//        }
+        if(data.stat !== "ok") {
+            console.log("Music search failed. Status: " + data.stat);
+            console.log(JSON.stringify(data));
+            callback(false);
+            return;
+        }
 
         callback(data);
     }
@@ -422,12 +416,12 @@ function setQuickMix(stationIds, callback) {
         var data = JSON.parse(dataString);
 
         /* Ensure success */
-//        if(data.stat != "ok") {
-//            console.log("QuickMix update failed. Status: " + data.stat);
-//            console.log(JSON.stringify(data));
-//            callback(false);
-//            return;
-//        }
+        if(data.stat !== "ok") {
+            console.log("QuickMix update failed. Status: " + data.stat);
+            console.log(JSON.stringify(data));
+            callback(false);
+            return;
+        }
 
         callback(data);
     }
@@ -454,13 +448,13 @@ function newStation(musicToken, callback) {
     function newStationResponse(dataString) {
         var data = JSON.parse(dataString);
 
-//        console.log(data);
-//        if(data.stat != "ok") {
-//            console.log("Create station operation failed. Status: " + data.stat);
-//            console.log(JSON.stringify(data));
-//            callback(false);
-//            return;
-//        }
+        /* Ensure success */
+        if(data.stat !== "ok") {
+            console.log("Create station operation failed. Status: " + data.stat);
+            console.log(JSON.stringify(data));
+            callback(false);
+            return;
+        }
 
         callback(data);
     }
@@ -487,14 +481,13 @@ function deleteStation(stationToken, callback) {
     function deleteStationResponse(dataString) {
         var data = JSON.parse(dataString);
 
-//        console.log(data);
-//        /* Ensure success */
-//        if(data.stat != "ok") {
-//            console.log("Delete station operation failed. Status: " + data.stat);
-//            console.log(JSON.stringify(data));
-//            callback(false);
-//            return;
-//        }
+        /* Ensure success */
+        if(data.stat !== "ok") {
+            console.log("Delete station operation failed. Status: " + data.stat);
+            console.log(JSON.stringify(data));
+            callback(false);
+            return;
+        }
 
         callback(data);
     }
@@ -521,13 +514,13 @@ function deleteFeedback(feedbackId, callback) {
     function deleteFeedbackResponse(dataString) {
         var data = JSON.parse(dataString);
 
-//        /* Ensure success */
-//        if(data.stat != "ok") {
-//            console.log("Delete feedback operation failed. Status: " + data.stat);
-//            console.log(JSON.stringify(data));
-//            callback(false);
-//            return;
-//        }
+        /* Ensure success */
+        if(data.stat !== "ok") {
+            console.log("Delete feedback operation failed. Status: " + data.stat);
+            console.log(JSON.stringify(data));
+            callback(false);
+            return;
+        }
 
         callback(data);
     }
@@ -554,13 +547,13 @@ function deleteSeed(seedId, callback) {
     function deleteSeedResponse(dataString) {
         var data = JSON.parse(dataString);
 
-//        /* Ensure success */
-//        if(data.stat != "ok") {
-//            console.log("Delete seed operation failed. Status: " + data.stat);
-//            console.log(JSON.stringify(data));
-//            callback(false);
-//            return;
-//        }
+        /* Ensure success */
+        if(data.stat !== "ok") {
+            console.log("Delete seed operation failed. Status: " + data.stat);
+            console.log(JSON.stringify(data));
+            callback(false);
+            return;
+        }
 
         callback(data);
     }
@@ -588,13 +581,13 @@ function addSeed(musicToken, stationToken, callback) {
     function addSeedResponse(dataString) {
         var data = JSON.parse(dataString);
 
-//        /* Ensure success */
-//        if(data.stat != "ok") {
-//            console.log("Add seed to station operation failed. Status: " + data.stat);
-//            console.log(JSON.stringify(data));
-//            callback(false);
-//            return;
-//        }
+        /* Ensure success */
+        if(data.stat !== "ok") {
+            console.log("Add seed to station operation failed. Status: " + data.stat);
+            console.log(JSON.stringify(data));
+            callback(false);
+            return;
+        }
 
         if(callback !== null) {
             callback(data);

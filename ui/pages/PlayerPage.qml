@@ -19,7 +19,6 @@ along with Panpipe.  If not, see <http://www.gnu.org/licenses/>.
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
-
 import Ubuntu.Components 1.3
 
 import "../components"
@@ -40,11 +39,8 @@ Page {
     property string currentSongName
     property string currentSongAlbum
     property string currentSongArtist
-
-//    property string currentStationName
-
+//    property string currentStationName //TODO: Look into presenting the station name in this page
     property double playbackPercentage
-
     property bool isLandscapeMode: (width > (1.7 * height))
 
     states: [
@@ -52,6 +48,7 @@ Page {
             name: "landscape"
             when: isLandscapeMode
 
+            /* Album art */
             AnchorChanges {
                 target: albumArtContainer
                 anchors {
@@ -123,17 +120,18 @@ Page {
     Rectangle {
         id: controlBlock
 
+        property double heightOfContents: (controlBar.height + songProgressBar.height + currentSongArtistLabel.height + currentSongAlbumLabel.height + currentSongNameLabel.height + units.gu(4))
+
         color: "Black"
         opacity: 0.85
 
-        height: units.gu(1) + /* height above text */ (controlBar.height + songProgressBar.height + currentSongArtistLabel.height + currentSongAlbumLabel.height + currentSongNameLabel.height + units.gu(4))
+        height: (units.gu(1) + heightOfContents)
 
         anchors {
             bottom: parent.bottom
             left: parent.left
             right: parent.right
         }
-
 
         /* Song info */
         Label {
@@ -191,7 +189,7 @@ Page {
             }
             fontSize: "x-small"
             color: "#ffffff"
-//            text: (audioSourceUrl != "") ? __durationToString(playbackPosition) : "0:00"
+//            text: (audioSourceUrl != "") ? __durationToString(playbackPosition) : "0:00" //TODO: look into bringing this logic back
             text: __durationToString(playbackPosition)
         }
 
@@ -205,7 +203,7 @@ Page {
             }
             fontSize: "x-small"
             color: "#ffffff"
-//            text: (audioSourceUrl != "") ? "-" + __durationToString(playbackDuration - playbackPosition) : "0:00"
+//            text: (audioSourceUrl != "") ? "-" + __durationToString(playbackDuration - playbackPosition) : "0:00" //TODO: look into bringing this logic back
             text: __durationToString(playbackDuration - playbackPosition)
         }
 
@@ -223,7 +221,7 @@ Page {
             height: units.gu(0.5)
 
             percentageComplete: playbackPercentage
-            backgroundColor: "#A0A0A0" //UbuntuColors.coolGrey
+            backgroundColor: "#A0A0A0"
             progressColor: UbuntuColors.orange
         }
 
@@ -310,7 +308,7 @@ Page {
         }
     }
 
-    /* Converts an duration in ms to a formated string ("minutes:seconds") */
+    /* Converts a duration in ms to a formated string ("minutes:seconds") */
     function __durationToString(duration) {
         var minutes = Math.floor((duration/1000) / 60);
         var seconds = Math.floor((duration/1000)) % 60;

@@ -31,11 +31,11 @@ Item {
 
     /* Public properties */
     property bool loading
-    property var pandoraInterface   //Must be bound to a PandoraInterface component
-    property string sortMethod      //Supported Options: "alphabetical", "date"
+    property var pandoraInterface   /* Must be bound to a PandoraInterface component */
+    property string sortMethod      /* Supported Options: "alphabetical", "date" */
     property string jsonCopy
     property int timeoutTime
-    property var quickMixStationIds //Array of station Ids in the QuickMix
+    property var quickMixStationIds /* Array of station Ids in the QuickMix */
 
     /* Private properties */
     property var stationArray
@@ -57,10 +57,12 @@ Item {
         }
     }
 
+    /* Data model used to store the list of user stations */
     ListModel {
         id: model
     }
 
+    /* Timer to watch for unresponsive station list requests */
     Timer {
         id: requestResponseTimeout
 

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2015 Micah Losli <micah.losli@gmail.com>
+Copyright (C) 2015-2016 Micah Losli <micah.losli@gmail.com>
 
 This file is part of Panpipe.
 
@@ -28,28 +28,33 @@ Item {
     signal receivedError()
     signal dataTimeout()
 
+    /* Public methods */
+    /*
+    retrieveMoreSongs()
+    clearPlaylist()
+    getAnyPlaylistItem(index)
+    loadNextSong()
+
+    */
+
     /* Aliases */
     property alias model: model
     property alias count: model.count
-
     property alias playlist: playlist
 
     /* Public properties */
     property bool loading
-    property var pandoraInterface   //Must be bound to a PandoraInterface component
-    property int timeoutTime        //Defaults to 10 seconds if not set
+    property var pandoraInterface   /* Must be bound to a PandoraInterface component */
+    property int timeoutTime        /* Defaults to 10 seconds if not set */
     property var currentStationToken
     property string currentStationName
     property int currentPlaylistIndex: -1
     property var currentPlaylistItem: getAnyPlaylistItem(playlist.currentIndex)
-
     property bool playlistDataAvailable: false
 
     /* Private properties */
-    property var lastReceivedGoodData
-
-    property date currentDateTime: new Date()
-
+    property var _lastReceivedGoodData
+    property date _currentDateTime: new Date()
     property int _PLAYLISTS_REQUESTED_NEW_STATION: 2
     property int _PLAYLISTS_REQUESTED_PERIODIC: 1
     property int _PLAYLIST_REQUEST_PERIOD: 30000
@@ -60,14 +65,14 @@ Item {
     Component.onCompleted: {
         loading = false;
 
-        /* If timeoutTime is nil, set it to a default of 10 seconds */
+        /* If timeoutTime is null, set it to a default of 10 seconds */
         if(!timeoutTime || 0 === timeoutTime) {
             timeoutTime = 10000;
         }
     }
 
     onCurrentStationTokenChanged: {
-        if(currentStationToken != "") {
+        if(currentStationToken !== "") {
             playlistDataAvailable = false;
             clearPlaylist();
 
@@ -78,6 +83,7 @@ Item {
         }
     }
 
+    /* Timer used to periodically build up the buffer of songs without requesting too many too fast */
     Timer {
         id: getMoreSongsTimer
 
@@ -101,10 +107,12 @@ Item {
         playbackMode: Playlist.Sequential
     }
 
+    /* Data modle used to store the playlist data for the current station */
     ListModel {
         id: model
     }
 
+    /* Timer to watch for unresponsive playlist requests */
     Timer {
         id: requestResponseTimeout
 
@@ -129,7 +137,7 @@ Item {
 
             if(data.stat == "ok") {
                 console.log("Playlist data received!!!");
-                lastReceivedGoodData = data;
+                _lastReceivedGoodData = data;
 
                 /* Add received playlist data to the model */
                 var playlistArray = data.result.items;
@@ -247,6 +255,8 @@ Item {
             retrieveMoreSongs();
         }
     }
+
+    /* Private functions */
 
     function _selectAudioUrl(aSongObject) {
 

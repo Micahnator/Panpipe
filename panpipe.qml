@@ -21,11 +21,11 @@ import QtQuick 2.4
 import QtMultimedia 5.6
 import Ubuntu.Components 1.3
 
-import "storage.js" as Storage
 import "panpipe_core"
 import "ui"
-
+import "storage.js" as Storage
 import "./panpipe_core/AudioStream.js" as AudioStream
+
 
 MainView {
     /* objectName for functional testing purposes (autopilot-qt5) */
@@ -63,7 +63,7 @@ MainView {
         Storage.initialize();
 
         /* Get the last used station sort method */
-//        startupPreferredStationSort = Storage.getSetting("station_sort_method");
+//        startupPreferredStationSort = Storage.getSetting("station_sort_method"); //TODO: Re-implement station sorting options
 
         /* Apply the selected audio format */
         if("Unknown" == selectedStream) {
@@ -90,6 +90,7 @@ MainView {
         }
     }
 
+    /* Backend component responsible for communicating with Pandora and storing retrieved data */
     PanpipeCore {
         id: pandoraBackend
 
@@ -164,7 +165,7 @@ MainView {
 
         playbackPercentage: (audioPlayer.position / audioPlayer.duration)
 
-        audioPlaying: audioNowPlaying//(audioPlayer.playbackState === Audio.PlayingState)
+        audioPlaying: audioNowPlaying
         playbackPosition: audioPlayer.position
         playbackDuration: audioPlayer.duration
         audioSourceUrl: audioPlayer.source
@@ -226,7 +227,7 @@ MainView {
         pandoraBackend.logout();
 
         /* Clear the UI */
-//        viewComponent.updateInterface();
+//        viewComponent.clearView();
 
         /* Clear login credentials */
         Storage.setSetting("pandora_username", "Unknown");
