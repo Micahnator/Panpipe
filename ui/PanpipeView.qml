@@ -110,6 +110,12 @@ Item {
             id: playerPage
         }
 
+        onColumnsChanged: {
+            if((columns === 2) && (audioPlayer.playlist.itemCount > 0)) {
+                layout.addPageToNextColumn(stationsPage, playerPage);
+            }
+        }
+
     }
 
 
