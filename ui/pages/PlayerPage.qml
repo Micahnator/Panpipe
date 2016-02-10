@@ -24,7 +24,7 @@ import Ubuntu.Components 1.3
 import "../components"
 
 Page {
-    title: i18n.tr("Player")
+    title: i18n.tr(currentStationName)
     head.foregroundColor: "white"
 
     /* Signals */

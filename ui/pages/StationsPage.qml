@@ -30,7 +30,7 @@ Page {
     head.foregroundColor: "white"
 
     /* Signals */
-    signal stationClicked(string stationToken)
+    signal stationClicked(string stationToken, string stationName)
     signal stationLongPressed(string stationToken)
 
     /* Aliases */
@@ -114,7 +114,7 @@ Page {
                 /* Click handling */
                 onClicked: {
                     stationListView.currentIndex = index;
-                    stationClicked(stationToken);
+                    stationClicked(stationToken, stationName);
                 }
             }
 

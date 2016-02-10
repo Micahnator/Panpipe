@@ -54,6 +54,7 @@ Item {
     property int playbackDuration
     property string audioSourceUrl
     property int currentSongRating
+    property string currentStationName
 
     property string username_auto_fill
 
@@ -92,6 +93,7 @@ Item {
 
             /* Event handling */
             onStationClicked: {
+                currentStationName = stationName;
                 stationSelected(stationToken);
                 playerPageTransitionDelayTimer.start();
             }
