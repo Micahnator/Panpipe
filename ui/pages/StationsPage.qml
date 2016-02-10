@@ -58,8 +58,7 @@ Page {
     for a definition of what data fields
     are in each data model item.
     */
-    UbuntuListView {
-        id: stationListView
+    ScrollView {
         anchors {
             top: parent.top
             right: parent.right
@@ -67,53 +66,59 @@ Page {
             left: parent.left
         }
 
-        clip: true  /* Keep list items properly contained */
+        UbuntuListView {
+            id: stationListView
 
-        currentIndex: -1    /* Start with no station selected */
+            anchors.fill: parent
 
-        delegate: ListItem {
-            /* Background color */
-            color: (index === stationListView.currentIndex) ? UbuntuColors.orange : "transparent"
+            clip: true  /* Keep list items properly contained */
 
-            /* Station art */
-            Image {
-                id: stationArt
-                anchors {
-                    left: parent.left
-                    verticalCenter: parent.verticalCenter
-                }
-                height: parent.height
-                width: height
-                sourceSize {
-                    height: 40
+            currentIndex: -1    /* Start with no station selected */
+
+            delegate: ListItem {
+                /* Background color */
+                color: (index === stationListView.currentIndex) ? UbuntuColors.orange : "transparent"
+
+                /* Station art */
+                Image {
+                    id: stationArt
+                    anchors {
+                        left: parent.left
+                        verticalCenter: parent.verticalCenter
+                    }
+                    height: parent.height
                     width: height
-                }
-                source: artUrl
-                asynchronous: true
-                fillMode: Image.PreserveAspectFit
-            }
-
-            /* Station name */
-            Text {
-                id: stationNameText
-                anchors {
-                    left: stationArt.right
-                    leftMargin: units.gu(1)
-                    right: parent.right
-                    verticalCenter: parent.verticalCenter
+                    sourceSize {
+                        height: 40
+                        width: height
+                    }
+                    source: artUrl
+                    asynchronous: true
+                    fillMode: Image.PreserveAspectFit
                 }
 
-                text: stationName
-                elide: Text.ElideRight
+                /* Station name */
+                Text {
+                    id: stationNameText
+                    anchors {
+                        left: stationArt.right
+                        leftMargin: units.gu(1)
+                        right: parent.right
+                        verticalCenter: parent.verticalCenter
+                    }
+
+                    text: stationName
+                    elide: Text.ElideRight
+                }
+
+                /* Click handling */
+                onClicked: {
+                    stationListView.currentIndex = index;
+                    stationClicked(stationToken);
+                }
             }
 
-            /* Click handling */
-            onClicked: {
-                stationListView.currentIndex = index;
-                stationClicked(stationToken);
-            }
         }
-
     }
 
     /* Now playing info / controls */
