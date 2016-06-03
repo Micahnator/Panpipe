@@ -44,8 +44,6 @@ MainView {
     width: units.gu(50)
     height: units.gu(80)
 
-    backgroundColor: "#193366"
-
     /* Properties */
     property string pandoraUsername: Storage.getSetting("pandora_username");
     property string pandoraPassword: Storage.getSetting("pandora_password");

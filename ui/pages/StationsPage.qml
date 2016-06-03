@@ -23,11 +23,20 @@ import Ubuntu.Components 1.3
 import "../components"
 
 Page {
-    title: i18n.tr("Stations")
-    anchors.fill: parent
+    header: PageHeader {
+        title: i18n.tr("Stations")
 
-    /* Set header text to white */
-    head.foregroundColor: "white"
+        StyleHints {
+            backgroundColor: "#193366"
+            dividerColor: backgroundColor
+            foregroundColor: "white"
+        }
+
+        trailingActionBar.actions: [
+            openSettingsAction,
+            logoutAction,
+        ]
+    }
 
     /* Signals */
     signal stationClicked(string stationToken, string stationName)
@@ -60,7 +69,7 @@ Page {
     */
     ScrollView {
         anchors {
-            top: parent.top
+            top: parent.header.bottom
             right: parent.right
             bottom: (showBottomControl) ? nowPlayingBar.top : parent.bottom
             left: parent.left

@@ -24,8 +24,15 @@ import Ubuntu.Components 1.3
 import "../components"
 
 Page {
-    title: i18n.tr(currentStationName)
-    head.foregroundColor: "white"
+    header: PageHeader {
+        title: i18n.tr(currentStationName)
+
+        StyleHints {
+            backgroundColor: "#193366"
+            dividerColor: backgroundColor
+            foregroundColor: "white"
+        }
+    }
 
     /* Signals */
     signal skipButtonPressed
@@ -52,7 +59,7 @@ Page {
             AnchorChanges {
                 target: albumArtContainer
                 anchors {
-                    top: parent.top
+                    top: parent.header.bottom
                     right: controlBlock.left
                     bottom: parent.bottom
                     left: parent.left
@@ -68,7 +75,7 @@ Page {
             AnchorChanges {
                 target: controlBlock
                 anchors {
-                    top: parent.top
+                    top: parent.header.bottom
                     right: parent.right
                     bottom: parent.bottom
                     left: undefined
@@ -98,7 +105,7 @@ Page {
         id: albumArtContainer
 
         anchors {
-            top: parent.top
+            top: parent.header.bottom
             left: parent.left
             right: parent.right
             bottom: controlBlock.top
