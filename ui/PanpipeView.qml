@@ -303,7 +303,7 @@ Item {
 
        Popups.Dialog {
            id: aboutScreen
-           title: i18n.tr("Panpipe 0.4.2")
+           title: i18n.tr("Panpipe 0.4.3")
 
            Rectangle {
                height: width

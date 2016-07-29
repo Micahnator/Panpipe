@@ -4,12 +4,12 @@
     "framework": "ubuntu-sdk-15.04.3-qml",
     "hooks": {
         "panpipe": {
-            "apparmor": "panpipe.json",
+            "apparmor": "apparmor.json",
             "desktop": "panpipe.desktop"
         }
     },
     "maintainer": "Micah Losli <micah.losli@gmail.com>",
     "name": "com.ubuntu.developer.mlosli.panpipe",
     "title": "panpipe",
-    "version": "0.4.2"
+    "version": "0.4.3"
 }
