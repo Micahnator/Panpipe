@@ -128,7 +128,7 @@ Item {
         Popups.Dialog {
             id: loginScreen
             title: i18n.tr("Enter login credentials")
-            text: i18n.tr("Enter Pandora username and password.")
+            text: i18n.tr("Enter Pandora email and password.")
 
             /* Dialog initialization */
             Component.onCompleted: {
@@ -148,7 +148,8 @@ Item {
 
             TextField {
                 id: usernameForm
-                placeholderText: i18n.tr("Username")
+                placeholderText: i18n.tr("Email")
+                inputMethodHints: Qt.ImhEmailCharactersOnly
 
                 /* Place focus on password form when tab or enter is typed */
                 KeyNavigation.tab: passwordForm
